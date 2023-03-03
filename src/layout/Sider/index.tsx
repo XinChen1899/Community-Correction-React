@@ -2,6 +2,7 @@ import { Menu, MenuProps, Switch } from "antd";
 import Sider, { SiderTheme } from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
 import { useState } from "react";
+import { Routes, useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -13,7 +14,7 @@ interface ISiderProps {
 export default function AppSider(props: ISiderProps) {
   const [collapsed, setCollapsed] = useState(false);
   const { menuItems, appTheme } = props;
-
+  let navigate = useNavigate();
   return (
     <Sider
       collapsible
@@ -38,9 +39,12 @@ export default function AppSider(props: ISiderProps) {
       />
       <Menu
         theme={appTheme}
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={["home"]}
         mode="inline"
         items={menuItems}
+        onClick={(e) => {
+          navigate(e.key);
+        }}
       />
     </Sider>
   );

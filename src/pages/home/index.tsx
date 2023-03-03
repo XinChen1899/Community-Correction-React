@@ -1,33 +1,69 @@
+import { Avatar, Card, Col, List, Row } from "antd";
 import "react";
+const data = [
+	{
+		title: "Ant Design Title 1",
+	},
+	{
+		title: "Ant Design Title 2",
+	},
+	{
+		title: "Ant Design Title 3",
+	},
+	{
+		title: "Ant Design Title 4",
+	},
+];
+
+const techs = [
+	{
+		id: 1,
+		title: "前端",
+		skills: ["React", "Ant Design", "react-router-dom", "vite"],
+	},
+	{
+		id: 2,
+		title: "后端",
+		skills: ["SprintBoot", "SpringCloud", "MyBatis"],
+	},
+	{
+		id: 3,
+		title: "数据库",
+		skills: ["MySQL"],
+	},
+];
 
 export default () => {
-  return (
-    <div>
-      <div style={{ color: "black" }}>首页啦啦啦</div>
-      <div>
-        <div
-          style={{
-            boxSizing: "border-box",
-            width: "100%",
-            padding: "40px",
-            backgroundColor: "var(--color-fill-2)",
-            display: "flex",
-            justifyContent: "start",
-            color: "black",
-            alignItems: "center",
-          }}
-        >
-          {/* <Image width={200} src={helloImg} /> */}
-          <h3
-            style={{
-              fontWeight: "bold",
-              marginLeft: "50px",
-            }}
-          >
-            技术交流群，有问题就问，提供强有力的技术支持～～～
-          </h3>
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div>
+			<h2 style={{ color: "black" }}>首页</h2>
+			<div>
+				<Row gutter={16}>
+					{techs.map((tech) => {
+						return (
+							<Col span={8} key={tech.id}>
+								<Card title={tech.title} bordered={false}>
+									<List
+										itemLayout="horizontal"
+										dataSource={tech.skills}
+										renderItem={(item) => (
+											<List.Item>
+												<List.Item.Meta
+													title={
+														<a href="##">
+															{item}
+														</a>
+													}
+												/>
+											</List.Item>
+										)}
+									/>
+								</Card>
+							</Col>
+						);
+					})}
+				</Row>
+			</div>
+		</div>
+	);
 };

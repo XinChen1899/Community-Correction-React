@@ -1,9 +1,10 @@
 import { Breadcrumb } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { routeNameMap, RouterData } from "@/router/config";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import BreadcrumbItem from "antd/es/breadcrumb/BreadcrumbItem";
+import { Home } from "@/pages";
 
 interface IContenterProps {
 	colorBgContainer: string;
@@ -26,14 +27,18 @@ function AppContent(props: IContenterProps) {
 							{
 								routeNameMap[
 									item as keyof typeof routeNameMap
-								]
+									]
 							}
 						</Breadcrumb.Item>
 					);
 				})}
 			</Breadcrumb>
 
-			<Routes>{RouterData}</Routes>
+			<Routes>
+				{/*默认路由*/}
+				<Route path={"/"} element={<Home />} />
+				{RouterData}
+			</Routes>
 		</Content>
 	);
 }

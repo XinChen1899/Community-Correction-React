@@ -1,7 +1,7 @@
 import { Menu, MenuProps, Switch } from "antd";
 import Sider, { SiderTheme } from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -29,14 +29,14 @@ export default function AppSider(props: ISiderProps) {
 				position: "fixed",
 				left: 0,
 				top: 0,
-				bottom: 0,
+				bottom: 0
 			}}
 		>
 			<div
 				style={{
 					height: 32,
 					margin: 16,
-					background: "rgba(255, 255, 255, 0.2)",
+					background: "rgba(255, 255, 255, 0.2)"
 				}}
 			/>
 			<Menu

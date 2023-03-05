@@ -10,6 +10,8 @@ import {
 	PieChartOutlined,
 	SearchOutlined
 } from "@ant-design/icons";
+import React from "react";
+
 interface IPageItem {
 	id: string;
 	title: string;
@@ -18,7 +20,7 @@ interface IPageItem {
 
 interface IRouterItem {
 	page: IPageItem;
-	children?: IPageItem[];
+	children: IPageItem[];
 	icon?: React.ReactNode;
 }
 
@@ -113,10 +115,6 @@ const routerItems: IRouterItem[] = [
 		<PieChartOutlined />
 	),
 	getRouterItem(pageMap["noExit"], undefined, <PieChartOutlined />)
-	// getRouterItem("home", "首页", Home, []),
-	// getRouterItem("se", "调查评估", SearchEvalute, []),
-	// getRouterItem("recv", "接收入矫", SearchEvalute, []),
-	// getRouterItem("no", "不准出境", SearchEvalute, []),
 	// getRouterItem("classify", "分类管理", SearchEvalute, []),
 	// getRouterItem("classify", "个别化矫正", SearchEvalute, []),
 	// getRouterItem("classify", "日常管理", SearchEvalute, []),
@@ -127,9 +125,9 @@ const routerItems: IRouterItem[] = [
 ];
 
 // 生成路由
-export const RouterData = routerItems.map(item => {
+export const RouterData = routerItems.map((item) => {
 	const { page, children } = item;
-	if (children == null) {
+	if (!children) {
 		return (
 			<Route
 				key={page.id}
@@ -138,7 +136,7 @@ export const RouterData = routerItems.map(item => {
 			/>
 		);
 	} else {
-		return children.map(p => {
+		return children.map((p) => {
 			const pathName = page.id + "/" + p.id;
 			return (
 				<Route

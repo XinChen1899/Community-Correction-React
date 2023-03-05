@@ -1,19 +1,6 @@
-import { Avatar, Card, Col, List, Row } from "antd";
+import { Card, Col, List, Row, Timeline } from "antd";
 import "react";
-const data = [
-	{
-		title: "Ant Design Title 1",
-	},
-	{
-		title: "Ant Design Title 2",
-	},
-	{
-		title: "Ant Design Title 3",
-	},
-	{
-		title: "Ant Design Title 4",
-	},
-];
+import { SmileOutlined } from "@ant-design/icons";
 
 const techs = [
 	{
@@ -36,7 +23,7 @@ const techs = [
 export default () => {
 	return (
 		<div>
-			<h2 style={{ color: "black" }}>首页</h2>
+			<h2>首页</h2>
 			<div>
 				<Row gutter={16}>
 					{techs.map((tech) => {
@@ -63,6 +50,24 @@ export default () => {
 						);
 					})}
 				</Row>
+				<Card title="代办列表">
+					<Timeline
+						items={[
+							{
+								color: "green",
+								children: "导航栏、路由跳转完成",
+							},
+							{
+								color: "gray",
+								children: (
+									<>
+										<p>调查评估</p>
+									</>
+								),
+							},
+						]}
+					/>
+				</Card>
 			</div>
 		</div>
 	);

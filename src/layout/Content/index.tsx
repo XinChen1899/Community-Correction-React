@@ -1,22 +1,20 @@
-import { Breadcrumb } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { Route, Routes } from "react-router-dom";
-import { routeNameMap, RouterData } from "@/router/config";
-import React, { useEffect } from "react";
-import BreadcrumbItem from "antd/es/breadcrumb/BreadcrumbItem";
-import { Home } from "@/pages";
+import React from "react";
+import { routeNameMap } from "@/router/config";
+import { Breadcrumb } from "antd";
+import { useLocation } from "react-router-dom";
 
 interface IContenterProps {
 	colorBgContainer: string;
-	path: any;
-	dispatch: React.Dispatch<any>;
+	// path: any;
+	children: any;
+	// dispatch: React.Dispatch<any>;
 }
 
 function AppContent(props: IContenterProps) {
-	// const { colorBgContainer } = props;
-	const { path } = props;
-	const curPath: string = path.path;
-	const pathList = curPath.split("/");
+	const { children } = props;
+	const { pathname } = useLocation();
+	const pathList = pathname.split("/").slice(2);
 
 	return (
 		<Content style={{ margin: "0 16px" }}>
@@ -34,11 +32,7 @@ function AppContent(props: IContenterProps) {
 				})}
 			</Breadcrumb>
 
-			<Routes>
-				{/*默认路由*/}
-				<Route path={"/"} element={<Home />} />
-				{RouterData}
-			</Routes>
+			{children}
 		</Content>
 	);
 }

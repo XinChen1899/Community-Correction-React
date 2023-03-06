@@ -14,4 +14,6 @@ import Investigatorsevaluated from "./investigators-evaluated";
 
 import { CorrectionPlan, CorrectionTeam } from "./income-correction";
 
-export { Home, Investigatorsevaluated, CorrectionPlan, CorrectionTeam };
+import Login from "./login";
+
+export { Home, Investigatorsevaluated, CorrectionPlan, CorrectionTeam, Login };

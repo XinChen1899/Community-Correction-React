@@ -1,15 +1,6 @@
-import {
-	Home,
-	Investigatorsevaluated,
-	CorrectionTeam,
-	CorrectionPlan
-} from "@/pages";
+import { CorrectionPlan, CorrectionTeam, Home, Investigatorsevaluated } from "@/pages";
 import { Route } from "react-router-dom";
-import {
-	HomeOutlined,
-	PieChartOutlined,
-	SearchOutlined
-} from "@ant-design/icons";
+import { HomeOutlined, PieChartOutlined, SearchOutlined } from "@ant-design/icons";
 import React from "react";
 
 interface IPageItem {
@@ -59,6 +50,7 @@ export const routeNameMap = {
 };
 
 // todo: 优化
+// 1. 现在这里注册页面
 const pageMap = {
 	// 首页
 	home: getPageItem("home", routeNameMap.home, Home),
@@ -101,7 +93,7 @@ const pageMap = {
 	//    "home6":       getPageItem("home6", "终止矫正", Home),
 	//    "recv/plan": getPageItem("plan", "矫正方案", Plan),
 };
-
+// 2. 添加路由
 const routerItems: IRouterItem[] = [
 	getRouterItem(pageMap["home"], undefined, <HomeOutlined />),
 	getRouterItem(
@@ -124,7 +116,7 @@ const routerItems: IRouterItem[] = [
 	// getRouterItem("classify", "终止矫正", SearchEvalute, []),
 ];
 
-// 生成路由
+// 3. 生成路由信息
 export const RouterData = routerItems.map((item) => {
 	const { page, children } = item;
 	if (!children) {

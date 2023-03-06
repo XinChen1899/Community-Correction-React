@@ -8,6 +8,12 @@
 - React-Router-Dom
 - Axios
 
+## 启动项目
+
+```bash
+yarn run dev
+```
+
 ## 二级菜单
 
 ### 调查评估

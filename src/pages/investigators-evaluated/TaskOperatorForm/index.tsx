@@ -1,6 +1,9 @@
-import React, { MutableRefObject, useRef } from "react";
-import { Button, Form, Input, Space } from "antd";
+import React, { MutableRefObject, useRef, useState } from "react";
+import { Button, Card, Form, Input, Space } from "antd";
 import { data } from "@/pages/investigators-evaluated/TaskTable";
+
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import TaskAddModal from "@/pages/investigators-evaluated/TaskOperatorForm/TaskAddModal";
 
 /*
 * 调查评估任务表的操作表单
@@ -14,6 +17,8 @@ interface ITaskOperatorForm {
 
 export default function TaskOperatorForm(props: ITaskOperatorForm) {
 	const [form] = Form.useForm();
+
+	const [addModalOpen, setAddModalOpen] = useState(false);
 
 	const inputName: MutableRefObject<any> = useRef(null);
 
@@ -32,57 +37,47 @@ export default function TaskOperatorForm(props: ITaskOperatorForm) {
 	};
 
 	return (
-		<Form
-			form={form}
-			name="search"
-			layout="inline"
-			onFinish={onFinish}
-		>
-			<Form.Item
-				name="username"
-				rules={[
-					{
-						required: true,
-						message: "请输入矫正对象姓名"
-					}
-				]}
-			>
-				<Input placeholder="请输入矫正对象姓名" ref={inputName} />
-			</Form.Item>
+		<>
+			<TaskAddModal open={addModalOpen} setOpen={setAddModalOpen} />
+			<Card title={"调查评估查询"} extra={<>
+				<Button onClick={() => setAddModalOpen(true)} type={"primary"} icon={<PlusOutlined />}>
+					新增调查评估
+				</Button>
+			</>}>
+				<Form
+					form={form}
+					name="search"
+					layout="inline"
+					onFinish={onFinish}
+				>
+					<Form.Item
+						label={"关键字"}
+						name="username"
+						rules={[
+							{
+								required: true,
+								message: "请输入矫正对象姓名"
+							}
+						]}
+					>
+						<Input placeholder="请输入矫正对象姓名" ref={inputName} />
+					</Form.Item>
 
-			<Form.Item shouldUpdate>
-				{() => (
-					<>
-						<Space>
-							<Button
-								type="primary"
-								htmlType="submit"
-								disabled={
-									!form.isFieldsTouched(
-										true
-									) ||
-									!!form
-										.getFieldsError()
-										.filter(
-											({
-												 errors
-											 }) =>
-												errors.length
-										).length
-								}
-
-								onClick={searchByName}
-							>
-								查询
-							</Button>
-
-							<Button type="primary">
-								新增调查评估
-							</Button>
-						</Space>
-					</>
-				)}
-			</Form.Item>
-		</Form>
+					<Form.Item shouldUpdate>
+						{() => (
+							<>
+								<Space>
+									<Button
+										type="primary"
+										icon={<SearchOutlined />}
+										onClick={searchByName}
+									/>
+								</Space>
+							</>
+						)}
+					</Form.Item>
+				</Form>
+			</Card>
+		</>
 	);
 }

@@ -22,7 +22,7 @@ const TaskInfo = (props: { selectTask: DataType }) => {
 				</Descriptions.Item>
 				<Descriptions.Item label="被调查评估对象性别" span={1.5}>{selectTask.sex}</Descriptions.Item>
 				<Descriptions.Item label="被调查评估对象出生日期" span={1.5}>2000/1/1</Descriptions.Item>
-				<Descriptions.Item label="被调查评估对象居住地地址" span={1.5}>{selectTask.address}</Descriptions.Item>
+				{/*<Descriptions.Item label="被调查评估对象居住地地址" span={1.5}>{selectTask.address}</Descriptions.Item>*/}
 				<Descriptions.Item label="被调查评估对象工作单位" span={1.5}>$60.00</Descriptions.Item>
 				<Descriptions.Item label="罪名" span={1.5}>抢劫</Descriptions.Item>
 				<Descriptions.Item label="原判判刑" span={1.5}>1个月</Descriptions.Item>

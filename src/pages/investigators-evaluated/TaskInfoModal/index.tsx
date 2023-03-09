@@ -1,5 +1,5 @@
-import { Button, Card, Col, Modal, Row, Space, Steps } from "antd";
-import { LoadingOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Card, Modal, Row, Steps } from "antd";
+import { CheckCircleOutlined, LoadingOutlined, UserOutlined } from "@ant-design/icons";
 import React from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import TaskInfo from "@/pages/investigators-evaluated/TaskInfoModal/TaskInfo";
@@ -37,11 +37,9 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 		>
 			<Card>
 				<Row>
-					<Col>
-						<Card>
-							<TaskInfo selectTask={selectTask} />
-						</Card>
-					</Col>
+					<Card>
+						<TaskInfo selectTask={selectTask} />
+					</Card>
 				</Row>
 
 				<Row>
@@ -66,7 +64,9 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 								},
 								{
 									title: "结束",
-									status: "process"
+									status: "process",
+									icon: <CheckCircleOutlined />
+
 									// icon: <LoadingOutlined />
 								}
 							]}

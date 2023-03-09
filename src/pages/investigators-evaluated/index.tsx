@@ -1,9 +1,4 @@
-import {
-	Button,
-	Form,
-	Input,
-	Space
-} from "antd";
+import { Space } from "antd";
 
 import "react";
 import { useEffect, useState } from "react";
@@ -22,8 +17,6 @@ import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
  */
 
 
-
-
 export default function Hello() {
 
 	const [, forceUpdate] = useState({});
@@ -31,11 +24,11 @@ export default function Hello() {
 	const [open, setOpen] = useState(false);
 
 	const [selectTask, setSelectTask] = useState<DataType>({
-		key: "",
+		isFinished: false,
+		id: "0",
 		name: "null",
 		age: 0,
 		sex: "",
-		address: "",
 		tags: []
 	});
 
@@ -51,7 +44,6 @@ export default function Hello() {
 	const showModal = () => {
 		setOpen(true);
 	};
-	// 点击对话框的Ok按钮
 
 
 	return (

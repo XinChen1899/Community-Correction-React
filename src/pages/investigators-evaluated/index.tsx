@@ -3,7 +3,6 @@ import { Space } from "antd";
 import "react";
 import { useEffect, useState } from "react";
 import TaskForm, { DataType } from "@/pages/investigators-evaluated/TaskTable";
-import TaskInfoModal from "@/pages/investigators-evaluated/TaskInfoModal";
 import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
 
 /**
@@ -17,7 +16,7 @@ import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
  */
 
 
-export default function Hello() {
+export default function IE() {
 
 	const [, forceUpdate] = useState({});
 	// 任务信息是否显示
@@ -25,7 +24,7 @@ export default function Hello() {
 
 	const [selectTask, setSelectTask] = useState<DataType>({
 		isFinished: false,
-		id: "0",
+		WTBH: "0",
 		name: "null",
 		age: 0,
 		sex: "",
@@ -61,11 +60,10 @@ export default function Hello() {
 					</div>
 
 					{/* 显示调查报告的列表 */}
-					<TaskForm showModal={showModal} setSelectTask={setSelectTask} />
+					<TaskForm selectTask={selectTask} setSelectTask={setSelectTask} />
 
 				</Space>
-				{/* 显示详情 */}
-				<TaskInfoModal open={open} setOpen={setOpen} selectTask={selectTask} />
+
 			</div>
 		</div>
 	);

@@ -19,9 +19,6 @@ import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
 export default function IE() {
 
 	const [, forceUpdate] = useState({});
-	// 任务信息是否显示
-	const [open, setOpen] = useState(false);
-
 	const [selectTask, setSelectTask] = useState<DataType>({
 		isFinished: false,
 		WTBH: "0",
@@ -37,12 +34,6 @@ export default function IE() {
 		forceUpdate({});
 	}, []);
 	// 表单提交后执行
-
-
-	// 打开对话框
-	const showModal = () => {
-		setOpen(true);
-	};
 
 
 	return (

@@ -3,6 +3,8 @@ import { CheckCircleOutlined, LoadingOutlined, UserOutlined } from "@ant-design/
 import React from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import TaskInfo from "@/pages/investigators-evaluated/Modal/TaskModifyModal/TaskInfo";
+import { IEInfo } from "@/entity/IE/IEInfo";
+import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -17,6 +19,46 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 	// 点击对话框的取消按钮
 	const handleCancel = () => {
 		setOpen(false);
+	};
+
+	// todo 根据WTBH获取IEInfo 和IEVisitInfo
+	const ieInfo: IEInfo = {
+		BDCPGRDLX: "",
+		BGRCSRQ: "",
+		BGRGZDW: "",
+		BGRJZDDZ: "",
+		BGRSFZH: "",
+		BGRXB: "",
+		DCDWXQJ: "",
+		DCPGYJ: "",
+		DCPGYJS: "",
+		DCYJSHR: "",
+		FJX: "",
+		NSYJZLB: "",
+		PJJG: "",
+		PJRQ: "",
+		WTDCH: "",
+		WTDW: "",
+		YPXF: "",
+		YPXQ: "",
+		YPXQJSRQ: "",
+		YPXQKSRQ: "",
+		ZM: "",
+		id: 0,
+		WTBH: selectTask.WTBH,
+		BGRXM: selectTask.name
+	};
+	const ieVisitInfo: IEVisitInfo = {
+		BDCRXM: selectTask.name,
+		DCDD: "",
+		DCDWSFS: "",
+		DCR: "谢毓佺",
+		DCSJ: "",
+		DCSX: "",
+		WTBH: selectTask.WTBH,
+		YBGRGX: "",
+		id: 0
+
 	};
 
 	return (
@@ -34,11 +76,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 			]}
 		>
 			<Card>
-				<Row>
-					<Card>
-						<TaskInfo selectTask={selectTask} />
-					</Card>
-				</Row>
+				<TaskInfo ieInfo={ieInfo} ieVisitInfo={ieVisitInfo} />
 			</Card>
 		</Modal>
 	);

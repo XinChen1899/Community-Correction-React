@@ -7,7 +7,7 @@ const TaskInfo = (props: { info: IEInfo }) => {
 
 
 	return (
-		<div>
+		<div style={{ width: "900px" }}>
 			<Descriptions title="调查评估信息" bordered>
 				<Descriptions.Item label="委托编号" span={1.5}>
 					{info.WTBH}

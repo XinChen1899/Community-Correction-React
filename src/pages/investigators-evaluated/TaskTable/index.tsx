@@ -1,18 +1,14 @@
-/*
-* 调查评估界面下的调查评估任务表
-* 业务功能：
-* - 能够查看所有的调查评估任务
-* */
-
-
-import Table, { ColumnsType } from "antd/es/table";
-import { Button, Space } from "antd";
-import React, { useState } from "react";
+import Table, { ColumnsType, ColumnType } from "antd/es/table";
+import { Button, Input, InputRef, Space } from "antd";
+import React, { useRef, useState } from "react";
 import { Spin } from "antd/lib";
-import { CheckCircleOutlined, LoadingOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import TaskVisitInfoModal from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal";
 import TaskInfoModal from "@/pages/investigators-evaluated/Modal/TaskInfoModal";
 import TaskModifyModal from "@/pages/investigators-evaluated/Modal/TaskModifyModal";
+import { FilterConfirmProps } from "antd/es/table/interface";
+// @ts-ignore
+import Highlighter from "react-highlight-words";
 
 // 调查评估表 元组的数据类型
 export interface DataType {
@@ -24,56 +20,6 @@ export interface DataType {
 	tags: string[];
 }
 
-// 调查评估表 列的定义
-const columns: ColumnsType<DataType> = [
-	{
-		title: "进度",
-		dataIndex: "isFinished",
-		key: "isFinished",
-		width: 50,
-		render: (_, record) => {
-			const { isFinished } = record;
-			let loading;
-			if (isFinished) loading = <Spin indicator={<LoadingOutlined />} />;
-			else loading = <Spin indicator={<CheckCircleOutlined />} />;
-			return loading;
-		}
-	},
-	{
-		title: "委托编号",
-		dataIndex: "id",
-		key: "WTBH",
-		width: 150
-
-	},
-	{
-		title: "姓名",
-		dataIndex: "name",
-		key: "name",
-		width: 150,
-		render: (text) => <a>{text}</a>
-	},
-	{
-		title: "年龄",
-		dataIndex: "age",
-		key: "age",
-		width: 50
-
-	},
-	{
-		title: "性别",
-		dataIndex: "sex",
-		key: "sex",
-		width: 50
-
-	},
-	{
-		title: "操作",
-		key: "action",
-		width: 200
-
-	}
-];
 
 // 调查评估表的数据
 export const data: DataType[] = [
@@ -109,6 +55,7 @@ interface ITaskForm {
 	setSelectTask: React.Dispatch<React.SetStateAction<DataType>>;
 }
 
+
 export default function TaskForm(props: ITaskForm) {
 	const { selectTask, setSelectTask } = props;
 	const [openInfo, setOpenInfo] = useState(false);
@@ -128,6 +75,155 @@ export default function TaskForm(props: ITaskForm) {
 	};
 
 
+	type DataIndex = keyof DataType;
+	const [searchText, setSearchText] = useState("");
+	const [searchedColumn, setSearchedColumn] = useState("");
+	const searchInput = useRef<InputRef>(null);
+
+	const handleSearch = (
+		selectedKeys: string[],
+		confirm: (param?: FilterConfirmProps) => void,
+		dataIndex: DataIndex
+	) => {
+		confirm();
+		setSearchText(selectedKeys[0]);
+		setSearchedColumn(dataIndex);
+	};
+
+	const handleReset = (clearFilters: () => void) => {
+		clearFilters();
+		setSearchText("");
+	};
+
+	const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+			<div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+				<Input
+					ref={searchInput}
+					placeholder={`Search ${dataIndex}`}
+					value={selectedKeys[0]}
+					onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+					style={{ marginBottom: 8, display: "block" }}
+				/>
+				<Space>
+					<Button
+						type="primary"
+						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+						icon={<SearchOutlined />}
+						size="small"
+						style={{ width: 90 }}
+					>
+						Search
+					</Button>
+					<Button
+						onClick={() => clearFilters && handleReset(clearFilters)}
+						size="small"
+						style={{ width: 90 }}
+					>
+						Reset
+					</Button>
+					<Button
+						type="link"
+						size="small"
+						onClick={() => {
+							confirm({ closeDropdown: false });
+							setSearchText((selectedKeys as string[])[0]);
+							setSearchedColumn(dataIndex);
+						}}
+					>
+						Filter
+					</Button>
+					<Button
+						type="link"
+						size="small"
+						onClick={() => {
+							close();
+						}}
+					>
+						close
+					</Button>
+				</Space>
+			</div>
+		),
+		filterIcon: (filtered: boolean) => (
+			<SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+		),
+		onFilter: (value, record) =>
+			record[dataIndex]
+				.toString()
+				.toLowerCase()
+				.includes((value as string).toLowerCase()),
+		onFilterDropdownOpenChange: (visible) => {
+			if (visible) {
+				setTimeout(() => searchInput.current?.select(), 100);
+			}
+		},
+		render: (text) =>
+			searchedColumn === dataIndex ? (
+				<Highlighter
+					highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+					searchWords={[searchText]}
+					autoEscape
+					textToHighlight={text ? text.toString() : ""}
+				/>
+			) : (
+				text
+			)
+	});
+
+
+	const columns: ColumnsType<DataType> = [
+		{
+			title: "进度",
+			dataIndex: "isFinished",
+			key: "isFinished",
+			width: 50,
+			render: (_, record) => {
+				const { isFinished } = record;
+				let loading;
+				if (isFinished) loading = <Spin indicator={<LoadingOutlined />} />;
+				else loading = <Spin indicator={<CheckCircleOutlined />} />;
+				return loading;
+			}
+		},
+		{
+			title: "委托编号",
+			dataIndex: "WTBH",
+			key: "WTBH",
+			width: 150,
+			...getColumnSearchProps("WTBH")
+
+		},
+		{
+			title: "姓名",
+			dataIndex: "name",
+			key: "name",
+			width: 150,
+			render: (text) => <a>{text}</a>,
+			...getColumnSearchProps("name")
+		},
+		{
+			title: "年龄",
+			dataIndex: "age",
+			key: "age",
+			width: 50
+
+		},
+		{
+			title: "性别",
+			dataIndex: "sex",
+			key: "sex",
+			width: 50
+
+		},
+		{
+			title: "操作",
+			key: "action",
+			width: 200
+
+		}
+	];
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
@@ -142,6 +238,7 @@ export default function TaskForm(props: ITaskForm) {
 			};
 		}
 	});
+
 
 	return (
 		<>

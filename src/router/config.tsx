@@ -1,4 +1,4 @@
-import { CorrectionPlan, CorrectionTeam, Home, Investigatorsevaluated } from "@/pages";
+import { CorrectionPlan, CorrectionTeam, Home, IE } from "@/pages";
 import { Route } from "react-router-dom";
 import { HomeOutlined, PieChartOutlined, SearchOutlined } from "@ant-design/icons";
 import React from "react";
@@ -42,7 +42,7 @@ function getRouterItem(
 // id -> 中文名
 export const routeNameMap = {
 	home: "首页",
-	investigatorSevaluated: "调查评估",
+	ie: "调查评估",
 	incomeCorrection: "接受入矫",
 	correctionPlan: "矫正方案",
 	correctionTeam: "矫正小组",
@@ -55,10 +55,10 @@ const pageMap = {
 	// 首页
 	home: getPageItem("home", routeNameMap.home, Home),
 	// 调查评估
-	investigatorSevaluated: getPageItem(
-		"investigatorSevaluated",
-		routeNameMap.investigatorSevaluated,
-		Investigatorsevaluated
+	ie: getPageItem(
+		"ie",
+		routeNameMap.ie,
+		IE
 	),
 	// 接收入矫
 	incomeCorrection: getPageItem(
@@ -81,7 +81,7 @@ const pageMap = {
 	noExit: getPageItem(
 		"noExit",
 		routeNameMap.noExit,
-		Investigatorsevaluated
+		IE
 	)
 
 	//    "classify":        getPageItem("classify", "分类管理", Investigatorsevaluated),
@@ -97,7 +97,7 @@ const pageMap = {
 const routerItems: IRouterItem[] = [
 	getRouterItem(pageMap["home"], undefined, <HomeOutlined />),
 	getRouterItem(
-		pageMap["investigatorSevaluated"],
+		pageMap["ie"],
 		undefined,
 		<SearchOutlined />
 	),

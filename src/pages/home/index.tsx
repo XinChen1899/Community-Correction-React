@@ -6,18 +6,18 @@ const techs = [
 	{
 		id: 1,
 		title: "前端",
-		skills: ["React", "Ant Design", "react-router-dom", "vite"],
+		skills: ["React", "Ant Design", "react-router-dom", "vite"]
 	},
 	{
 		id: 2,
 		title: "后端",
-		skills: ["SprintBoot", "SpringCloud", "MyBatis"],
+		skills: ["SprintBoot", "SpringCloud", "MyBatis"]
 	},
 	{
 		id: 3,
 		title: "数据库",
-		skills: ["MySQL"],
-	},
+		skills: ["MySQL"]
+	}
 ];
 
 export default () => {
@@ -55,16 +55,24 @@ export default () => {
 						items={[
 							{
 								color: "green",
-								children: "导航栏、路由跳转完成",
+								children: "导航栏、路由跳转完成"
+							},
+							{
+								color: "green",
+								children: (
+									<>
+										<p>调查评估ui完成</p>
+									</>
+								)
 							},
 							{
 								color: "gray",
 								children: (
 									<>
-										<p>调查评估</p>
+										<p>调查评估后端</p>
 									</>
-								),
-							},
+								)
+							}
 						]}
 					/>
 				</Card>

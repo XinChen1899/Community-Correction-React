@@ -10,8 +10,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<BrowserRouter>
 		<ConfigProvider locale={zhCN}>
 			<Routes>
-				<Route path={"/"} element={<App />} />
-				<Route path={"/admin/*"} element={<App />} />
+				<Route path={"/*"} element={<App />} />
+				{/*<Route path={"/admin/*"} element={<App />} />*/}
 			</Routes>
 		</ConfigProvider>
 	</BrowserRouter>

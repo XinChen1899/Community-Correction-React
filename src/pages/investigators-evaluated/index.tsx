@@ -4,6 +4,7 @@ import "react";
 import { useEffect, useState } from "react";
 import TaskForm, { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
+import useRequest from "@/api";
 
 /**
  * 调查评估:
@@ -21,11 +22,9 @@ export default function IE() {
 	const [, forceUpdate] = useState({});
 	const [selectTask, setSelectTask] = useState<DataType>({
 		isFinished: false,
-		WTBH: "0",
+		wtbh: "0",
 		name: "null",
-		age: 0,
-		sex: "",
-		tags: []
+		sex: ""
 	});
 
 
@@ -35,7 +34,7 @@ export default function IE() {
 	}, []);
 	// 表单提交后执行
 
-
+	const result = useRequest("/ie/test", "get");
 	return (
 		<div>
 			<div>
@@ -45,6 +44,9 @@ export default function IE() {
 					style={{ display: "flex" }}
 				>
 					<h2>调查评估</h2>
+					<h2>
+						{result.result}
+					</h2>
 					{/* 操作区 */}
 					<div style={{ padding: "0px 15px" }}>
 						<TaskOperatorForm />

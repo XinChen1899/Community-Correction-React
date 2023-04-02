@@ -18,16 +18,14 @@ export default function TaskVisitInfoModal(props: {
 	const { open, setOpen, selectTask } = props;
 	// todo 发起api请求获取调查评估走访信息（根据委托编号）
 	const info: IEVisitInfo = {
-		BDCRXM: selectTask.name,
-		DCDD: "",
-		DCDWSFS: "",
-		DCR: "谢毓佺",
-		DCSJ: "",
-		DCSX: "",
-		WTBH: selectTask.WTBH,
-		YBGRGX: "",
-		id: 0
-
+		bdcrxm: selectTask.name,
+		dcdd: "",
+		dcdwsfs: "",
+		dcr: "谢毓佺",
+		dcsj: "",
+		dcsx: "",
+		wtbh: selectTask.wtbh,
+		ybgrgx: ""
 	};
 
 	const handleOk = () => {

@@ -1,19 +1,18 @@
 export interface IEVisitInfo {
-	id: number;
 	// 委托编号
-	WTBH: string;
+	wtbh: string;
 	// 被调查人姓名
-	BDCRXM: string;
+	bdcrxm: string;
 	// 与被调查评估对象关系
-	YBGRGX: string;
+	ybgrgx: string;
 	// 调查事项
-	DCSX: string;
+	dcsx: string;
 	// 调查时间
-	DCSJ: string;
+	dcsj: string;
 	// 调查地点
-	DCDD: string;
+	dcdd: string;
 	// 调查单位
-	DCDWSFS: string;
+	dcdwsfs: string;
 	// 调查人
-	DCR: string;
+	dcr: string;
 }

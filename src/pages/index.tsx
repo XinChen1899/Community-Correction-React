@@ -10,10 +10,9 @@ import { lazy } from "react";
 
 // const SearchEvalute = lazy(() => import("./searchevalute"));
 import Home from "./home";
-import Investigatorsevaluated from "./investigators-evaluated";
+import IE from "./investigators-evaluated";
 
 import { CorrectionPlan, CorrectionTeam } from "./income-correction";
 
-import Login from "./login";
 
-export { Home, Investigatorsevaluated, CorrectionPlan, CorrectionTeam, Login };
+export { Home, IE, CorrectionPlan, CorrectionTeam };

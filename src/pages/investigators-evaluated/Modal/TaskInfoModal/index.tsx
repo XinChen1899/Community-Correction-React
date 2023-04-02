@@ -1,8 +1,9 @@
 import { Button, Card, Modal, Row, Steps } from "antd";
 import { CheckCircleOutlined, LoadingOutlined, UserOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import TaskInfo from "@/pages/investigators-evaluated/Modal/TaskInfoModal/TaskInfo";
+import axios from "axios";
 import { IEInfo } from "@/entity/IE/IEInfo";
 
 
@@ -12,38 +13,46 @@ interface ITaskInfoModal {
 	selectTask: DataType;
 }
 
+
 export default function TaskInfoModal(props: ITaskInfoModal) {
 	const { open, setOpen, selectTask } = props;
-	const wtbh = selectTask.WTBH;
+	const wtbh = selectTask.wtbh;
+	const [info, setInfo] = useState<IEInfo>();
+	const temp: IEInfo = {
+		bdcpgrdlx: "",
+		bgrcsrq: "",
+		bgrgzdw: "",
+		bgrjzddz: "",
+		bgrsfzh: "",
+		bgrxb: "",
+		bgrxm: "xxx",
+		dcdwxqj: "",
+		dcpgyj: "",
+		dcpgyjs: "",
+		dcyjshr: "",
+		fjx: "",
+		nsyjzlb: "",
+		pjjg: "",
+		pjrq: "",
+		wtbh: "",
+		wtdch: "",
+		wtdw: "",
+		ypxf: "",
+		ypxq: "",
+		ypxqjsrq: "",
+		ypxqksrq: "",
+		zm: ""
 
-	// todo 根据wtbh获取到IEInfo信息
-	let info: IEInfo = {
-		BDCPGRDLX: "",
-		BGRCSRQ: "",
-		BGRGZDW: "",
-		BGRJZDDZ: "",
-		BGRSFZH: "",
-		BGRXB: "",
-		DCDWXQJ: "",
-		DCPGYJ: "",
-		DCPGYJS: "",
-		DCYJSHR: "",
-		FJX: "",
-		NSYJZLB: "",
-		PJJG: "",
-		PJRQ: "",
-		WTDCH: "",
-		WTDW: "",
-		YPXF: "",
-		YPXQ: "",
-		YPXQJSRQ: "",
-		YPXQKSRQ: "",
-		ZM: "",
-		id: 0,
-		WTBH: wtbh,
-		BGRXM: selectTask.name
 	};
 
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await axios.get(`http://localhost:9006/ie/${wtbh}`);
+			setInfo(result.data);
+		};
+		fetchData();
+		console.log(info);
+	}, [wtbh]);
 	const handleOk = () => {
 
 	};
@@ -69,7 +78,7 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 			<Card>
 				<Row>
 					<Card>
-						<TaskInfo info={info} />
+						<TaskInfo info={info === undefined ? temp : info} />
 					</Card>
 				</Row>
 

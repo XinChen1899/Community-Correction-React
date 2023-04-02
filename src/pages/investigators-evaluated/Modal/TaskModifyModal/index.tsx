@@ -4,7 +4,7 @@ import { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 import { Space } from "antd/lib";
-import { EditOutlined, EllipsisOutlined, SettingOutlined, UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 
@@ -20,42 +20,40 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 
 	// todo 根据WTBH获取IEInfo 和IEVisitInfo
 	const ieInfo: IEInfo = {
-		BDCPGRDLX: "01",
-		BGRCSRQ: "",
-		BGRGZDW: "",
-		BGRJZDDZ: "",
-		BGRSFZH: "",
-		BGRXB: "01",
-		DCDWXQJ: "",
-		DCPGYJ: "",
-		DCPGYJS: "",
-		DCYJSHR: "",
-		FJX: "01",
-		NSYJZLB: "",
-		PJJG: "01",
-		PJRQ: "",
-		WTDCH: "",
-		WTDW: "",
-		YPXF: "01",
-		YPXQ: "",
-		YPXQJSRQ: "",
-		YPXQKSRQ: "",
-		ZM: "01",
-		id: 0,
-		WTBH: selectTask.WTBH,
-		BGRXM: selectTask.name
+		bdcpgrdlx: "",
+		bgrcsrq: "",
+		bgrgzdw: "",
+		bgrjzddz: "",
+		bgrsfzh: "",
+		bgrxb: "",
+		dcdwxqj: "",
+		dcpgyj: "",
+		dcpgyjs: "",
+		dcyjshr: "",
+		fjx: "",
+		nsyjzlb: "",
+		pjjg: "",
+		pjrq: "",
+		wtdch: "",
+		wtdw: "",
+		ypxf: "",
+		ypxq: "",
+		ypxqjsrq: "",
+		ypxqksrq: "",
+		zm: "",
+
+		wtbh: selectTask.wtbh,
+		bgrxm: selectTask.name
 	};
 	const ieVisitInfo: IEVisitInfo = {
-		BDCRXM: selectTask.name,
-		DCDD: "",
-		DCDWSFS: "",
-		DCR: "谢毓佺",
-		DCSJ: "",
-		DCSX: "",
-		WTBH: selectTask.WTBH,
-		YBGRGX: "",
-		id: 0
-
+		bdcrxm: selectTask.name,
+		dcdd: "",
+		dcdwsfs: "",
+		dcr: "谢毓佺",
+		dcsj: "",
+		dcsx: "",
+		wtbh: selectTask.wtbh,
+		ybgrgx: ""
 	};
 
 	const [form] = Form.useForm();
@@ -107,44 +105,44 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 						  onFinish={onFinish}
 						  initialValues={ieInfo}
 					>
-						<Form.Item name={"WTBH"} label={"委托编号"}>
+						<Form.Item name={"wtbh"} label={"委托编号"}>
 							<Input disabled={true} />
 						</Form.Item>
-						<Form.Item name={"WTDW"} label="委托单位">
+						<Form.Item name={"wtdw"} label="委托单位">
 							<Input placeholder={"请输入委托单位"} />
 						</Form.Item>
-						<Form.Item name={"WTDCH"} label="委托调查函">
+						<Form.Item name={"wtdch"} label="委托调查函">
 							<TextArea placeholder={"请输入委托调查函"} />
 						</Form.Item>
-						<Form.Item name={"BDCPGRDLX"} label="被调查评估对象的类型" initialValue={"01"}>
+						<Form.Item name={"bdcpgrdlx"} label="被调查评估对象的类型" initialValue={"01"}>
 							<Select defaultValue="被告人" style={{ width: 120 }}>
 								<Select.Option value="01">被告人</Select.Option>
 								<Select.Option value="02">罪犯</Select.Option>
 								<Select.Option value="99">其他</Select.Option>
 							</Select>
 						</Form.Item>
-						<Form.Item name={"BGRXM"} label="被调查评估对象姓名">
-							<Input placeholder={"请输入姓名"} defaultValue={ieInfo.BGRXM} />
+						<Form.Item name={"bgrxm"} label="被调查评估对象姓名">
+							<Input placeholder={"请输入姓名"} defaultValue={ieInfo.bgrxm} />
 						</Form.Item>
-						<Form.Item name={"BGRXB"} label="被调查评估对象性别" initialValue={"male"}>
+						<Form.Item name={"bgrxb"} label="被调查评估对象性别" initialValue={"male"}>
 							<Select defaultValue="男" style={{ width: 120 }}>
 								<Select.Option value="male">男</Select.Option>
 								<Select.Option value="female">女</Select.Option>
 							</Select>
 						</Form.Item>
-						<Form.Item name={"BGRSFZH"} label="被调查评估对象的身份证号">
+						<Form.Item name={"bgrsfzh"} label="被调查评估对象的身份证号">
 							<Input placeholder={"请输入身份证"} />
 						</Form.Item>
-						<Form.Item name={"BGRCSRQ"} label="被调查评估对象出生日期">
+						<Form.Item name={"bgrcsrq"} label="被调查评估对象出生日期">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item name={"BGRJZDDZ"} label="被调查评估对象居住地地址">
+						<Form.Item name={"bgrjzddz"} label="被调查评估对象居住地地址">
 							<Input placeholder={"请输入居住地址"} />
 						</Form.Item>
-						<Form.Item name={"BGRGZDW"} label="被调查评估对象工作单位">
+						<Form.Item name={"bgrgzdw"} label="被调查评估对象工作单位">
 							<Input placeholder={"请输入工作单位"} />
 						</Form.Item>
-						<Form.Item name={"ZM"} label="罪名" initialValue={"01"}>
+						<Form.Item name={"zm"} label="罪名" initialValue={"01"}>
 							<Select defaultValue="危害国家安全" style={{ width: 230 }}>
 								<Select.Option value="01">危害国家安全</Select.Option>
 								<Select.Option value="02">危害公共安全</Select.Option>
@@ -158,16 +156,16 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 								<Select.Option value="99">其他</Select.Option>
 							</Select>
 						</Form.Item>
-						<Form.Item name={"YPXQ"} label="原判刑期">
+						<Form.Item name={"ypxq"} label="原判刑期">
 							<Input placeholder={"请输入原判刑期"} />
 						</Form.Item>
-						<Form.Item name={"YPXQKSRQ"} label="原判刑期开始日期">
+						<Form.Item name={"ypxqksrq"} label="原判刑期开始日期">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item name={"YPXQJSRQ"} label="原判刑期结束日期">
+						<Form.Item name={"ypxqjsrq"} label="原判刑期结束日期">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item name={"YPXF"} label="原判刑罚" initialValue={"01"}>
+						<Form.Item name={"ypxf"} label="原判刑罚" initialValue={"01"}>
 							<Select defaultValue="死刑缓期两年执行" style={{ width: 170 }}>
 								<Select.Option value="01">死刑缓期两年执行</Select.Option>
 								<Select.Option value="02">无期徒刑</Select.Option>
@@ -176,7 +174,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 								<Select.Option value="05">管制</Select.Option>
 							</Select>
 						</Form.Item>
-						<Form.Item name={"FJX"} label="附加刑" initialValue={"99"}>
+						<Form.Item name={"fjx"} label="附加刑" initialValue={"99"}>
 							<Select defaultValue="无" style={{ width: 170 }}>
 								<Select.Option value="01">罚金</Select.Option>
 								<Select.Option value="02">剥夺政治权利</Select.Option>
@@ -186,17 +184,17 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 								<Select.Option value="99">其他</Select.Option>
 							</Select>
 						</Form.Item>
-						<Form.Item name={"PJJG"} label="判决机关" initialValue={"01"}>
+						<Form.Item name={"pjjg"} label="判决机关" initialValue={"01"}>
 							<Select defaultValue="人民法院" style={{ width: 170 }}>
 								<Select.Option value="01">人民法院</Select.Option>
 								<Select.Option value="02">公安机关</Select.Option>
 								<Select.Option value="03">监狱管理机关</Select.Option>
 							</Select>
 						</Form.Item>
-						<Form.Item name={"PJRQ"} label="判决日期">
+						<Form.Item name={"pjrq"} label="判决日期">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item name={"NSYJZLB"} label="拟适用矫正类别" initialValue={"02"}>
+						<Form.Item name={"nsyjzlb"} label="拟适用矫正类别" initialValue={"02"}>
 							<Select defaultValue="普通" style={{ width: 170 }}>
 								<Select.Option value="01">宽松</Select.Option>
 								<Select.Option value="02">普通</Select.Option>
@@ -204,19 +202,19 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 							</Select>
 						</Form.Item>
 
-						<Form.Item name={"DCDWXQJ"} label="接受委托的县级社区矫正机构">
+						<Form.Item name={"dcdwxqj"} label="接受委托的县级社区矫正机构">
 							<Input style={{ width: 300 }} placeholder={"请输入接受委托的县级矫正机构"} />
 						</Form.Item>
 
-						<Form.Item name={"DCPGYJ"} label="调查评估意见">
+						<Form.Item name={"dcpgyj"} label="调查评估意见">
 							<TextArea style={{ width: 500 }} placeholder={"请输入调查评估意见"} />
 						</Form.Item>
 
-						<Form.Item name={"DCYJSHR"} label="调查评估意见审核人">
+						<Form.Item name={"dcyjshr"} label="调查评估意见审核人">
 							<Input placeholder={"请输入调查意见审核人"} />
 						</Form.Item>
 
-						<Form.Item name={"DCPGYJS"} label="调查评估意见书">
+						<Form.Item name={"dcpgyjs"} label="调查评估意见书">
 							<Upload name="yjs" action="/upload.do" listType="picture">
 								<Button icon={<UploadOutlined />}>Click to upload</Button>
 							</Upload>
@@ -228,25 +226,25 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 						form={form2}
 						initialValues={ieVisitInfo}
 					>
-						<Form.Item name={"BDCRXM"} label="被调查人姓名">
+						<Form.Item name={"bdcrxm"} label="被调查人姓名">
 							<Input placeholder={"请输入姓名"} />
 						</Form.Item>
-						<Form.Item name={"YBGRGX"} label="与被调查评估对象关系">
+						<Form.Item name={"ybgrgx"} label="与被调查评估对象关系">
 							<Input placeholder={"与被调查评估对象关系"} />
 						</Form.Item>
-						<Form.Item name={"DCSX"} label="调查事项">
+						<Form.Item name={"dcsx"} label="调查事项">
 							<Input placeholder={"调查事项"} />
 						</Form.Item>
-						<Form.Item name={"DCSJ"} label="调查时间">
+						<Form.Item name={"dcsj"} label="调查时间">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item name={"DCDD"} label="调查地点">
+						<Form.Item name={"dcdd"} label="调查地点">
 							<Input placeholder={"调查地点"} />
 						</Form.Item>
-						<Form.Item name={"DCDWSFS"} label="调查单位">
+						<Form.Item name={"dcdwsfs"} label="调查单位">
 							<Input placeholder={"调查单位"} />
 						</Form.Item>
-						<Form.Item name={"DCR"} label="调查人">
+						<Form.Item name={"dcr"} label="调查人">
 							<Input placeholder={"调查人"} />
 						</Form.Item>
 					</Form>

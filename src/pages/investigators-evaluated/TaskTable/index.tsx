@@ -1,6 +1,6 @@
 import Table, { ColumnsType, ColumnType } from "antd/es/table";
 import { Button, Input, InputRef, Space } from "antd";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd/lib";
 import { CheckCircleOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import TaskVisitInfoModal from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal";
@@ -9,59 +9,50 @@ import TaskModifyModal from "@/pages/investigators-evaluated/Modal/TaskModifyMod
 import { FilterConfirmProps } from "antd/es/table/interface";
 // @ts-ignore
 import Highlighter from "react-highlight-words";
+import axios from "axios";
+import { IEInfo } from "@/entity/IE/IEInfo";
 
 // 调查评估表 元组的数据类型
 export interface DataType {
 	isFinished: boolean; // 是否结束
-	WTBH: string; // 委托编号
+	wtbh: string; // 委托编号
 	name: string; // 被调查人姓名
-	age: number; // 被调查人年龄
 	sex: string; // 被调查人性别
-	tags: string[];
 }
-
-
-// 调查评估表的数据
-export const data: DataType[] = [
-	{
-		isFinished: true,
-		WTBH: "00000001",
-		name: "张三",
-		age: 32,
-		sex: "男",
-		tags: ["nice", "developer"]
-	},
-	{
-		isFinished: false,
-		WTBH: "22345678",
-		name: "李四",
-		age: 42,
-		sex: "男",
-		tags: ["loser"]
-	},
-	{
-		isFinished: false,
-		WTBH: "32345678",
-		name: "王五",
-		age: 32,
-		sex: "女",
-		tags: ["cool", "teacher"]
-	}
-];
-
 
 interface ITaskForm {
 	selectTask: DataType;
 	setSelectTask: React.Dispatch<React.SetStateAction<DataType>>;
 }
 
-
+const ieInfo2DataType = (infoList: IEInfo[]) => {
+	return infoList.map((item: IEInfo) => {
+		return {
+			isFinished: false,
+			wtbh: item.wtbh,
+			name: item.bgrxm,
+			sex: item.bgrxb === "male" ? "男" : "女"
+		} as DataType;
+	});
+};
 export default function TaskForm(props: ITaskForm) {
 	const { selectTask, setSelectTask } = props;
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openVisit, setOpenVisit] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
 
+	const [infoList, setInfoList] = useState<IEInfo[]>([]);
+	const [tableData, setTableData] = useState<DataType[]>([]);
+
+	useEffect(() => {
+		console.log("First");
+		const fetchData = async () => {
+			const result = await axios.get("http://localhost:9006/ie/all");
+			setInfoList(result.data);
+			setTableData(ieInfo2DataType(infoList));
+		};
+		fetchData();
+	}, []);
 	const showInfoModal = () => {
 		setOpenInfo(true);
 	};
@@ -189,10 +180,10 @@ export default function TaskForm(props: ITaskForm) {
 		},
 		{
 			title: "委托编号",
-			dataIndex: "WTBH",
-			key: "WTBH",
+			dataIndex: "wtbh",
+			key: "wtbh",
 			width: 150,
-			...getColumnSearchProps("WTBH")
+			...getColumnSearchProps("wtbh")
 
 		},
 		{
@@ -204,24 +195,15 @@ export default function TaskForm(props: ITaskForm) {
 			...getColumnSearchProps("name")
 		},
 		{
-			title: "年龄",
-			dataIndex: "age",
-			key: "age",
-			width: 50
-
-		},
-		{
 			title: "性别",
 			dataIndex: "sex",
 			key: "sex",
 			width: 50
-
 		},
 		{
 			title: "操作",
 			key: "action",
 			width: 200
-
 		}
 	];
 	// 绑定操作栏的操作
@@ -239,12 +221,11 @@ export default function TaskForm(props: ITaskForm) {
 		}
 	});
 
-
 	return (
 		<>
 			<Table
 				columns={columns}
-				dataSource={data}
+				dataSource={tableData}
 				onRow={(record) => {
 					return {
 						onClick: () => {

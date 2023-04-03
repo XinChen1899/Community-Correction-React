@@ -17,12 +17,13 @@ export interface DataType {
 	isFinished: boolean; // 是否结束
 	wtbh: string; // 委托编号
 	name: string; // 被调查人姓名
-	sex: string; // 被调查人性别
 }
 
 interface ITaskForm {
 	selectTask: DataType;
 	setSelectTask: React.Dispatch<React.SetStateAction<DataType>>;
+	tableUpdate: boolean,
+	setTableUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ieInfo2DataType = (infoList: IEInfo[]) => {
@@ -30,29 +31,31 @@ const ieInfo2DataType = (infoList: IEInfo[]) => {
 		return {
 			isFinished: false,
 			wtbh: item.wtbh,
-			name: item.bgrxm,
-			sex: item.bgrxb === "male" ? "男" : "女"
+			name: item.bgrxm
 		} as DataType;
 	});
 };
 export default function TaskForm(props: ITaskForm) {
-	const { selectTask, setSelectTask } = props;
+	const { selectTask, setSelectTask, tableUpdate, setTableUpdate } = props;
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openVisit, setOpenVisit] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
 
-	const [infoList, setInfoList] = useState<IEInfo[]>([]);
 	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [taskUpdate, setTaskUpdate] = useState(false);
+
+	const fetchData = () => {
+		axios.get("http://localhost:9006/ie/all")
+			.then((res) => {
+				// setInfoList(res.data);
+				setTableData(ieInfo2DataType(res.data));
+			});
+	};
 
 	useEffect(() => {
-		console.log("First");
-		const fetchData = async () => {
-			const result = await axios.get("http://localhost:9006/ie/all");
-			setInfoList(result.data);
-			setTableData(ieInfo2DataType(infoList));
-		};
 		fetchData();
-	}, []);
+		console.log(tableData);
+	}, [tableUpdate]);
 	const showInfoModal = () => {
 		setOpenInfo(true);
 	};
@@ -195,12 +198,6 @@ export default function TaskForm(props: ITaskForm) {
 			...getColumnSearchProps("name")
 		},
 		{
-			title: "性别",
-			dataIndex: "sex",
-			key: "sex",
-			width: 50
-		},
-		{
 			title: "操作",
 			key: "action",
 			width: 200
@@ -225,7 +222,8 @@ export default function TaskForm(props: ITaskForm) {
 		<>
 			<Table
 				columns={columns}
-				dataSource={tableData}
+				dataSource={tableData.length ? tableData : []}
+				rowKey={(record) => record.wtbh}
 				onRow={(record) => {
 					return {
 						onClick: () => {
@@ -235,9 +233,20 @@ export default function TaskForm(props: ITaskForm) {
 				}}
 			/>
 			{/* 显示详情 */}
-			<TaskInfoModal open={openInfo} setOpen={setOpenInfo} selectTask={selectTask} />
-			<TaskVisitInfoModal open={openVisit} setOpen={setOpenVisit} selectTask={selectTask} />
-			<TaskModifyModal open={openModify} setOpen={setOpenModify} selectTask={selectTask} />
+			<TaskInfoModal open={openInfo} setOpen={setOpenInfo}
+						   selectTask={selectTask}
+						   taskUpdate={taskUpdate}
+			/>
+			<TaskVisitInfoModal open={openVisit} setOpen={setOpenVisit}
+								selectTask={selectTask}
+								taskUpdate={taskUpdate}
+			/>
+			<TaskModifyModal open={openModify} setOpen={setOpenModify}
+							 selectTask={selectTask} setTableUpdate={setTableUpdate}
+							 setTaskUpdate={setTaskUpdate}
+							 tableUpdate={tableUpdate}
+							 taskUpdate={taskUpdate}
+			/>
 		</>
 
 	);

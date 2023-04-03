@@ -11,11 +11,12 @@ interface ITaskInfoModal {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	selectTask: DataType;
+	taskUpdate: boolean;
 }
 
 
 export default function TaskInfoModal(props: ITaskInfoModal) {
-	const { open, setOpen, selectTask } = props;
+	const { open, setOpen, selectTask, taskUpdate } = props;
 	const wtbh = selectTask.wtbh;
 	const [info, setInfo] = useState<IEInfo>();
 	const temp: IEInfo = {
@@ -51,8 +52,8 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 			setInfo(result.data);
 		};
 		fetchData();
-		console.log(info);
-	}, [wtbh]);
+		console.log("Get IEInfo: " + info);
+	}, [wtbh, taskUpdate]);
 	const handleOk = () => {
 
 	};

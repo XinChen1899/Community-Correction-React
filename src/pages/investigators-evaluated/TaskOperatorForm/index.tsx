@@ -10,13 +10,14 @@ import TaskAddModal from "@/pages/investigators-evaluated/TaskOperatorForm/TaskA
 * */
 
 
-export default function TaskOperatorForm() {
+export default function TaskOperatorForm(props: { setTableUpdate: any }) {
 	const [addModalOpen, setAddModalOpen] = useState(false);
 
 
 	return (
 		<>
-			<TaskAddModal open={addModalOpen} setOpen={setAddModalOpen} />
+			<TaskAddModal open={addModalOpen} setOpen={setAddModalOpen}
+						  setTableUpdate={props.setTableUpdate} />
 			<Card title={"调查评估查询"} extra={<>
 				<Button onClick={() => setAddModalOpen(true)} type={"primary"} icon={<PlusOutlined />}>
 					新增调查评估

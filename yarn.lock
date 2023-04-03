@@ -569,7 +569,7 @@ csstype@^3.0.10, csstype@^3.0.2:
   resolved "https://repo.huaweicloud.com/repository/npm/csstype/-/csstype-3.1.1.tgz"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
 
-dayjs@^1.11.1, "dayjs@>= 1.x":
+dayjs@^1.11.1, dayjs@^1.11.7, "dayjs@>= 1.x":
   version "1.11.7"
   resolved "https://repo.huaweicloud.com/repository/npm/dayjs/-/dayjs-1.11.7.tgz"
   integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
@@ -751,6 +751,11 @@ mime-types@^2.1.12:
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
   dependencies:
     mime-db "1.52.0"
+
+moment@^2.29.4, "moment@>= 2.x":
+  version "2.29.4"
+  resolved "https://repo.huaweicloud.com/repository/npm/moment/-/moment-2.29.4.tgz"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 ms@2.1.2:
   version "2.1.2"

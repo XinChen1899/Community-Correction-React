@@ -1,10 +1,15 @@
 import { Button, Card, DatePicker, Form, Input, Modal, Select, Upload } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 import { Space } from "antd/lib";
 import { UploadOutlined } from "@ant-design/icons";
+import axios from "axios";
+import moment from "moment";
+import { IEInfo2 } from "@/entity/IE/IEInfo2";
+import dayjs from "dayjs";
+import { getDate, saveData, updateData } from "@/api/ie";
 
 const { TextArea } = Input;
 
@@ -12,16 +17,19 @@ interface ITaskInfoModal {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	selectTask: DataType;
+	tableUpdate: any;
+	setTableUpdate: any;
+	taskUpdate: any;
+	setTaskUpdate: any;
 }
 
 export default function TaskModifyModal(props: ITaskInfoModal) {
-	const { open, setOpen, selectTask } = props;
+	const { open, setOpen, selectTask, setTableUpdate, tableUpdate, taskUpdate, setTaskUpdate } = props;
 
-
-	// todo 根据WTBH获取IEInfo 和IEVisitInfo
-	const ieInfo: IEInfo = {
+	const wtbh = selectTask.wtbh;
+	const tempIeInfo: IEInfo2 = {
 		bdcpgrdlx: "",
-		bgrcsrq: "",
+		bgrcsrq: dayjs(),
 		bgrgzdw: "",
 		bgrjzddz: "",
 		bgrsfzh: "",
@@ -33,18 +41,39 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		fjx: "",
 		nsyjzlb: "",
 		pjjg: "",
-		pjrq: "",
+		pjrq: dayjs(),
 		wtdch: "",
 		wtdw: "",
 		ypxf: "",
 		ypxq: "",
-		ypxqjsrq: "",
-		ypxqksrq: "",
+		ypxqjsrq: dayjs(),
+		ypxqksrq: dayjs(),
 		zm: "",
 
 		wtbh: selectTask.wtbh,
 		bgrxm: selectTask.name
 	};
+	const [ieInfo, setIeInfo] = useState<IEInfo2>(tempIeInfo);
+	const [confirmLoading, setConfirmLoading] = useState(false);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await axios.get(`http://localhost:9006/ie/${wtbh}`);
+			const temp: IEInfo = result.data;
+			const data: IEInfo2 = result.data;
+			data.bgrcsrq = dayjs(temp.bgrcsrq);
+			data.ypxqjsrq = dayjs(temp.ypxqjsrq);
+			data.ypxqksrq = dayjs(temp.ypxqksrq);
+			data.pjrq = dayjs(temp.pjrq);
+			setIeInfo(data);
+		};
+		fetchData();
+		console.log("Modify: Get IEInfo");
+		console.log(ieInfo);
+	}, [wtbh, taskUpdate]);
+
+	// todo 根据WTBH获取IEInfo 和IEVisitInfo
+
 	const ieVisitInfo: IEVisitInfo = {
 		bdcrxm: selectTask.name,
 		dcdd: "",
@@ -66,21 +95,32 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		form2.setFieldsValue(ieVisitInfo);
 	});
 
-	const onFinish = (values: any) => {
+	const onFinish = async (values: any) => {
 		const info = values as IEInfo;
-		console.log(info);
 
-		// todo 提交给数据库
+		info.pjrq = getDate(values.pjrq);
+		info.ypxqjsrq = getDate(values.ypxqjsrq);
+		info.bgrcsrq = getDate(values.bgrcsrq);
+		info.ypxqksrq = getDate(values.ypxqksrq);
+		await updateData(info);
+		setTableUpdate(!tableUpdate);
+		setTaskUpdate(!taskUpdate);
 	};
 
 	const handleOk = () => {
 		form.submit();
 		form2.submit();
+		setConfirmLoading(true);
+		setTimeout(() => {
+			setOpen(false);
+			setConfirmLoading(false);
+		}, 1000);
 	};
 	// 点击对话框的取消按钮
 	const handleCancel = () => {
 		setOpen(false);
 	};
+
 
 	return (
 		<Modal
@@ -90,14 +130,15 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 			title={"修改" + selectTask.name + "的调查评估信息"}
 			onOk={handleOk}
 			onCancel={handleCancel}
-			footer={[
-				<Button key="back" onClick={handleCancel}>
-					返回
-				</Button>,
-				<Button type={"primary"} onClick={handleOk}>
-					更新
-				</Button>
-			]}
+			confirmLoading={confirmLoading}
+			// footer={[
+			// 	<Button key="back" onClick={handleCancel}>
+			// 		返回
+			// 	</Button>,
+			// 	<Button type={"primary"} onClick={handleOk}>
+			// 		更新
+			// 	</Button>
+			// ]}
 		>
 			<Space direction={"vertical"}>
 				<Card title={"调查评估信息表"} style={{ width: "900px" }}>
@@ -122,7 +163,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 							</Select>
 						</Form.Item>
 						<Form.Item name={"bgrxm"} label="被调查评估对象姓名">
-							<Input placeholder={"请输入姓名"} defaultValue={ieInfo.bgrxm} />
+							<Input placeholder={"请输入姓名"} />
 						</Form.Item>
 						<Form.Item name={"bgrxb"} label="被调查评估对象性别" initialValue={"male"}>
 							<Select defaultValue="男" style={{ width: 120 }}>

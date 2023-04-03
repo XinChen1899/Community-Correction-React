@@ -4,12 +4,12 @@ import { UploadOutlined } from "@ant-design/icons";
 
 import "@/entity/IE/IEInfo";
 import { IEInfo } from "@/entity/IE/IEInfo";
-import axios from "axios";
+import { getDate, saveData } from "@/api/ie";
 
 const { TextArea } = Input;
 
-const TaskAddModal = (props: { open: boolean, setOpen: any }) => {
-	const { setOpen, open } = props;
+const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any }) => {
+	const { setOpen, open, setTableUpdate } = props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
@@ -19,37 +19,22 @@ const TaskAddModal = (props: { open: boolean, setOpen: any }) => {
 	};
 
 	const handleOk = () => {
-
 		setConfirmLoading(true);
 		form.submit();
 		setTimeout(() => {
 			setOpen(false);
 			setConfirmLoading(false);
-		}, 1500);
+			setTableUpdate(true);
+		}, 1000);
 	};
 
-	const getDate = (date: any) => {
-		return `${date.year()}/${date.month()}/${date.day()}`;
-	};
-	const saveData = async (data: IEInfo) => {
-		const result = await axios({
-			url: "/ie/save",
-			data,
-			method: "post",
-			headers: { "Access-Control-Allow-Origin": "*" }
-		});
-		console.log(result);
-	};
 	const onFinish = async (values: any) => {
 		const tempInfo = values as IEInfo;
-		tempInfo.pjrq = getDate(tempInfo.pjrq);
-		tempInfo.ypxqjsrq = getDate(tempInfo.ypxqjsrq);
-		tempInfo.bgrcsrq = getDate(tempInfo.bgrcsrq);
-		tempInfo.ypxqksrq = getDate(tempInfo.ypxqksrq);
-		// setInfo(tempInfo);
-		console.log(tempInfo);
+		tempInfo.pjrq = getDate(values.pjrq);
+		tempInfo.ypxqjsrq = getDate(values.ypxqjsrq);
+		tempInfo.bgrcsrq = getDate(values.bgrcsrq);
+		tempInfo.ypxqksrq = getDate(values.ypxqksrq);
 		await saveData(tempInfo);
-		// console.log(info);
 	};
 
 

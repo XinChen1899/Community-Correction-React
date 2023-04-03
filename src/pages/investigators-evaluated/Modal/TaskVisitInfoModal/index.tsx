@@ -1,21 +1,15 @@
-import { Button, Card, Modal, Row, Steps } from "antd";
-import { CheckCircleOutlined, LoadingOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Card, Modal } from "antd";
 import React from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import TaskInfo from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal/TaskInfo";
 import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 
-interface ITaskInfoModal {
-	open: boolean;
-	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	selectTask: DataType;
-}
 
 export default function TaskVisitInfoModal(props: {
 	open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-	selectTask: DataType
+	selectTask: DataType, taskUpdate: boolean
 }) {
-	const { open, setOpen, selectTask } = props;
+	const { open, setOpen, selectTask, taskUpdate } = props;
 	// todo 发起api请求获取调查评估走访信息（根据委托编号）
 	const info: IEVisitInfo = {
 		bdcrxm: selectTask.name,

@@ -23,9 +23,10 @@ export default function IE() {
 	const [selectTask, setSelectTask] = useState<DataType>({
 		isFinished: false,
 		wtbh: "0",
-		name: "null",
-		sex: ""
+		name: "null"
 	});
+
+	const [tableUpdate, setTableUpdate] = useState(false);
 
 
 	// To disable submit button at the beginning.
@@ -49,11 +50,14 @@ export default function IE() {
 					</h2>
 					{/* 操作区 */}
 					<div style={{ padding: "0px 15px" }}>
-						<TaskOperatorForm />
+						<TaskOperatorForm setTableUpdate={setTableUpdate} />
 					</div>
 
 					{/* 显示调查报告的列表 */}
-					<TaskForm selectTask={selectTask} setSelectTask={setSelectTask} />
+					<TaskForm selectTask={selectTask} setSelectTask={setSelectTask}
+							  tableUpdate={tableUpdate}
+							  setTableUpdate={setTableUpdate}
+					/>
 
 				</Space>
 

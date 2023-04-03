@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, DatePicker, Form, Input, Modal, Select, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import "@/entity/IE/IEInfo";
 import { IEInfo } from "@/entity/IE/IEInfo";
-import { getDate, saveData } from "@/api/ie";
+import { getDate, saveIEInfoData, saveIEVisInfoData } from "@/api/ie";
+import dayjs from "dayjs";
+import axios from "axios";
 
 const { TextArea } = Input;
 
-const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any }) => {
-	const { setOpen, open, setTableUpdate } = props;
+const TaskAddModal = (props: {
+	open: boolean, setOpen: any,
+	tableUpdate: boolean,
+	setTableUpdate: any
+}) => {
+	const { setOpen, open, setTableUpdate, tableUpdate } = props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
+
+	const [wtbh, setWTBH] = useState("00000000");
 
 	const handleCancel = () => {
 		setOpen(false);
@@ -27,6 +35,19 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 			setTableUpdate(true);
 		}, 1000);
 	};
+	const getWTBH = (ieInfoCounts: number) => {
+		const s = ieInfoCounts.toString();
+		const len = 8 - s.length;
+		return "0".repeat(len) + s;
+	};
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await axios.get(`http://localhost:9006/ie/count`);
+			setWTBH(getWTBH(result.data));
+			console.log("Get WTBH: " + wtbh);
+		};
+		fetchData();
+	}, [tableUpdate]);
 
 	const onFinish = async (values: any) => {
 		const tempInfo = values as IEInfo;
@@ -34,7 +55,17 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 		tempInfo.ypxqjsrq = getDate(values.ypxqjsrq);
 		tempInfo.bgrcsrq = getDate(values.bgrcsrq);
 		tempInfo.ypxqksrq = getDate(values.ypxqksrq);
-		await saveData(tempInfo);
+		await saveIEInfoData(tempInfo);
+		await saveIEVisInfoData({
+			bdcrxm: tempInfo.bgrxm,
+			dcdd: "",
+			dcdwsfs: "",
+			dcr: "",
+			dcsj: getDate(dayjs()),
+			dcsx: "",
+			wtbh: tempInfo.wtbh,
+			ybgrgx: ""
+		});
 	};
 
 
@@ -47,8 +78,19 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 			   onOk={handleOk}
 		>
 			<Card title={"调查评估信息表"}>
-				<Form form={form} onFinish={onFinish}>
-					<Form.Item name={"wtbh"} initialValue={"00000001"} label={"委托编号"}>
+				<Form form={form} onFinish={onFinish}
+					  initialValues={{
+						  "wtbh": wtbh,
+						  "bdcpgrdlx": "01",
+						  "bgrxb": "male",
+						  "zm": "01",
+						  "ypxf": "01",
+						  "fjx": "99",
+						  "pjjg": "01",
+						  "nsyjzlb": "02"
+					  }}
+				>
+					<Form.Item name={"wtbh"} label={"委托编号"}>
 						<Input disabled={false} />
 					</Form.Item>
 					<Form.Item name={"wtdw"} label="委托单位">
@@ -57,7 +99,7 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 					<Form.Item name={"wtdch"} label="委托调查函">
 						<TextArea placeholder={"请输入委托调查函"} />
 					</Form.Item>
-					<Form.Item name={"bdcpgrdlx"} label="被调查评估对象的类型" initialValue={"01"}>
+					<Form.Item name={"bdcpgrdlx"} label="被调查评估对象的类型">
 						<Select defaultValue="被告人" style={{ width: 120 }}>
 							<Select.Option value="01">被告人</Select.Option>
 							<Select.Option value="02">罪犯</Select.Option>
@@ -67,7 +109,7 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 					<Form.Item name={"bgrxm"} label="被调查评估对象姓名">
 						<Input placeholder={"请输入姓名"} />
 					</Form.Item>
-					<Form.Item name={"bgrxb"} label="被调查评估对象性别" initialValue={"male"}>
+					<Form.Item name={"bgrxb"} label="被调查评估对象性别">
 						<Select defaultValue="男" style={{ width: 120 }}>
 							<Select.Option value="male">男</Select.Option>
 							<Select.Option value="female">女</Select.Option>
@@ -85,7 +127,7 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 					<Form.Item name={"bgrgzdw"} label="被调查评估对象工作单位">
 						<Input placeholder={"请输入工作单位"} />
 					</Form.Item>
-					<Form.Item name={"zm"} label="罪名" initialValue={"01"}>
+					<Form.Item name={"zm"} label="罪名">
 						<Select defaultValue="危害国家安全" style={{ width: 230 }}>
 							<Select.Option value="01">危害国家安全</Select.Option>
 							<Select.Option value="02">危害公共安全</Select.Option>
@@ -108,7 +150,7 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 					<Form.Item name={"ypxqjsrq"} label="原判刑期结束日期">
 						<DatePicker />
 					</Form.Item>
-					<Form.Item name={"ypxf"} label="原判刑罚" initialValue={"01"}>
+					<Form.Item name={"ypxf"} label="原判刑罚">
 						<Select defaultValue="死刑缓期两年执行" style={{ width: 170 }}>
 							<Select.Option value="01">死刑缓期两年执行</Select.Option>
 							<Select.Option value="02">无期徒刑</Select.Option>
@@ -117,7 +159,7 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 							<Select.Option value="05">管制</Select.Option>
 						</Select>
 					</Form.Item>
-					<Form.Item name={"fjx"} label="附加刑" initialValue={"99"}>
+					<Form.Item name={"fjx"} label="附加刑">
 						<Select defaultValue="无" style={{ width: 170 }}>
 							<Select.Option value="01">罚金</Select.Option>
 							<Select.Option value="02">剥夺政治权利</Select.Option>
@@ -127,7 +169,7 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 							<Select.Option value="99">其他</Select.Option>
 						</Select>
 					</Form.Item>
-					<Form.Item name={"pjjg"} label="判决机关" initialValue={"01"}>
+					<Form.Item name={"pjjg"} label="判决机关">
 						<Select defaultValue="人民法院" style={{ width: 170 }}>
 							<Select.Option value="01">人民法院</Select.Option>
 							<Select.Option value="02">公安机关</Select.Option>
@@ -137,7 +179,7 @@ const TaskAddModal = (props: { open: boolean, setOpen: any, setTableUpdate: any 
 					<Form.Item name={"pjrq"} label="判决日期">
 						<DatePicker />
 					</Form.Item>
-					<Form.Item name={"nsyjzlb"} label="拟适用矫正类别" initialValue={"02"}>
+					<Form.Item name={"nsyjzlb"} label="拟适用矫正类别">
 						<Select defaultValue="普通" style={{ width: 170 }}>
 							<Select.Option value="01">宽松</Select.Option>
 							<Select.Option value="02">普通</Select.Option>

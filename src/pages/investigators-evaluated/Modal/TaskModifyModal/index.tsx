@@ -9,7 +9,8 @@ import axios from "axios";
 import moment from "moment";
 import { IEInfo2 } from "@/entity/IE/IEInfo2";
 import dayjs from "dayjs";
-import { getDate, saveData, updateData } from "@/api/ie";
+import { getDate, saveIEInfoData, updateIEInfoData, updateIEVisInfoData } from "@/api/ie";
+import { IEVisitInfo2 } from "@/entity/IE/IEVisitInfo2";
 
 const { TextArea } = Input;
 
@@ -27,6 +28,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 	const { open, setOpen, selectTask, setTableUpdate, tableUpdate, taskUpdate, setTaskUpdate } = props;
 
 	const wtbh = selectTask.wtbh;
+
 	const tempIeInfo: IEInfo2 = {
 		bdcpgrdlx: "",
 		bgrcsrq: dayjs(),
@@ -53,7 +55,21 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		wtbh: selectTask.wtbh,
 		bgrxm: selectTask.name
 	};
+	const tempIeVisInfo: IEVisitInfo2 = {
+		bdcrxm: "",
+		dcdd: "",
+		dcdwsfs: "",
+		dcr: "",
+		dcsj: dayjs(),
+		dcsx: "",
+		wtbh: "",
+		ybgrgx: ""
+	};
+
+
 	const [ieInfo, setIeInfo] = useState<IEInfo2>(tempIeInfo);
+	const [ieVisInfo, setIEVisInfo] = useState<IEVisitInfo2>(tempIeVisInfo);
+
 	const [confirmLoading, setConfirmLoading] = useState(false);
 
 	useEffect(() => {
@@ -70,20 +86,18 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		fetchData();
 		console.log("Modify: Get IEInfo");
 		console.log(ieInfo);
+
+		const fetchData2 = async () => {
+			const result = await axios.get(`http://localhost:9006/ie/vis/${wtbh}`);
+			const temp: IEVisitInfo = result.data;
+			const data: IEVisitInfo2 = result.data;
+			data.dcsj = dayjs(temp.dcsj);
+			setIEVisInfo(data);
+		};
+		fetchData2();
+		console.log("Modify: Get IEVisInfo");
+		console.log(ieVisInfo);
 	}, [wtbh, taskUpdate]);
-
-	// todo 根据WTBH获取IEInfo 和IEVisitInfo
-
-	const ieVisitInfo: IEVisitInfo = {
-		bdcrxm: selectTask.name,
-		dcdd: "",
-		dcdwsfs: "",
-		dcr: "谢毓佺",
-		dcsj: "",
-		dcsx: "",
-		wtbh: selectTask.wtbh,
-		ybgrgx: ""
-	};
 
 	const [form] = Form.useForm();
 	const [form2] = Form.useForm();
@@ -92,7 +106,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		form.resetFields();
 		form.setFieldsValue(ieInfo);
 		form2.resetFields();
-		form2.setFieldsValue(ieVisitInfo);
+		form2.setFieldsValue(ieVisInfo);
 	});
 
 	const onFinish = async (values: any) => {
@@ -102,7 +116,16 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		info.ypxqjsrq = getDate(values.ypxqjsrq);
 		info.bgrcsrq = getDate(values.bgrcsrq);
 		info.ypxqksrq = getDate(values.ypxqksrq);
-		await updateData(info);
+		await updateIEInfoData(info);
+		setTableUpdate(!tableUpdate);
+		setTaskUpdate(!taskUpdate);
+	};
+
+	const onFinish2 = async (values: any) => {
+		const info = values as IEVisitInfo;
+		info.wtbh = selectTask.wtbh;
+		info.dcsj = getDate(values.dcsj);
+		await updateIEVisInfoData(info);
 		setTableUpdate(!tableUpdate);
 		setTaskUpdate(!taskUpdate);
 	};
@@ -131,14 +154,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 			onOk={handleOk}
 			onCancel={handleCancel}
 			confirmLoading={confirmLoading}
-			// footer={[
-			// 	<Button key="back" onClick={handleCancel}>
-			// 		返回
-			// 	</Button>,
-			// 	<Button type={"primary"} onClick={handleOk}>
-			// 		更新
-			// 	</Button>
-			// ]}
 		>
 			<Space direction={"vertical"}>
 				<Card title={"调查评估信息表"} style={{ width: "900px" }}>
@@ -265,7 +280,8 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 				<Card title={"调查评估走访信息表"}>
 					<Form
 						form={form2}
-						initialValues={ieVisitInfo}
+						initialValues={ieVisInfo}
+						onFinish={onFinish2}
 					>
 						<Form.Item name={"bdcrxm"} label="被调查人姓名">
 							<Input placeholder={"请输入姓名"} />

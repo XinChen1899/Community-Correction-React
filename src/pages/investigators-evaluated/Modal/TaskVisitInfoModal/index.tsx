@@ -1,8 +1,10 @@
 import { Button, Card, Modal } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
 import TaskInfo from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal/TaskInfo";
 import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
+import { IEInfo } from "@/entity/IE/IEInfo";
+import axios from "axios";
 
 
 export default function TaskVisitInfoModal(props: {
@@ -11,7 +13,7 @@ export default function TaskVisitInfoModal(props: {
 }) {
 	const { open, setOpen, selectTask, taskUpdate } = props;
 	// todo 发起api请求获取调查评估走访信息（根据委托编号）
-	const info: IEVisitInfo = {
+	const tempInfo: IEVisitInfo = {
 		bdcrxm: selectTask.name,
 		dcdd: "",
 		dcdwsfs: "",
@@ -21,13 +23,22 @@ export default function TaskVisitInfoModal(props: {
 		wtbh: selectTask.wtbh,
 		ybgrgx: ""
 	};
-
+	const [info, setInfo] = useState<IEVisitInfo>(tempInfo);
 	const handleOk = () => {
 
 	};
 	const handleCancel = () => {
 		setOpen(false);
 	};
+	const { wtbh } = selectTask;
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await axios.get(`http://localhost:9006/ie/vis/${wtbh}`);
+			setInfo(result.data);
+		};
+		fetchData();
+		console.log("Get IEVisitInfo: " + info);
+	}, [wtbh, taskUpdate]);
 
 	return (
 		<Modal

@@ -50,7 +50,7 @@ export default function IE() {
 					</h2>
 					{/* 操作区 */}
 					<div style={{ padding: "0px 15px" }}>
-						<TaskOperatorForm setTableUpdate={setTableUpdate} />
+						<TaskOperatorForm tableUpdate={tableUpdate} setTableUpdate={setTableUpdate} />
 					</div>
 
 					{/* 显示调查报告的列表 */}

@@ -1,7 +1,8 @@
 import { Button, Card, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
-import TaskInfo from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal/TaskInfo";
+import TaskInfo
+	from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal/TaskInfo";
 import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import axios from "axios";
@@ -12,7 +13,7 @@ export default function TaskVisitInfoModal(props: {
 	selectTask: DataType, taskUpdate: boolean
 }) {
 	const { open, setOpen, selectTask, taskUpdate } = props;
-	// todo 发起api请求获取调查评估走访信息（根据委托编号）
+
 	const tempInfo: IEVisitInfo = {
 		bdcrxm: selectTask.name,
 		dcdd: "",
@@ -25,11 +26,11 @@ export default function TaskVisitInfoModal(props: {
 	};
 	const [info, setInfo] = useState<IEVisitInfo>(tempInfo);
 	const handleOk = () => {
-
 	};
 	const handleCancel = () => {
 		setOpen(false);
 	};
+	
 	const { wtbh } = selectTask;
 	useEffect(() => {
 		const fetchData = async () => {
@@ -37,7 +38,6 @@ export default function TaskVisitInfoModal(props: {
 			setInfo(result.data);
 		};
 		fetchData();
-		console.log("Get IEVisitInfo: " + info);
 	}, [wtbh, taskUpdate]);
 
 	return (
@@ -48,11 +48,6 @@ export default function TaskVisitInfoModal(props: {
 			title={selectTask.name + "的调查走访信息"}
 			onOk={handleOk}
 			onCancel={handleCancel}
-			footer={[
-				<Button key="back" onClick={handleCancel}>
-					返回
-				</Button>
-			]}
 		>
 			<Card>
 				<TaskInfo info={info} />

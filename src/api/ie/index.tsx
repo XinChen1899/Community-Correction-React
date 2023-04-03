@@ -1,11 +1,8 @@
 import { IEInfo } from "@/entity/IE/IEInfo";
 import axios from "axios";
-import { Dayjs } from "dayjs";
 import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 
-export const getDate = (date: Dayjs) => {
-	return `${date.year()}/${date.month() + 1}/${date.date()}`;
-};
+
 export const saveIEInfoData = async (data: IEInfo) => {
 	const result = await axios({
 		url: "/ie/save",

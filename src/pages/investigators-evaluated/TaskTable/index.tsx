@@ -1,11 +1,18 @@
 import Table, { ColumnsType, ColumnType } from "antd/es/table";
-import { Button, Input, InputRef, Space } from "antd";
+import { Button, Input, InputRef, Popconfirm, Space } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd/lib";
-import { CheckCircleOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import TaskVisitInfoModal from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal";
-import TaskInfoModal from "@/pages/investigators-evaluated/Modal/TaskInfoModal";
-import TaskModifyModal from "@/pages/investigators-evaluated/Modal/TaskModifyModal";
+import {
+	CheckCircleOutlined, DeleteOutlined, EditOutlined,
+	LoadingOutlined,
+	SearchOutlined
+} from "@ant-design/icons";
+import TaskVisitInfoModal
+	from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal";
+import TaskInfoModal
+	from "@/pages/investigators-evaluated/Modal/TaskInfoModal";
+import TaskModifyModal
+	from "@/pages/investigators-evaluated/Modal/TaskModifyModal";
 import { FilterConfirmProps } from "antd/es/table/interface";
 // @ts-ignore
 import Highlighter from "react-highlight-words";
@@ -36,7 +43,12 @@ const ieInfo2DataType = (infoList: IEInfo[]) => {
 	});
 };
 export default function TaskForm(props: ITaskForm) {
-	const { selectTask, setSelectTask, tableUpdate, setTableUpdate } = props;
+	const {
+		selectTask,
+		setSelectTask,
+		tableUpdate,
+		setTableUpdate
+	} = props;
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openVisit, setOpenVisit] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
@@ -46,16 +58,15 @@ export default function TaskForm(props: ITaskForm) {
 
 	const fetchData = () => {
 		axios.get("http://localhost:9006/ie/all")
-			.then((res) => {
-				// setInfoList(res.data);
-				setTableData(ieInfo2DataType(res.data));
-			});
+			 .then((res) => {
+				 setTableData(ieInfo2DataType(res.data));
+			 });
 	};
 
 	useEffect(() => {
 		fetchData();
-		console.log(tableData);
 	}, [tableUpdate]);
+
 	const showInfoModal = () => {
 		setOpenInfo(true);
 	};
@@ -90,8 +101,15 @@ export default function TaskForm(props: ITaskForm) {
 	};
 
 	const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
-		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-			<div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+		filterDropdown: ({
+							 setSelectedKeys,
+							 selectedKeys,
+							 confirm,
+							 clearFilters,
+							 close
+						 }) => (
+			<div style={{ padding: 8 }}
+				 onKeyDown={(e) => e.stopPropagation()}>
 				<Input
 					ref={searchInput}
 					placeholder={`Search ${dataIndex}`}
@@ -141,7 +159,8 @@ export default function TaskForm(props: ITaskForm) {
 			</div>
 		),
 		filterIcon: (filtered: boolean) => (
-			<SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+			<SearchOutlined
+				style={{ color: filtered ? "#1890ff" : undefined }} />
 		),
 		onFilter: (value, record) =>
 			record[dataIndex]
@@ -156,7 +175,10 @@ export default function TaskForm(props: ITaskForm) {
 		render: (text) =>
 			searchedColumn === dataIndex ? (
 				<Highlighter
-					highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+					highlightStyle={{
+						backgroundColor: "#ffc069",
+						padding: 0
+					}}
 					searchWords={[searchText]}
 					autoEscape
 					textToHighlight={text ? text.toString() : ""}
@@ -165,6 +187,10 @@ export default function TaskForm(props: ITaskForm) {
 				text
 			)
 	});
+
+	const confirm = () => {
+		console.log('delete')
+	}
 
 
 	const columns: ColumnsType<DataType> = [
@@ -176,8 +202,10 @@ export default function TaskForm(props: ITaskForm) {
 			render: (_, record) => {
 				const { isFinished } = record;
 				let loading;
-				if (isFinished) loading = <Spin indicator={<LoadingOutlined />} />;
-				else loading = <Spin indicator={<CheckCircleOutlined />} />;
+				if (!isFinished) loading =
+					<Spin indicator={<LoadingOutlined />} />;
+				else loading =
+					<Spin indicator={<CheckCircleOutlined />} />;
 				return loading;
 			}
 		},
@@ -187,14 +215,12 @@ export default function TaskForm(props: ITaskForm) {
 			key: "wtbh",
 			width: 150,
 			...getColumnSearchProps("wtbh")
-
 		},
 		{
 			title: "姓名",
 			dataIndex: "name",
 			key: "name",
 			width: 150,
-			render: (text) => <a>{text}</a>,
 			...getColumnSearchProps("name")
 		},
 		{
@@ -209,9 +235,24 @@ export default function TaskForm(props: ITaskForm) {
 			column.render = (_, record) => {
 				return (
 					<Space size="middle">
-						<Button type={"primary"} onClick={showInfoModal}>调查评估信息表</Button>
-						<Button type={"primary"} onClick={showVisitModal}>调查评估走访信息</Button>
-						<Button type={"primary"} onClick={showModifyModel}>修改信息</Button>
+						<Button type={"dashed"}
+								onClick={showInfoModal}>调查评估信息表</Button>
+						<Button type={"dashed"}
+								onClick={showVisitModal}>调查评估走访信息</Button>
+						<Button type={"dashed"} danger
+								icon={<EditOutlined />}
+								onClick={showModifyModel}>修改信息</Button>
+
+						<Popconfirm
+							title="是否删除"
+							description="是否删除该调查评估信息！"
+							onConfirm={confirm}
+							onOpenChange={() => console.log("open change")}
+						>
+							<Button type={"primary"} danger
+									icon={<DeleteOutlined />}
+							>删除!</Button>
+						</Popconfirm>
 					</Space>
 				);
 			};
@@ -237,12 +278,14 @@ export default function TaskForm(props: ITaskForm) {
 						   selectTask={selectTask}
 						   taskUpdate={taskUpdate}
 			/>
-			<TaskVisitInfoModal open={openVisit} setOpen={setOpenVisit}
+			<TaskVisitInfoModal open={openVisit}
+								setOpen={setOpenVisit}
 								selectTask={selectTask}
 								taskUpdate={taskUpdate}
 			/>
 			<TaskModifyModal open={openModify} setOpen={setOpenModify}
-							 selectTask={selectTask} setTableUpdate={setTableUpdate}
+							 selectTask={selectTask}
+							 setTableUpdate={setTableUpdate}
 							 setTaskUpdate={setTaskUpdate}
 							 tableUpdate={tableUpdate}
 							 taskUpdate={taskUpdate}

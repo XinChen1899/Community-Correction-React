@@ -2,8 +2,11 @@ import { Space } from "antd";
 
 import "react";
 import { useEffect, useState } from "react";
-import TaskForm, { DataType } from "@/pages/investigators-evaluated/TaskTable";
-import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
+import TaskForm, {
+	DataType
+} from "@/pages/investigators-evaluated/TaskTable";
+import TaskOperatorForm
+	from "@/pages/investigators-evaluated/TaskOperatorForm";
 import useRequest from "@/api";
 
 /**
@@ -19,49 +22,37 @@ import useRequest from "@/api";
 
 export default function IE() {
 
-	const [, forceUpdate] = useState({});
 	const [selectTask, setSelectTask] = useState<DataType>({
 		isFinished: false,
-		wtbh: "0",
+		wtbh: "00000000",
 		name: "null"
 	});
-
+	// 是否需要更新表格
 	const [tableUpdate, setTableUpdate] = useState(false);
-
-
-	// To disable submit button at the beginning.
-	useEffect(() => {
-		forceUpdate({});
-	}, []);
-	// 表单提交后执行
-
+	// api测试
 	const result = useRequest("/ie/test", "get");
+
 	return (
 		<div>
-			<div>
-				<Space
-					direction="vertical"
-					size="middle"
-					style={{ display: "flex" }}
-				>
-					<h2>调查评估</h2>
-					<h2>
-						{result.result}
-					</h2>
-					{/* 操作区 */}
-					<div style={{ padding: "0px 15px" }}>
-						<TaskOperatorForm tableUpdate={tableUpdate} setTableUpdate={setTableUpdate} />
-					</div>
+			<Space
+				direction="vertical"
+				size="middle"
+				style={{ display: "flex" }}
+			>
+				<h2>调查评估 Test: {result.result}</h2>
+				{/* 操作区 */}
+				<div style={{ padding: "0px 15px" }}>
+					<TaskOperatorForm tableUpdate={tableUpdate}
+									  setTableUpdate={setTableUpdate} />
+				</div>
 
-					{/* 显示调查报告的列表 */}
-					<TaskForm selectTask={selectTask} setSelectTask={setSelectTask}
-							  tableUpdate={tableUpdate}
-							  setTableUpdate={setTableUpdate}
-					/>
-
-				</Space>
-
-			</div>
+				{/* 显示调查报告的列表 */}
+				<TaskForm selectTask={selectTask}
+						  setSelectTask={setSelectTask}
+						  tableUpdate={tableUpdate}
+						  setTableUpdate={setTableUpdate}
+				/>
+			</Space>
 		</div>
 	);
 }

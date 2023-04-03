@@ -1,8 +1,13 @@
-import { Button, Card, Modal, Row, Steps } from "antd";
-import { CheckCircleOutlined, LoadingOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Card, Modal, Row, Space, Steps } from "antd";
+import {
+	CheckCircleOutlined,
+	LoadingOutlined,
+	UserOutlined
+} from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DataType } from "@/pages/investigators-evaluated/TaskTable";
-import TaskInfo from "@/pages/investigators-evaluated/Modal/TaskInfoModal/TaskInfo";
+import TaskInfo
+	from "@/pages/investigators-evaluated/Modal/TaskInfoModal/TaskInfo";
 import axios from "axios";
 import { IEInfo } from "@/entity/IE/IEInfo";
 
@@ -52,10 +57,10 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 			setInfo(result.data);
 		};
 		fetchData();
-		console.log("Get IEInfo: " + info);
 	}, [wtbh, taskUpdate]);
-	const handleOk = () => {
 
+	const handleOk = () => {
+		setOpen(false);
 	};
 	// 点击对话框的取消按钮
 	const handleCancel = () => {
@@ -67,27 +72,20 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 			style={{ top: 20 }}
 			open={open}
 			width={1000}
-			title={selectTask.name + "的调查评估信息"}
 			onOk={handleOk}
 			onCancel={handleCancel}
-			footer={[
-				<Button key="back" onClick={handleCancel}>
-					返回
-				</Button>
-			]}
 		>
 			<Card>
-				<Row>
-					<Card>
-						<TaskInfo info={info === undefined ? temp : info} />
+				<Space direction={"vertical"}>
+					<Card hoverable style={{ width: "900px" }}>
+						<TaskInfo
+							info={info === undefined ? temp : info} />
 					</Card>
-				</Row>
 
-				<Row>
 					<Card
 						title="调查报告流程"
 						hoverable
-						style={{ width: "950px" }}
+						style={{ width: "900px" }}
 					>
 						<Steps
 							items={[
@@ -111,7 +109,8 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 							]}
 						/>
 					</Card>
-				</Row>
+				</Space>
+
 			</Card>
 		</Modal>
 	);

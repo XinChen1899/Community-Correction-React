@@ -1,6 +1,5 @@
 import { Card, Col, List, Row, Timeline } from "antd";
 import "react";
-import { SmileOutlined } from "@ant-design/icons";
 
 const techs = [
 	{
@@ -30,7 +29,7 @@ export default () => {
 						return (
 							<Col span={8} key={tech.id}>
 								<Card title={tech.title}
-									  bordered={false}>
+									bordered={false}>
 									<List
 										itemLayout="horizontal"
 										dataSource={tech.skills}
@@ -67,7 +66,7 @@ export default () => {
 								)
 							},
 							{
-								color: "red",
+								color: "green",
 								children: (
 									<>
 										<p>调查评估后端</p>

@@ -1,7 +1,6 @@
 import Home from "./home";
 import IE from "./investigators-evaluated";
 
-import { CorrectionPlan, CorrectionTeam } from "./income-correction";
+import WaitPeople from "@/pages/income-correction/WaitPeople";
 
-
-export { Home, IE, CorrectionPlan, CorrectionTeam };
+export { Home, IE, WaitPeople };

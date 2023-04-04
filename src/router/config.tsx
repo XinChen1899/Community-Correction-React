@@ -1,11 +1,12 @@
-import { CorrectionPlan, CorrectionTeam, Home, IE } from "@/pages";
+import { Home, IE } from "@/pages";
 import { Route } from "react-router-dom";
 import {
 	HomeOutlined,
 	PieChartOutlined,
-	SearchOutlined
+	SearchOutlined,
 } from "@ant-design/icons";
 import React from "react";
+import { WaitPeople } from "@/pages";
 
 interface IPageItem {
 	id: string;
@@ -27,7 +28,7 @@ function getPageItem(
 	return {
 		id,
 		title,
-		component
+		component,
 	} as IPageItem;
 }
 
@@ -39,7 +40,7 @@ function getRouterItem(
 	return {
 		page,
 		children,
-		icon
+		icon,
 	} as IRouterItem;
 }
 
@@ -47,12 +48,11 @@ function getRouterItem(
 export const routeNameMap = {
 	home: "首页",
 	ie: "调查评估",
-	ieInfo: "调查评估报告",
-	ieVisit: "调查评估走访信息",
-	incomeCorrection: "接受入矫",
+	ic: "接收入矫",
+	wait: "待入矫人员",
 	correctionPlan: "矫正方案",
 	correctionTeam: "矫正小组",
-	noExit: "不准出境"
+	noExit: "不准出境",
 };
 
 // todo: 优化
@@ -61,35 +61,25 @@ const pageMap = {
 	// 首页
 	home: getPageItem("home", routeNameMap.home, Home),
 	// 调查评估
-	ie: getPageItem(
-		"ie",
-		routeNameMap.ie,
-		IE
-	),
+	ie: getPageItem("ie", routeNameMap.ie, IE),
 	// -- 调查评估走访信息
 	// 接收入矫
-	incomeCorrection: getPageItem(
-		"incomeCorrection",
-		routeNameMap.incomeCorrection
-	),
-	// --矫正方案
-	correctionPlan: getPageItem(
-		"correctionPlan",
-		routeNameMap.incomeCorrection,
-		CorrectionPlan
-	),
-	// --矫正小组
-	correctionTeam: getPageItem(
-		"correctionTeam",
-		routeNameMap.incomeCorrection,
-		CorrectionTeam
-	),
+	ic: getPageItem("ic", routeNameMap.ic),
+	wait: getPageItem("wait", routeNameMap.wait, WaitPeople),
+	// // --矫正方案
+	// correctionPlan: getPageItem(
+	// 	"correctionPlan",
+	// 	routeNameMap.incomeCorrection,
+	// 	CorrectionPlan
+	// ),
+	// // --矫正小组
+	// correctionTeam: getPageItem(
+	// 	"correctionTeam",
+	// 	routeNameMap.incomeCorrection,
+	// 	CorrectionTeam
+	// ),
 	// 不准出境
-	noExit: getPageItem(
-		"noExit",
-		routeNameMap.noExit,
-		IE
-	)
+	noExit: getPageItem("noExit", routeNameMap.noExit, IE),
 
 	//    "classify":        getPageItem("classify", "分类管理", Investigatorsevaluated),
 	//    "home1":        getPageItem("home1", "个别化矫正", Home),
@@ -103,17 +93,13 @@ const pageMap = {
 // 2. 添加路由
 const routerItems: IRouterItem[] = [
 	getRouterItem(pageMap["home"], undefined, <HomeOutlined />),
+	getRouterItem(pageMap["ie"], undefined, <SearchOutlined />),
 	getRouterItem(
-		pageMap["ie"],
-		undefined,
-		<SearchOutlined />
-	),
-	getRouterItem(
-		pageMap["incomeCorrection"],
-		[pageMap["correctionPlan"], pageMap["correctionTeam"]],
+		pageMap["ic"],
+		[pageMap["wait"]],
 		<PieChartOutlined />
 	),
-	getRouterItem(pageMap["noExit"], undefined, <PieChartOutlined />)
+	getRouterItem(pageMap["noExit"], undefined, <PieChartOutlined />),
 	// getRouterItem("classify", "分类管理", SearchEvalute, []),
 	// getRouterItem("classify", "个别化矫正", SearchEvalute, []),
 	// getRouterItem("classify", "日常管理", SearchEvalute, []),

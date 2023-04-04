@@ -22,23 +22,3 @@ export const updateIEInfoData = async (data: IEInfo) => {
 	});
 	console.log(result);
 };
-
-export const saveIEVisInfoData = async (data: IEVisitInfo) => {
-	const result = await axios({
-		url: "/ie/vis/save",
-		data,
-		method: "post",
-		headers: { "Access-Control-Allow-Origin": "*" }
-	});
-	console.log(result);
-};
-
-export const updateIEVisInfoData = async (data: IEVisitInfo) => {
-	const result = await axios({
-		url: "/ie/vis/update",
-		data,
-		method: "post",
-		headers: { "Access-Control-Allow-Origin": "*" }
-	});
-	console.log(result);
-};

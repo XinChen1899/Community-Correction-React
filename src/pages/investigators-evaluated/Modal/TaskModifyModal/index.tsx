@@ -1,33 +1,29 @@
 import {
-	Button,
 	Card,
-	DatePicker,
 	Form,
 	Input,
-	Modal,
-	Select,
-	Upload
+	Modal
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { DataType } from "@/pages/investigators-evaluated/TaskTable";
+import {
+	DataType
+} from "@/pages/investigators-evaluated/Table";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 import { Space } from "antd/lib";
-import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { IEInfo2 } from "@/entity/IE/IEInfo2";
 import dayjs from "dayjs";
 import { updateIEInfoData, updateIEVisInfoData } from "@/api/ie";
 import { IEVisitInfo2 } from "@/entity/IE/IEVisitInfo2";
-import { getDate, IeFormConvert2IeInfo } from "@/coderepo/ie";
+import {
+	getDate,
+	IeFormConvert2IeInfo
+} from "@/coderepo/ie";
 import {
 	IEInfoForm
 } from "@/pages/investigators-evaluated/Form/IEInfoForm";
-import {
-	IeVisitForm
-} from "@/pages/investigators-evaluated/Form/IEVisitForm";
-
-const { TextArea } = Input;
+import { GMessage } from "@/coderepo/msg/GMsg";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -37,6 +33,7 @@ interface ITaskInfoModal {
 	setTableUpdate: any;
 	taskUpdate: any;
 	setTaskUpdate: any;
+	gMsg: GMessage;
 }
 
 export default function TaskModifyModal(props: ITaskInfoModal) {
@@ -47,7 +44,8 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		setTableUpdate,
 		tableUpdate,
 		taskUpdate,
-		setTaskUpdate
+		setTaskUpdate,
+		gMsg
 	} = props;
 
 	const { wtbh } = selectTask;
@@ -77,21 +75,8 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		wtbh: selectTask.wtbh,
 		bgrxm: selectTask.name
 	};
-	const tempIeVisInfo: IEVisitInfo2 = {
-		bdcrxm: "",
-		dcdd: "",
-		dcdwsfs: "",
-		dcr: "",
-		dcsj: dayjs(),
-		dcsx: "",
-		wtbh: "",
-		ybgrgx: ""
-	};
-
 
 	const [ieInfo, setIeInfo] = useState<IEInfo2>(tempIeInfo);
-	const [ieVisInfo, setIEVisInfo] = useState<IEVisitInfo2>(tempIeVisInfo);
-
 	const [confirmLoading, setConfirmLoading] = useState(false);
 
 	useEffect(() => {
@@ -107,14 +92,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		};
 		fetchData();
 
-		const fetchData2 = async () => {
-			const result = await axios.get(`http://localhost:9006/ie/vis/${wtbh}`);
-			const temp: IEVisitInfo = result.data;
-			const data: IEVisitInfo2 = result.data;
-			data.dcsj = dayjs(temp.dcsj);
-			setIEVisInfo(data);
-		};
-		fetchData2();
 	}, [wtbh, taskUpdate]);
 
 	const [form] = Form.useForm();
@@ -123,30 +100,19 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 	useEffect(() => {
 		form.resetFields();
 		form.setFieldsValue(ieInfo);
-		form2.resetFields();
-		form2.setFieldsValue(ieVisInfo);
 	});
 
 	const onFinish = async (values: any) => {
 		const info = IeFormConvert2IeInfo(values);
-
+		selectTask.name = info.bgrxm;
 		await updateIEInfoData(info);
 		setTableUpdate(!tableUpdate);
 		setTaskUpdate(!taskUpdate);
-	};
-
-	const onFinish2 = async (values: any) => {
-		const info = values as IEVisitInfo;
-		info.wtbh = selectTask.wtbh;
-		info.dcsj = getDate(values.dcsj);
-		await updateIEVisInfoData(info);
-		setTableUpdate(!tableUpdate);
-		setTaskUpdate(!taskUpdate);
+		gMsg.onSuccess("修改成功!");
 	};
 
 	const handleOk = () => {
 		form.submit();
-		form2.submit();
 		setConfirmLoading(true);
 		setTimeout(() => {
 			setOpen(false);
@@ -174,10 +140,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 					  style={{ width: "900px" }}>
 					<IEInfoForm form={form} onFinish={onFinish}
 								initialValues={ieInfo} />
-				</Card>
-				<Card title={"调查评估走访信息表"}>
-					<IeVisitForm form={form2} onFinish={onFinish2}
-								 initialValues={ieVisInfo} />
 				</Card>
 			</Space>
 

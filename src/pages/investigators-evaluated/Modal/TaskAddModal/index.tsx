@@ -6,26 +6,30 @@ import {
 } from "antd";
 
 import "@/entity/IE/IEInfo";
-import { saveIEInfoData, saveIEVisInfoData } from "@/api/ie";
-import dayjs from "dayjs";
+import { saveIEInfoData } from "@/api/ie";
 import {
 	IEInfoForm
 } from "@/pages/investigators-evaluated/Form/IEInfoForm";
-import { getDate, IeFormConvert2IeInfo } from "@/coderepo/ie";
+import {
+	IeFormConvert2IeInfo
+} from "@/coderepo/ie";
+import { GMessage } from "@/coderepo/msg/GMsg";
 
 
 const TaskAddModal = (props: {
 	open: boolean, setOpen: any,
 	tableUpdate: boolean,
 	setTableUpdate: any,
-	tableCount: number
+	tableCount: number,
+	gMsg: GMessage
 }) => {
 	const {
 		setOpen,
 		open,
 		setTableUpdate,
 		tableUpdate,
-		tableCount
+		tableCount,
+		gMsg
 	} = props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
@@ -62,16 +66,7 @@ const TaskAddModal = (props: {
 	const onFinish = async (values: any) => {
 		const tempInfo = IeFormConvert2IeInfo(values);
 		await saveIEInfoData(tempInfo);
-		await saveIEVisInfoData({
-			bdcrxm: tempInfo.bgrxm,
-			dcdd: "",
-			dcdwsfs: "",
-			dcr: "",
-			dcsj: getDate(dayjs()),
-			dcsx: "",
-			wtbh: tempInfo.wtbh,
-			ybgrgx: ""
-		});
+		gMsg.onSuccess("新增调查评估!");
 	};
 
 

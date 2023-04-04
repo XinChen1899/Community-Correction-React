@@ -3,9 +3,10 @@ import { Button, Card, Descriptions } from "antd";
 
 import { PlusOutlined } from "@ant-design/icons";
 import TaskAddModal
-	from "@/pages/investigators-evaluated/TaskOperatorForm/TaskAddModal";
+	from "@/pages/investigators-evaluated/Modal/TaskAddModal";
 import { IEData } from "@/entity/IE/IEData";
 import axios from "axios";
+import { GMessage } from "@/coderepo/msg/GMsg";
 
 /*
  * 调查评估任务表的操作表单
@@ -14,9 +15,9 @@ import axios from "axios";
 
 
 export default function TaskOperatorForm(
-	props: { tableUpdate: boolean, setTableUpdate: any }) {
+	props: { tableUpdate: boolean, setTableUpdate: any, gMsg: GMessage }) {
 
-	const { tableUpdate, setTableUpdate } = props;
+	const { tableUpdate, setTableUpdate, gMsg } = props;
 
 	const [addModalOpen, setAddModalOpen] = useState(false);
 	const [infoCount, setInfoCount] = useState(0);
@@ -43,6 +44,7 @@ export default function TaskOperatorForm(
 						  tableUpdate={tableUpdate}
 						  setTableUpdate={setTableUpdate}
 						  tableCount={infoCount}
+						  gMsg={gMsg}
 			/>
 			<Card title={"调查评估操作区"} extra={<>
 				<Button onClick={() => setAddModalOpen(true)}

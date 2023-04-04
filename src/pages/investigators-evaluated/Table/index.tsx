@@ -7,8 +7,7 @@ import {
 	LoadingOutlined,
 	SearchOutlined
 } from "@ant-design/icons";
-import TaskVisitInfoModal
-	from "@/pages/investigators-evaluated/Modal/TaskVisitInfoModal";
+
 import TaskInfoModal
 	from "@/pages/investigators-evaluated/Modal/TaskInfoModal";
 import TaskModifyModal
@@ -18,6 +17,7 @@ import { FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import axios from "axios";
 import { IEInfo } from "@/entity/IE/IEInfo";
+import { GMessage } from "@/coderepo/msg/GMsg";
 
 // 调查评估表 元组的数据类型
 export interface DataType {
@@ -30,7 +30,8 @@ interface ITaskForm {
 	selectTask: DataType;
 	setSelectTask: React.Dispatch<React.SetStateAction<DataType>>;
 	tableUpdate: boolean,
-	setTableUpdate: React.Dispatch<React.SetStateAction<boolean>>
+	setTableUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+	gMsg: GMessage
 }
 
 const ieInfo2DataType = (infoList: IEInfo[]) => {
@@ -47,10 +48,10 @@ export default function TaskForm(props: ITaskForm) {
 		selectTask,
 		setSelectTask,
 		tableUpdate,
-		setTableUpdate
+		setTableUpdate,
+		gMsg
 	} = props;
 	const [openInfo, setOpenInfo] = useState(false);
-	const [openVisit, setOpenVisit] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
 
 	const [tableData, setTableData] = useState<DataType[]>([]);
@@ -71,9 +72,6 @@ export default function TaskForm(props: ITaskForm) {
 		setOpenInfo(true);
 	};
 
-	const showVisitModal = () => {
-		setOpenVisit(true);
-	};
 
 	const showModifyModel = () => {
 		setOpenModify(true);
@@ -189,8 +187,8 @@ export default function TaskForm(props: ITaskForm) {
 	});
 
 	const confirm = () => {
-		console.log('delete')
-	}
+		console.log("delete");
+	};
 
 
 	const columns: ColumnsType<DataType> = [
@@ -237,8 +235,6 @@ export default function TaskForm(props: ITaskForm) {
 					<Space size="middle">
 						<Button type={"dashed"}
 								onClick={showInfoModal}>调查评估信息表</Button>
-						<Button type={"dashed"}
-								onClick={showVisitModal}>调查评估走访信息</Button>
 						<Button type={"dashed"} danger
 								icon={<EditOutlined />}
 								onClick={showModifyModel}>修改信息</Button>
@@ -278,17 +274,13 @@ export default function TaskForm(props: ITaskForm) {
 						   selectTask={selectTask}
 						   taskUpdate={taskUpdate}
 			/>
-			<TaskVisitInfoModal open={openVisit}
-								setOpen={setOpenVisit}
-								selectTask={selectTask}
-								taskUpdate={taskUpdate}
-			/>
 			<TaskModifyModal open={openModify} setOpen={setOpenModify}
 							 selectTask={selectTask}
 							 setTableUpdate={setTableUpdate}
 							 setTaskUpdate={setTaskUpdate}
 							 tableUpdate={tableUpdate}
 							 taskUpdate={taskUpdate}
+							 gMsg={gMsg}
 			/>
 		</>
 

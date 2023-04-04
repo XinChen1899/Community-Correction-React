@@ -1,6 +1,10 @@
 import { CorrectionPlan, CorrectionTeam, Home, IE } from "@/pages";
 import { Route } from "react-router-dom";
-import { HomeOutlined, PieChartOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+	HomeOutlined,
+	PieChartOutlined,
+	SearchOutlined
+} from "@ant-design/icons";
 import React from "react";
 
 interface IPageItem {
@@ -43,6 +47,8 @@ function getRouterItem(
 export const routeNameMap = {
 	home: "首页",
 	ie: "调查评估",
+	ieInfo: "调查评估报告",
+	ieVisit: "调查评估走访信息",
 	incomeCorrection: "接受入矫",
 	correctionPlan: "矫正方案",
 	correctionTeam: "矫正小组",
@@ -60,6 +66,7 @@ const pageMap = {
 		routeNameMap.ie,
 		IE
 	),
+	// -- 调查评估走访信息
 	// 接收入矫
 	incomeCorrection: getPageItem(
 		"incomeCorrection",

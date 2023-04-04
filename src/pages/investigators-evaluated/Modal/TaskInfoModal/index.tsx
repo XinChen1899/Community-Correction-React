@@ -5,7 +5,9 @@ import {
 	UserOutlined
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { DataType } from "@/pages/investigators-evaluated/TaskTable";
+import {
+	DataType
+} from "@/pages/investigators-evaluated/Table";
 import TaskInfo
 	from "@/pages/investigators-evaluated/Modal/TaskInfoModal/TaskInfo";
 import axios from "axios";

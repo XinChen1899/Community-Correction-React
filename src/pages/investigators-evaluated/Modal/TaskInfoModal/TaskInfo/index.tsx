@@ -1,10 +1,11 @@
 import React from "react";
 import { Descriptions } from "antd";
 import { IEInfo } from "@/entity/IE/IEInfo";
+import { transform } from "@/coderepo/ie";
 
 const TaskInfo = (props: { info: IEInfo }) => {
 	const { info } = props;
-	
+
 	return (
 		<Descriptions title="调查评估信息" bordered layout="vertical">
 			<Descriptions.Item label="委托编号">
@@ -18,7 +19,7 @@ const TaskInfo = (props: { info: IEInfo }) => {
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象的类型"
 			>
-				{info.bdcpgrdlx}
+				{transform("bdcpgrdlx", info.bdcpgrdlx)}
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象姓名"
 			>
@@ -30,7 +31,7 @@ const TaskInfo = (props: { info: IEInfo }) => {
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象性别"
 							   span={1.5}>
-				{info.bgrxb}
+				{transform("bgrxb", info.bgrxb)}
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象出生日期"
 			>
@@ -41,25 +42,38 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				{info.bgrjzddz}
 			</Descriptions.Item>}
 			<Descriptions.Item label="被调查评估对象工作单位"
-			>{info.bgrgzdw}</Descriptions.Item>
+			>{info.bgrgzdw}
+			</Descriptions.Item>
 			<Descriptions.Item label="罪名"
-			>{info.zm}</Descriptions.Item>
+			>{transform("zm", info.zm)}
+			</Descriptions.Item>
 			<Descriptions.Item label="原判判刑"
-			>{info.ypxq}</Descriptions.Item>
+			>{info.ypxq}
+			</Descriptions.Item>
 			<Descriptions.Item label="原判刑期开始日期"
 			>{info.ypxqksrq}</Descriptions.Item>
 			<Descriptions.Item label="原判刑期结束日期"
 			>{info.ypxqjsrq}</Descriptions.Item>
 			<Descriptions.Item label="原判刑罚"
-			>{info.ypxf}</Descriptions.Item>
+			>
+				{transform("ypxf", info.ypxf)}
+			</Descriptions.Item>
 			<Descriptions.Item label="附加邢"
-			>{info.fjx}</Descriptions.Item>
+			>
+				{transform("fjx", info.fjx)}
+			</Descriptions.Item>
 			<Descriptions.Item label="判决机关"
-			>{info.pjjg}</Descriptions.Item>
+			>
+				{transform("pjjg", info.pjjg)}
+			</Descriptions.Item>
 			<Descriptions.Item
-				label="判决日期">{info.pjrq}</Descriptions.Item>
+				label="判决日期">
+				{info.pjrq}
+			</Descriptions.Item>
 			<Descriptions.Item
-				label="拟使用矫正类别">{info.nsyjzlb}</Descriptions.Item>
+				label="拟使用矫正类别">
+				{transform("nsyjzlb", info.nsyjzlb)}
+			</Descriptions.Item>
 			<Descriptions.Item label="接收委托的县级社区矫正机构">
 				{info.dcdwxqj}
 			</Descriptions.Item>

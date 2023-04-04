@@ -11,7 +11,7 @@ const techs = [
 	{
 		id: 2,
 		title: "后端",
-		skills: ["SprintBoot", "SpringCloud", "MyBatis"]
+		skills: ["Sprint Boot", "Spring Cloud", "MyBatis-Plus"]
 	},
 	{
 		id: 3,
@@ -29,15 +29,16 @@ export default () => {
 					{techs.map((tech) => {
 						return (
 							<Col span={8} key={tech.id}>
-								<Card title={tech.title} bordered={false}>
+								<Card title={tech.title}
+									  bordered={false}>
 									<List
 										itemLayout="horizontal"
 										dataSource={tech.skills}
-										renderItem={(item) => (
-											<List.Item>
+										renderItem={(item, idx) => (
+											<List.Item key={idx}>
 												<List.Item.Meta
 													title={
-														<a href="##">
+														<a href="#">
 															{item}
 														</a>
 													}
@@ -66,7 +67,7 @@ export default () => {
 								)
 							},
 							{
-								color: "gray",
+								color: "red",
 								children: (
 									<>
 										<p>调查评估后端</p>

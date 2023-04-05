@@ -10,7 +10,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
 import { useState } from "react";
-import TemplateHome from "@/pages/template/TemplateHome";
+import TemplateHome from "@/template/TemplateHome";
 import RegisterModal from "./Modal/RegisterModal";
 import { GMessage } from "@/coderepo/msg/GMsg";
 import CrpInfoModal from "./Modal/CrpInfoModal";

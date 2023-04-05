@@ -3,10 +3,9 @@ import { Button, Space } from "antd";
 import "react";
 import { useState } from "react";
 import TaskForm, {
-	DataType
+	DataType,
 } from "@/pages/investigators-evaluated/Table";
-import TaskOperatorForm
-	from "@/pages/investigators-evaluated/TaskOperatorForm";
+import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
 import useRequest from "@/api";
 import { message } from "antd";
 
@@ -18,13 +17,11 @@ import { message } from "antd";
  * 3.查看流程节点记录。
  */
 
-
 export default function IE() {
-
 	const [selectTask, setSelectTask] = useState<DataType>({
 		isFinished: false,
 		wtbh: "00000000",
-		name: "null"
+		name: "null",
 	});
 	// 是否需要更新表格
 	const [tableUpdate, setTableUpdate] = useState(false);
@@ -36,14 +33,14 @@ export default function IE() {
 	const successMsg = (msg: string) => {
 		messageApi.open({
 			type: "success",
-			content: msg
+			content: msg,
 		});
 	};
 
 	const errorMsg = (msg: string) => {
 		messageApi.open({
 			type: "error",
-			content: msg
+			content: msg,
 		});
 	};
 
@@ -53,29 +50,30 @@ export default function IE() {
 			<Space
 				direction="vertical"
 				size="middle"
-				style={{ display: "flex" }}
-			>
+				style={{ display: "flex" }}>
 				<h2>调查评估 Test: {result.result}</h2>
 				{/* 操作区 */}
 				<div style={{ padding: "0px 15px" }}>
-					<TaskOperatorForm tableUpdate={tableUpdate}
-									  setTableUpdate={setTableUpdate}
-									  gMsg={{
-										  onSuccess: successMsg,
-										  onError: errorMsg
-									  }}
+					<TaskOperatorForm
+						tableUpdate={tableUpdate}
+						setTableUpdate={setTableUpdate}
+						gMsg={{
+							onSuccess: successMsg,
+							onError: errorMsg,
+						}}
 					/>
 				</div>
 
 				{/* 显示调查报告的列表 */}
-				<TaskForm selectTask={selectTask}
-						  setSelectTask={setSelectTask}
-						  tableUpdate={tableUpdate}
-						  setTableUpdate={setTableUpdate}
-						  gMsg={{
-							  onSuccess: successMsg,
-							  onError: errorMsg
-						  }}
+				<TaskForm
+					selectTask={selectTask}
+					setSelectTask={setSelectTask}
+					tableUpdate={tableUpdate}
+					setTableUpdate={setTableUpdate}
+					gMsg={{
+						onSuccess: successMsg,
+						onError: errorMsg,
+					}}
 				/>
 			</Space>
 		</div>

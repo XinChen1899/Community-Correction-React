@@ -1,10 +1,10 @@
 import Home from "./home";
 import IE from "./investigators-evaluated";
 
-import WaitPeople from "@/pages/income-correction/WaitPeople";
-import CorrectionTeam from "@/pages/income-correction/CorrectionTeam";
-import CorrectionPlan from "@/pages/income-correction/CorrectionPlan";
-import Worker from "./security/Woker";
+import WaitPeople from "@/pages/WaitPeople";
+import CorrectionTeam from "@/pages/CorrectionTeam";
+import CorrectionPlan from "@/pages/CorrectionPlan";
+import Worker from "./Woker";
 export {
 	Home,
 	IE,

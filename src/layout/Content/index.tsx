@@ -1,8 +1,7 @@
 import { Content } from "antd/es/layout/layout";
-import React from "react";
-import { routeNameMap } from "@/router/config";
 import { Breadcrumb } from "antd";
 import { useLocation } from "react-router-dom";
+import { routeNameMap } from "@/router";
 
 interface IContenterProps {
 	colorBgContainer: string;
@@ -19,13 +18,13 @@ function AppContent(props: IContenterProps) {
 	return (
 		<Content style={{ margin: "0 16px" }}>
 			<Breadcrumb style={{ margin: "16px 0" }}>
-				{pathList.map((item: string) => {
+				{pathList.map((item: string, idx: number) => {
 					return (
-						<Breadcrumb.Item key={item}>
+						<Breadcrumb.Item key={idx}>
 							{
 								routeNameMap[
 									item as keyof typeof routeNameMap
-									]
+								]
 							}
 						</Breadcrumb.Item>
 					);

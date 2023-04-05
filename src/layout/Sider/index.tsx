@@ -3,7 +3,7 @@ import Sider, { SiderTheme } from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import routerItems, { routeNameMap } from "@/router/config";
+import { routeTable } from "@/router";
 
 interface ISiderProps {
 	appTheme: SiderTheme;
@@ -22,40 +22,35 @@ function getItem(
 		icon,
 		children,
 		label,
-		title: label
+		title: label,
 	} as MenuItem;
 }
 
-function getChildItem(
-	childItem: string[],
-	parentKey: React.Key
-): MenuItem[] {
-	return childItem.map((label) =>
-		getItem(
-			routeNameMap[label as keyof typeof routeNameMap],
-			parentKey + "/" + label
-		)
-	);
-}
+const generateMenu = (routeTable: any[]) => {
+	const menus: MenuItem[] = [];
+	const menuChildren: MenuItem[] = [];
+	routeTable.forEach((route: any) => {
+		if (route.children.length) {
+			menuChildren.push(...generateMenu(route.children));
+			menus.push(
+				getItem(
+					route.page.title,
+					route.url,
+					route.icon,
+					menuChildren
+				)
+			);
+		} else {
+			menus.push(
+				getItem(route.page.title, route.url, route.icon)
+			);
+		}
+	});
+	return menus;
+};
 
-// 根据路由信息生成导航栏
-const menuItems = routerItems.map((item) => {
-	if (item.children != null) {
-		return getItem(
-			item.page.title,
-			item.page.id,
-			item.icon,
-			getChildItem(
-				item.children.map((i) => {
-					return i.id;
-				}),
-				item.page.id
-			)
-		);
-	} else {
-		return getItem(item.page.title, item.page.id, item.icon);
-	}
-});
+const menuItemsTemp = generateMenu(routeTable);
+
 // 设置菜单默认的选择
 const findDefaultMenuItem = (pathname: string) => {
 	const pathList = pathname.split("/").slice(2);
@@ -71,14 +66,12 @@ const findDefaultMenuItem = (pathname: string) => {
 	}
 };
 
-
 export default function AppSider(props: ISiderProps) {
 	const [collapsed, setCollapsed] = useState(false);
 	const { appTheme } = props;
 
 	let navigate = useNavigate();
 	const { pathname } = useLocation();
-
 
 	const defaultMenuItem = findDefaultMenuItem(pathname);
 
@@ -94,27 +87,24 @@ export default function AppSider(props: ISiderProps) {
 				position: "fixed",
 				left: 0,
 				top: 0,
-				bottom: 0
-			}}
-		>
+				bottom: 0,
+			}}>
 			<div
 				style={{
 					height: 32,
 					margin: "20px auto",
 					color: "white",
-					textAlign: "center"
-				}}
-			>
+					textAlign: "center",
+				}}>
 				<h1>社区矫正</h1>
 			</div>
-
 
 			<Menu
 				theme={appTheme}
 				defaultOpenKeys={defaultMenuItem[0]}
 				defaultSelectedKeys={defaultMenuItem[1]}
 				mode="inline"
-				items={menuItems}
+				items={menuItemsTemp}
 				onClick={({ key }) => {
 					navigate(key);
 				}}

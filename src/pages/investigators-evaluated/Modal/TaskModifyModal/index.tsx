@@ -82,7 +82,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 	}, [wtbh, taskUpdate]);
 
 	const [form] = Form.useForm();
-	const [form2] = Form.useForm();
 
 	useEffect(() => {
 		form.resetFields();

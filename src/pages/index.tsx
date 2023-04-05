@@ -5,6 +5,7 @@ import WaitPeople from "@/pages/WaitPeople";
 import CorrectionTeam from "@/pages/CorrectionTeam";
 import CorrectionPlan from "@/pages/CorrectionPlan";
 import Worker from "./Woker";
+
 export {
 	Home,
 	IE,

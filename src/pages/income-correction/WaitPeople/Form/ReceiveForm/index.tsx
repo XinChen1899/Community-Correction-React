@@ -47,6 +47,12 @@ export function ReceiveForm(props: {
 			<Form.Item name={"xgrq"} label="宣告日期">
 				<DatePicker />
 			</Form.Item>
+			<Form.Item name={"jzxz"} label="矫正小组">
+				<Select style={{ width: 120 }}>
+					<Select.Option value="male">男</Select.Option>
+					<Select.Option value="female">女</Select.Option>
+				</Select>
+			</Form.Item>
 		</Form>
 	);
 }

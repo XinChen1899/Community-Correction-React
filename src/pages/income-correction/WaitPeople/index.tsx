@@ -140,7 +140,7 @@ export default function WaitPeople() {
 								onClick={() =>
 									setCrpRecModalOpen(true)
 								}>
-								接收
+								接收入矫
 							</Button>
 
 							<Popconfirm

@@ -1,29 +1,30 @@
-import {
-	Button,
-	Card,
-	Col,
-	Descriptions,
-	message,
-	Popconfirm,
-	Row,
-	Space,
-	Statistic,
-} from "antd";
+import { Button, message, Popconfirm, Space } from "antd";
 import {
 	DeleteOutlined,
 	EditOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
-import Table, { ColumnsType } from "antd/es/table";
+import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
-import AddModal from "./Modal/AddModal/AddTeam";
+import AddTeamModal from "./Modal/AddTeamModal";
 import TemplateHome from "@/pages/template/TemplateHome";
+import TeamInfoModal from "./Modal/TeamInfoModal";
+import TeamModifyModal from "./Modal/TeamModifyModal";
+import { GMessage } from "@/coderepo/msg/GMsg";
 
 export interface DataType {
 	id: string; // 小组编号
+	teamName: string; // 小组名
 	monitorName: string; // 组长姓名
 	teamNumber: number; // 小组人数
 }
+
+const defaultDataType: DataType = {
+	id: "",
+	teamName: "",
+	monitorName: "",
+	teamNumber: 0,
+};
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -31,6 +32,11 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "id",
 		key: "id",
 		width: 150,
+	},
+	{
+		title: "小组名",
+		dataIndex: "teamName",
+		key: "teamName",
 	},
 	{
 		title: "组长姓名",
@@ -50,11 +56,14 @@ const columns: ColumnsType<DataType> = [
 
 export default function CorrectionTeam() {
 	const [messageApi, contextHolder] = message.useMessage();
-	const [addModalOpen, setAddModalOpen] = useState(false);
 
-	const showAddModal = () => {
-		setAddModalOpen(true);
-	};
+	const [addModalOpen, setAddModalOpen] = useState(false);
+	const [teamInfoModalOpen, setTeamInfoModalOpen] = useState(false);
+	const [teamModifyModalOpen, setTeamModifyModalOpen] =
+		useState(false);
+
+	const [selectRecord, setSelectRecord] =
+		useState<DataType>(defaultDataType);
 
 	const successMsg = (msg: string) => {
 		messageApi.open({
@@ -70,24 +79,26 @@ export default function CorrectionTeam() {
 		});
 	};
 
-	const dataCollection = {
-		totalNumber: 0,
-	};
-
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
 			column.render = (_, record) => {
 				return (
 					<Space size="middle">
-						<Button type={"dashed"} onClick={() => {}}>
+						<Button
+							type={"dashed"}
+							onClick={() =>
+								setTeamInfoModalOpen(true)
+							}>
 							小组信息
 						</Button>
 						<Button
 							type={"dashed"}
 							danger
 							icon={<EditOutlined />}
-							onClick={() => {}}>
+							onClick={() =>
+								setTeamModifyModalOpen(true)
+							}>
 							修改小组信息
 						</Button>
 
@@ -113,20 +124,34 @@ export default function CorrectionTeam() {
 	const tableData: DataType[] = [
 		{
 			id: "1",
+			teamName: "team1",
 			monitorName: "谢xx",
 			teamNumber: 3,
 		},
 	];
 
+	const gMsg: GMessage = {
+		onSuccess: successMsg,
+		onError: errorMsg,
+	};
+
 	return (
 		<div>
-			<AddModal
+			<AddTeamModal
 				open={addModalOpen}
 				setOpen={setAddModalOpen}
-				gMsg={{
-					onSuccess: successMsg,
-					onError: errorMsg,
-				}}
+				gMsg={gMsg}
+			/>
+			<TeamInfoModal
+				open={teamInfoModalOpen}
+				setOpen={setTeamInfoModalOpen}
+				selectRecord={selectRecord}
+			/>
+			<TeamModifyModal
+				open={teamModifyModalOpen}
+				setOpen={setTeamModifyModalOpen}
+				selectRecord={selectRecord}
+				gMsg={gMsg}
 			/>
 			{contextHolder}
 			<TemplateHome
@@ -136,7 +161,7 @@ export default function CorrectionTeam() {
 						<Space direction={"horizontal"}>
 							<Button
 								onClick={() => {
-									showAddModal();
+									setAddModalOpen(true);
 								}}
 								type={"primary"}
 								icon={<PlusOutlined />}>
@@ -150,7 +175,7 @@ export default function CorrectionTeam() {
 					{ title: "矫正小组总数", value: 999 },
 				]}
 				tableData={tableData.length ? tableData : []}
-				tableOnRow={undefined}
+				tableOnRow={(record: any) => setSelectRecord(record)}
 			/>
 		</div>
 	);

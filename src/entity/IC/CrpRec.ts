@@ -11,4 +11,5 @@ export interface CorrectionPeopleRec {
 	grlxdh: string;
     xgrq: Dayjs;
 	zp: string;
+    jzxz: number;
 }

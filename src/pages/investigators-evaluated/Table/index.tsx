@@ -3,21 +3,21 @@ import { Button, Input, InputRef, Popconfirm, Space } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd/lib";
 import {
-	CheckCircleOutlined, DeleteOutlined, EditOutlined,
+	CheckCircleOutlined,
+	DeleteOutlined,
+	EditOutlined,
 	LoadingOutlined,
-	SearchOutlined
+	SearchOutlined,
 } from "@ant-design/icons";
 
-import TaskInfoModal
-	from "@/pages/investigators-evaluated/Modal/TaskInfoModal";
-import TaskModifyModal
-	from "@/pages/investigators-evaluated/Modal/TaskModifyModal";
+import TaskInfoModal from "@/pages/investigators-evaluated/Modal/TaskInfoModal";
+import TaskModifyModal from "@/pages/investigators-evaluated/Modal/TaskModifyModal";
 import { FilterConfirmProps } from "antd/es/table/interface";
 // @ts-ignore
 import Highlighter from "react-highlight-words";
-import axios from "axios";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { GMessage } from "@/coderepo/msg/GMsg";
+import { getAll } from "@/api/ie";
 
 // 调查评估表 元组的数据类型
 export interface DataType {
@@ -29,9 +29,9 @@ export interface DataType {
 interface ITaskForm {
 	selectTask: DataType;
 	setSelectTask: React.Dispatch<React.SetStateAction<DataType>>;
-	tableUpdate: boolean,
+	tableUpdate: boolean;
 	setTableUpdate: React.Dispatch<React.SetStateAction<boolean>>;
-	gMsg: GMessage
+	gMsg: GMessage;
 }
 
 const ieInfo2DataType = (infoList: IEInfo[]) => {
@@ -39,7 +39,7 @@ const ieInfo2DataType = (infoList: IEInfo[]) => {
 		return {
 			isFinished: false,
 			wtbh: item.wtbh,
-			name: item.bgrxm
+			name: item.bgrxm,
 		} as DataType;
 	});
 };
@@ -49,7 +49,7 @@ export default function TaskForm(props: ITaskForm) {
 		setSelectTask,
 		tableUpdate,
 		setTableUpdate,
-		gMsg
+		gMsg,
 	} = props;
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
@@ -58,10 +58,10 @@ export default function TaskForm(props: ITaskForm) {
 	const [taskUpdate, setTaskUpdate] = useState(false);
 
 	const fetchData = () => {
-		axios.get("http://localhost:9006/ie/all")
-			 .then((res) => {
-				 setTableData(ieInfo2DataType(res.data));
-			 });
+		// axios.get("http://localhost:9006/ie/all").then((res) => {
+		// 	setTableData(ieInfo2DataType(res.data));
+		// });
+		getAll(ieInfo2DataType, setTableData);
 	};
 
 	useEffect(() => {
@@ -72,11 +72,9 @@ export default function TaskForm(props: ITaskForm) {
 		setOpenInfo(true);
 	};
 
-
 	const showModifyModel = () => {
 		setOpenModify(true);
 	};
-
 
 	type DataIndex = keyof DataType;
 	const [searchText, setSearchText] = useState("");
@@ -98,39 +96,58 @@ export default function TaskForm(props: ITaskForm) {
 		setSearchText("");
 	};
 
-	const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<DataType> => ({
+	const getColumnSearchProps = (
+		dataIndex: DataIndex
+	): ColumnType<DataType> => ({
 		filterDropdown: ({
-							 setSelectedKeys,
-							 selectedKeys,
-							 confirm,
-							 clearFilters,
-							 close
-						 }) => (
-			<div style={{ padding: 8 }}
-				 onKeyDown={(e) => e.stopPropagation()}>
+			setSelectedKeys,
+			selectedKeys,
+			confirm,
+			clearFilters,
+			close,
+		}) => (
+			<div
+				style={{ padding: 8 }}
+				onKeyDown={(e) => e.stopPropagation()}>
 				<Input
 					ref={searchInput}
 					placeholder={`Search ${dataIndex}`}
 					value={selectedKeys[0]}
-					onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+					onChange={(e) =>
+						setSelectedKeys(
+							e.target.value ? [e.target.value] : []
+						)
+					}
+					onPressEnter={() =>
+						handleSearch(
+							selectedKeys as string[],
+							confirm,
+							dataIndex
+						)
+					}
 					style={{ marginBottom: 8, display: "block" }}
 				/>
 				<Space>
 					<Button
 						type="primary"
-						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+						onClick={() =>
+							handleSearch(
+								selectedKeys as string[],
+								confirm,
+								dataIndex
+							)
+						}
 						icon={<SearchOutlined />}
 						size="small"
-						style={{ width: 90 }}
-					>
+						style={{ width: 90 }}>
 						Search
 					</Button>
 					<Button
-						onClick={() => clearFilters && handleReset(clearFilters)}
+						onClick={() =>
+							clearFilters && handleReset(clearFilters)
+						}
 						size="small"
-						style={{ width: 90 }}
-					>
+						style={{ width: 90 }}>
 						Reset
 					</Button>
 					<Button
@@ -138,10 +155,11 @@ export default function TaskForm(props: ITaskForm) {
 						size="small"
 						onClick={() => {
 							confirm({ closeDropdown: false });
-							setSearchText((selectedKeys as string[])[0]);
+							setSearchText(
+								(selectedKeys as string[])[0]
+							);
 							setSearchedColumn(dataIndex);
-						}}
-					>
+						}}>
 						Filter
 					</Button>
 					<Button
@@ -149,8 +167,7 @@ export default function TaskForm(props: ITaskForm) {
 						size="small"
 						onClick={() => {
 							close();
-						}}
-					>
+						}}>
 						close
 					</Button>
 				</Space>
@@ -158,7 +175,8 @@ export default function TaskForm(props: ITaskForm) {
 		),
 		filterIcon: (filtered: boolean) => (
 			<SearchOutlined
-				style={{ color: filtered ? "#1890ff" : undefined }} />
+				style={{ color: filtered ? "#1890ff" : undefined }}
+			/>
 		),
 		onFilter: (value, record) =>
 			record[dataIndex]
@@ -175,7 +193,7 @@ export default function TaskForm(props: ITaskForm) {
 				<Highlighter
 					highlightStyle={{
 						backgroundColor: "#ffc069",
-						padding: 0
+						padding: 0,
 					}}
 					searchWords={[searchText]}
 					autoEscape
@@ -183,13 +201,12 @@ export default function TaskForm(props: ITaskForm) {
 				/>
 			) : (
 				text
-			)
+			),
 	});
 
 	const confirm = () => {
 		console.log("delete");
 	};
-
 
 	const columns: ColumnsType<DataType> = [
 		{
@@ -200,32 +217,36 @@ export default function TaskForm(props: ITaskForm) {
 			render: (_, record) => {
 				const { isFinished } = record;
 				let loading;
-				if (!isFinished) loading =
-					<Spin indicator={<LoadingOutlined />} />;
-				else loading =
-					<Spin indicator={<CheckCircleOutlined />} />;
+				if (!isFinished)
+					loading = (
+						<Spin indicator={<LoadingOutlined />} />
+					);
+				else
+					loading = (
+						<Spin indicator={<CheckCircleOutlined />} />
+					);
 				return loading;
-			}
+			},
 		},
 		{
 			title: "委托编号",
 			dataIndex: "wtbh",
 			key: "wtbh",
 			width: 150,
-			...getColumnSearchProps("wtbh")
+			...getColumnSearchProps("wtbh"),
 		},
 		{
 			title: "姓名",
 			dataIndex: "name",
 			key: "name",
 			width: 150,
-			...getColumnSearchProps("name")
+			...getColumnSearchProps("name"),
 		},
 		{
 			title: "操作",
 			key: "action",
-			width: 200
-		}
+			width: 200,
+		},
 	];
 	// 绑定操作栏的操作
 	columns.map((column) => {
@@ -233,21 +254,32 @@ export default function TaskForm(props: ITaskForm) {
 			column.render = (_, record) => {
 				return (
 					<Space size="middle">
-						<Button type={"dashed"}
-								onClick={showInfoModal}>调查评估信息表</Button>
-						<Button type={"dashed"} danger
-								icon={<EditOutlined />}
-								onClick={showModifyModel}>修改信息</Button>
+						<Button
+							type={"dashed"}
+							onClick={showInfoModal}>
+							调查评估信息表
+						</Button>
+						<Button
+							type={"dashed"}
+							danger
+							icon={<EditOutlined />}
+							onClick={showModifyModel}>
+							修改信息
+						</Button>
 
 						<Popconfirm
 							title="是否删除"
 							description="是否删除该调查评估信息！"
 							onConfirm={confirm}
-							onOpenChange={() => console.log("open change")}
-						>
-							<Button type={"primary"} danger
-									icon={<DeleteOutlined />}
-							>删除!</Button>
+							onOpenChange={() =>
+								console.log("open change")
+							}>
+							<Button
+								type={"primary"}
+								danger
+								icon={<DeleteOutlined />}>
+								删除!
+							</Button>
 						</Popconfirm>
 					</Space>
 				);
@@ -265,24 +297,27 @@ export default function TaskForm(props: ITaskForm) {
 					return {
 						onClick: () => {
 							setSelectTask(record);
-						} // 点击行
+						}, // 点击行
 					};
 				}}
 			/>
 			{/* 显示详情 */}
-			<TaskInfoModal open={openInfo} setOpen={setOpenInfo}
-						   selectTask={selectTask}
-						   taskUpdate={taskUpdate}
+			<TaskInfoModal
+				open={openInfo}
+				setOpen={setOpenInfo}
+				selectTask={selectTask}
+				taskUpdate={taskUpdate}
 			/>
-			<TaskModifyModal open={openModify} setOpen={setOpenModify}
-							 selectTask={selectTask}
-							 setTableUpdate={setTableUpdate}
-							 setTaskUpdate={setTaskUpdate}
-							 tableUpdate={tableUpdate}
-							 taskUpdate={taskUpdate}
-							 gMsg={gMsg}
+			<TaskModifyModal
+				open={openModify}
+				setOpen={setOpenModify}
+				selectTask={selectTask}
+				setTableUpdate={setTableUpdate}
+				setTaskUpdate={setTaskUpdate}
+				tableUpdate={tableUpdate}
+				taskUpdate={taskUpdate}
+				gMsg={gMsg}
 			/>
 		</>
-
 	);
 }

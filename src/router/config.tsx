@@ -89,14 +89,6 @@ const pageMap = {
 	noExit: getPageItem("noExit", routeNameMap.noExit, IE),
 	security: getPageItem("security", routeNameMap.security),
 	worker: getPageItem("worker", routeNameMap.worker, Worker),
-	//    "classify":        getPageItem("classify", "分类管理", Investigatorsevaluated),
-	//    "home1":        getPageItem("home1", "个别化矫正", Home),
-	//    "home2":        getPageItem("home2", "日常管理", Investigatorsevaluated),
-	//    "home3":        getPageItem("home3", "业务审批", Home),
-	//    "home4":        getPageItem("home4", "考核奖惩", Home),
-	//    "home5":       getPageItem("home5", "解除矫正", Home),
-	//    "home6":       getPageItem("home6", "终止矫正", Home),
-	//    "recv/plan": getPageItem("plan", "矫正方案", Plan),
 };
 // 2. 添加路由
 const routerItems: IRouterItem[] = [
@@ -113,13 +105,6 @@ const routerItems: IRouterItem[] = [
 		[pageMap["worker"]],
 		<TeamOutlined />
 	),
-	// getRouterItem("classify", "分类管理", SearchEvalute, []),
-	// getRouterItem("classify", "个别化矫正", SearchEvalute, []),
-	// getRouterItem("classify", "日常管理", SearchEvalute, []),
-	// getRouterItem("classify", "业务审批", SearchEvalute, []),
-	// getRouterItem("classify", "考核奖惩", SearchEvalute, []),
-	// getRouterItem("classify", "解除矫正", SearchEvalute, []),
-	// getRouterItem("classify", "终止矫正", SearchEvalute, []),
 ];
 
 // 3. 生成路由信息
@@ -146,90 +131,4 @@ export const RouterData = routerItems.map((item) => {
 		});
 	}
 });
-
-// const items: MenuItem[] = [
-//     getItem(
-//       "接收入矫",
-//       "sub1",
-//       <UserOutlined />,
-//       getChildItem(
-//         [
-//           "交付接收",
-//           "入矫登记",
-//           "矫正小组",
-//           "入矫矫正方案",
-//           "入矫宣告",
-//           "逾期报到或未报到",
-//         ],
-//         "sub1"
-//       )
-//     ),
-//     { type: "divider" },
-
-//     getItem(
-//       "个别化矫正",
-//       "sub2",
-//       <FileOutlined />,
-//       getChildItem(["矫正方案", "方案库"], "sub2")
-//     ),
-//     { type: "divider" },
-
-//     getItem(
-//       "日常管理",
-//       "sub3",
-//       <FileOutlined />,
-//       getChildItem(
-//         [
-//           "定期报到",
-//           "日常报告",
-//           "实地查访",
-//           "通信联络",
-//           "信息化核查",
-//           "公安情报核查",
-//           "脱管处置",
-//           "被羁押处置",
-//         ],
-//         "sub3"
-//       )
-//     ),
-//     { type: "divider" },
-
-//     getItem(
-//       "业务审批",
-//       "sub4",
-//       <FileOutlined />,
-//       getChildItem(
-//         [
-//           "进入特定场所审批",
-//           "会客",
-//           "外出",
-//           "经常性跨市县活动",
-//           "迁居/执行地变更",
-//           "病情复查延期/暂予监外执行",
-//           "减免考核",
-//         ],
-//         "sub4"
-//       )
-//     ),
-//     { type: "divider" },
-
-//     getItem(
-//       "考核奖惩",
-//       "sub5",
-//       <FileOutlined />,
-//       getChildItem(["计分考核", "奖励", "处罚"], "sub5")
-//     ),
-//     { type: "divider" },
-
-//     getItem("终止矫正", "13", <FileOutlined />),
-//     { type: "divider" },
-
-//     getItem(
-//       "解除矫正",
-//       "sub6",
-//       <FileOutlined />,
-//       getChildItem(["解矫办理", "解矫宣告", "特赦"], "sub6")
-//     ),
-//   ];
-
 export default routerItems;

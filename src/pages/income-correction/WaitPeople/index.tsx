@@ -1,4 +1,4 @@
-import { Button, message, Popconfirm, Select, Space } from "antd";
+import { Button, message, Popconfirm, Space } from "antd";
 import {
 	CheckCircleOutlined,
 	CloseCircleFilled,
@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import TemplateHome from "@/pages/template/TemplateHome";
 import RegisterModal from "./Modal/RegisterModal";
 import { GMessage } from "@/coderepo/msg/GMsg";

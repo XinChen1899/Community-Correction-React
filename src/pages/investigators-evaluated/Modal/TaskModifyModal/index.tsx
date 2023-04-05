@@ -6,7 +6,7 @@ import { Space } from "antd/lib";
 import axios from "axios";
 import { IEInfo2 } from "@/entity/IE/IEInfo2";
 import dayjs from "dayjs";
-import { updateIEInfoData } from "@/api/ie";
+import { getById, updateIEInfoData } from "@/api/ie";
 import { getDate, IeFormConvert2IeInfo } from "@/coderepo/ie";
 import { IEInfoForm } from "@/pages/investigators-evaluated/Form/IEInfoForm";
 import { GMessage } from "@/coderepo/msg/GMsg";
@@ -67,15 +67,15 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const result = await axios.get(
-				`http://localhost:9006/ie/${wtbh}`
-			);
-			const temp: IEInfo = result.data;
-			const data: IEInfo2 = result.data;
-			data.bgrcsrq = dayjs(temp.bgrcsrq);
-			data.ypxqjsrq = dayjs(temp.ypxqjsrq);
-			data.ypxqksrq = dayjs(temp.ypxqksrq);
-			data.pjrq = dayjs(temp.pjrq);
+			// const result = await axios.get(
+			// 	`http://localhost:9006/ie/${wtbh}`
+			// );
+			const result = await getById(wtbh);
+			const data: IEInfo2 = result;
+			data.bgrcsrq = dayjs(result.bgrcsrq);
+			data.ypxqjsrq = dayjs(result.ypxqjsrq);
+			data.ypxqksrq = dayjs(result.ypxqksrq);
+			data.pjrq = dayjs(result.pjrq);
 			setIeInfo(data);
 		};
 		fetchData();

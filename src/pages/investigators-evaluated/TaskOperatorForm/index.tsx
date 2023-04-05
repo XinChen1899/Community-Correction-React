@@ -13,6 +13,7 @@ import TaskAddModal from "@/pages/investigators-evaluated/Modal/TaskAddModal";
 import { IEData } from "@/entity/IE/IEData";
 import axios from "axios";
 import { GMessage } from "@/coderepo/msg/GMsg";
+import { getCount } from "@/api/ie";
 
 /*
  * 调查评估任务表的操作表单
@@ -30,13 +31,14 @@ export default function TaskOperatorForm(props: {
 	const [infoCount, setInfoCount] = useState(0);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			const result = await axios.get(
-				`http://localhost:9006/ie/count`
-			);
-			setInfoCount(result.data);
-		};
-		fetchData();
+		// const fetchData = async () => {
+		// 	const result = await axios.get(
+		// 		`http://localhost:9006/ie/count`
+		// 	);
+		// 	setInfoCount(result.data);
+		// };
+		// fetchData();
+		getCount(setInfoCount);
 	}, [tableUpdate]);
 
 	const ieData: IEData = {

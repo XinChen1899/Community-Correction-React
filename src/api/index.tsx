@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:9006";
-
-const useRequest = (url: string, method: string, data: any = {}, config: any = {}) => {
+const useRequest = (
+	url: string,
+	method: string,
+	data: any = {},
+	config: any = {}
+) => {
 	const [loading, setLoading] = useState(true);
 	const [result, setResult] = useState(null);
 	const [error, setError] = useState<Error>(new Error());
@@ -16,9 +19,13 @@ const useRequest = (url: string, method: string, data: any = {}, config: any = {
 				params: data,
 				method,
 				headers: { "Access-Control-Allow-Origin": "*" },
-				...config
+				...config,
 			});
-			if (result && result.status >= 200 && result.status <= 304) {
+			if (
+				result &&
+				result.status >= 200 &&
+				result.status <= 304
+			) {
 				setResult(result.data);
 			} else {
 				setError(new Error("get data error in index"));
@@ -35,7 +42,7 @@ const useRequest = (url: string, method: string, data: any = {}, config: any = {
 	return {
 		loading,
 		result,
-		error
+		error,
 	};
 };
 

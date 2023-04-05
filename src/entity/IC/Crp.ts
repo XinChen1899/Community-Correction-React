@@ -1,3 +1,4 @@
+// 社区矫正对象基本信息
 export interface CorrectionPeople {
 	sqjzdxbh: string;
 	sfdcpg: boolean;

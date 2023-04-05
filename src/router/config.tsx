@@ -1,12 +1,19 @@
-import { Home, IE } from "@/pages";
+import {
+	CorrectionPlan,
+	CorrectionTeam,
+	Home,
+	IE,
+	WaitPeople,
+	Worker,
+} from "@/pages";
 import { Route } from "react-router-dom";
 import {
 	HomeOutlined,
 	PieChartOutlined,
 	SearchOutlined,
+	TeamOutlined,
 } from "@ant-design/icons";
 import React from "react";
-import { WaitPeople } from "@/pages";
 
 interface IPageItem {
 	id: string;
@@ -50,9 +57,11 @@ export const routeNameMap = {
 	ie: "调查评估",
 	ic: "接收入矫",
 	wait: "待入矫人员",
-	correctionPlan: "矫正方案",
-	correctionTeam: "矫正小组",
+	crplan: "矫正方案",
+	crteam: "矫正小组",
 	noExit: "不准出境",
+	security: "权限",
+	worker: "行政人员",
 };
 
 // todo: 优化
@@ -66,21 +75,20 @@ const pageMap = {
 	// 接收入矫
 	ic: getPageItem("ic", routeNameMap.ic),
 	wait: getPageItem("wait", routeNameMap.wait, WaitPeople),
-	// // --矫正方案
-	// correctionPlan: getPageItem(
-	// 	"correctionPlan",
-	// 	routeNameMap.incomeCorrection,
-	// 	CorrectionPlan
-	// ),
-	// // --矫正小组
-	// correctionTeam: getPageItem(
-	// 	"correctionTeam",
-	// 	routeNameMap.incomeCorrection,
-	// 	CorrectionTeam
-	// ),
+	crteam: getPageItem(
+		"crteam",
+		routeNameMap.crteam,
+		CorrectionTeam
+	),
+	crplan: getPageItem(
+		"crplan",
+		routeNameMap.crplan,
+		CorrectionPlan
+	),
 	// 不准出境
 	noExit: getPageItem("noExit", routeNameMap.noExit, IE),
-
+	security: getPageItem("security", routeNameMap.security),
+	worker: getPageItem("worker", routeNameMap.worker, Worker),
 	//    "classify":        getPageItem("classify", "分类管理", Investigatorsevaluated),
 	//    "home1":        getPageItem("home1", "个别化矫正", Home),
 	//    "home2":        getPageItem("home2", "日常管理", Investigatorsevaluated),
@@ -96,10 +104,15 @@ const routerItems: IRouterItem[] = [
 	getRouterItem(pageMap["ie"], undefined, <SearchOutlined />),
 	getRouterItem(
 		pageMap["ic"],
-		[pageMap["wait"]],
-		<PieChartOutlined />
+		[pageMap["wait"], pageMap["crteam"], pageMap["crplan"]],
+		<TeamOutlined />
 	),
 	getRouterItem(pageMap["noExit"], undefined, <PieChartOutlined />),
+	getRouterItem(
+		pageMap["security"],
+		[pageMap["worker"]],
+		<TeamOutlined />
+	),
 	// getRouterItem("classify", "分类管理", SearchEvalute, []),
 	// getRouterItem("classify", "个别化矫正", SearchEvalute, []),
 	// getRouterItem("classify", "日常管理", SearchEvalute, []),

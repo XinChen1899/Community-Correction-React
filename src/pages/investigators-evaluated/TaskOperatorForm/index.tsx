@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Descriptions } from "antd";
+import {
+	Button,
+	Card,
+	Col,
+	Descriptions,
+	Row,
+	Statistic,
+} from "antd";
 
 import { PlusOutlined } from "@ant-design/icons";
-import TaskAddModal
-	from "@/pages/investigators-evaluated/Modal/TaskAddModal";
+import TaskAddModal from "@/pages/investigators-evaluated/Modal/TaskAddModal";
 import { IEData } from "@/entity/IE/IEData";
 import axios from "axios";
 import { GMessage } from "@/coderepo/msg/GMsg";
@@ -13,10 +19,11 @@ import { GMessage } from "@/coderepo/msg/GMsg";
  * - 新增调查评估
  * */
 
-
-export default function TaskOperatorForm(
-	props: { tableUpdate: boolean, setTableUpdate: any, gMsg: GMessage }) {
-
+export default function TaskOperatorForm(props: {
+	tableUpdate: boolean;
+	setTableUpdate: any;
+	gMsg: GMessage;
+}) {
 	const { tableUpdate, setTableUpdate, gMsg } = props;
 
 	const [addModalOpen, setAddModalOpen] = useState(false);
@@ -24,7 +31,9 @@ export default function TaskOperatorForm(
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const result = await axios.get(`http://localhost:9006/ie/count`);
+			const result = await axios.get(
+				`http://localhost:9006/ie/count`
+			);
 			setInfoCount(result.data);
 		};
 		fetchData();
@@ -34,42 +43,51 @@ export default function TaskOperatorForm(
 		currentProcessNumber: 0,
 		todayCompleteNumber: 0,
 		todayNewNumber: 0,
-		totalNumber: infoCount
+		totalNumber: infoCount,
 	};
 
 	return (
 		<>
-			<TaskAddModal open={addModalOpen}
-						  setOpen={setAddModalOpen}
-						  tableUpdate={tableUpdate}
-						  setTableUpdate={setTableUpdate}
-						  tableCount={infoCount}
-						  gMsg={gMsg}
+			<TaskAddModal
+				open={addModalOpen}
+				setOpen={setAddModalOpen}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				tableCount={infoCount}
+				gMsg={gMsg}
 			/>
-			<Card title={"调查评估操作区"} extra={<>
-				<Button onClick={() => setAddModalOpen(true)}
-						type={"primary"} icon={<PlusOutlined />}>
-					新增调查评估
-				</Button>
-			</>}>
+			<Card
+				title={"调查评估操作区"}
+				extra={
+					<>
+						<Button
+							onClick={() => setAddModalOpen(true)}
+							type={"primary"}
+							icon={<PlusOutlined />}>
+							新增调查评估
+						</Button>
+					</>
+				}>
 				{/* todo 调查评估统计数据！*/}
-				<Descriptions>
-					<Descriptions.Item label="总人数">
-						{ieData.totalNumber}
-					</Descriptions.Item>
-					<Descriptions.Item
-						label="今日新增调查评估数">
-						{ieData.todayNewNumber}
-					</Descriptions.Item>
-					<Descriptions.Item label="正在处理中的调查评估数">
-						{ieData.currentProcessNumber}
-					</Descriptions.Item>
-					<Descriptions.Item label="今日已完成调查评估数">
-						{ieData.todayCompleteNumber}
-					</Descriptions.Item>
-				</Descriptions>
+				<Row gutter={16}>
+					<Col span={12}>
+						<Statistic title="调查评估总数" value={999} />
+					</Col>
+					<Col span={12}>
+						<Statistic
+							title="今日新增调查评估数"
+							value={999}
+						/>
+					</Col>
+					<Col span={12}>
+						<Statistic
+							title="正在处理中的调查评估数"
+							value={999}
+						/>
+					</Col>
+				</Row>
+				<Descriptions></Descriptions>
 			</Card>
-
 		</>
 	);
 }

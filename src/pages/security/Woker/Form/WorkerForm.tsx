@@ -42,7 +42,7 @@ const beforeUpload = (file: RcFile) => {
 	return isJpgOrPng && isLt2M;
 };
 
-export function WaitPeopleForm(props: {
+export function WorkerForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;

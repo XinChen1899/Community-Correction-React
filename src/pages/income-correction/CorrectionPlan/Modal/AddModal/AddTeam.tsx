@@ -3,7 +3,7 @@ import { Card, Form, Modal } from "antd";
 
 import "@/entity/IE/IEInfo";
 import { GMessage } from "@/coderepo/msg/GMsg";
-import { WaitPeopleForm } from "@/pages/income-correction/WaitPeople/Form/WaitPeopleForm";
+import { AddTeamForm } from "../../Form/AddTeamForm";
 
 const AddModal = (props: {
 	open: boolean;
@@ -41,7 +41,7 @@ const AddModal = (props: {
 			confirmLoading={confirmLoading}
 			onOk={handleOk}>
 			<Card title={"新增待矫正人员信息表"}>
-				<WaitPeopleForm
+				<AddTeamForm
 					form={form}
 					onFinish={onFinish}
 					initialValues={{

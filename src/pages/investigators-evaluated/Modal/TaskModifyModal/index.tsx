@@ -1,28 +1,14 @@
-import {
-	Card,
-	Form,
-	Input,
-	Modal
-} from "antd";
+import { Card, Form, Input, Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import {
-	DataType
-} from "@/pages/investigators-evaluated/Table";
+import { DataType } from "@/pages/investigators-evaluated/Table";
 import { IEInfo } from "@/entity/IE/IEInfo";
-import { IEVisitInfo } from "@/entity/IE/IEVisitInfo";
 import { Space } from "antd/lib";
 import axios from "axios";
 import { IEInfo2 } from "@/entity/IE/IEInfo2";
 import dayjs from "dayjs";
-import { updateIEInfoData, updateIEVisInfoData } from "@/api/ie";
-import { IEVisitInfo2 } from "@/entity/IE/IEVisitInfo2";
-import {
-	getDate,
-	IeFormConvert2IeInfo
-} from "@/coderepo/ie";
-import {
-	IEInfoForm
-} from "@/pages/investigators-evaluated/Form/IEInfoForm";
+import { updateIEInfoData } from "@/api/ie";
+import { getDate, IeFormConvert2IeInfo } from "@/coderepo/ie";
+import { IEInfoForm } from "@/pages/investigators-evaluated/Form/IEInfoForm";
 import { GMessage } from "@/coderepo/msg/GMsg";
 
 interface ITaskInfoModal {
@@ -45,7 +31,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		tableUpdate,
 		taskUpdate,
 		setTaskUpdate,
-		gMsg
+		gMsg,
 	} = props;
 
 	const { wtbh } = selectTask;
@@ -73,7 +59,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		ypxqksrq: dayjs(),
 		zm: "",
 		wtbh: selectTask.wtbh,
-		bgrxm: selectTask.name
+		bgrxm: selectTask.name,
 	};
 
 	const [ieInfo, setIeInfo] = useState<IEInfo2>(tempIeInfo);
@@ -81,7 +67,9 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const result = await axios.get(`http://localhost:9006/ie/${wtbh}`);
+			const result = await axios.get(
+				`http://localhost:9006/ie/${wtbh}`
+			);
 			const temp: IEInfo = result.data;
 			const data: IEInfo2 = result.data;
 			data.bgrcsrq = dayjs(temp.bgrcsrq);
@@ -91,7 +79,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 			setIeInfo(data);
 		};
 		fetchData();
-
 	}, [wtbh, taskUpdate]);
 
 	const [form] = Form.useForm();
@@ -124,7 +111,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		setOpen(false);
 	};
 
-
 	return (
 		<Modal
 			style={{ top: 20 }}
@@ -133,16 +119,18 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 			title={"修改" + selectTask.name + "的调查评估信息"}
 			onOk={handleOk}
 			onCancel={handleCancel}
-			confirmLoading={confirmLoading}
-		>
+			confirmLoading={confirmLoading}>
 			<Space direction={"vertical"}>
-				<Card title={"调查评估信息表"}
-					  style={{ width: "900px" }}>
-					<IEInfoForm form={form} onFinish={onFinish}
-								initialValues={ieInfo} />
+				<Card
+					title={"调查评估信息表"}
+					style={{ width: "900px" }}>
+					<IEInfoForm
+						form={form}
+						onFinish={onFinish}
+						initialValues={ieInfo}
+					/>
 				</Card>
 			</Space>
-
 		</Modal>
 	);
 }

@@ -109,7 +109,7 @@ export function RegisterForm(props: {
 			<Form.Item name={"sfzhm"} label="身份证号码">
 				<Input
 					placeholder={"请输入身份证号码"}
-					maxLength={18}
+					maxLength={19}
 				/>
 			</Form.Item>
 			<Form.Item name={"csrq"} label="出生日期">

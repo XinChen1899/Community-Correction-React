@@ -5,47 +5,103 @@ import { GMessage } from "@/coderepo/msg/GMsg";
 import { DataType } from "../..";
 import { RegisterForm } from "../../Form/RegisterForm";
 import { CorrectionPeople } from "@/entity/IC/Crp";
+import { getCrpById, updateCrp } from "@/api/ic";
+import dayjs from "dayjs";
+import { getDate } from "@/coderepo/ie";
+import { mzMap } from "@/coderepo";
+
+const defaultCrp: CorrectionPeople = {
+	sqjzdxbh: "",
+	sfdcpg: false,
+	jzlb: "",
+	xm: "null",
+	xb: "",
+	mz: "",
+	gj: "",
+	hjlx: "",
+	sfzhm: "",
+	csrq: "",
+	whcd: "",
+	hyzk: "",
+	jyjxqk: "",
+	xzzmm: "",
+	xgzdw: "",
+	dwlxdh: "",
+	grlxdh: "",
+	ywjtcyjzyshgx: "",
+	zp: "",
+};
 
 export default function CrpModifyModal(props: {
 	open: boolean;
 	setOpen: any;
 	selectRecord: DataType;
 	gMsg: GMessage;
+	tableUpdate: boolean;
+	setTableUpdate: any;
+	infoUpdate: any;
+	setInfoUpdate: any;
 }) {
-	const { open, setOpen, selectRecord, gMsg } = props;
+	const {
+		open,
+		setOpen,
+		selectRecord,
+		gMsg,
+		tableUpdate,
+		setTableUpdate,
+		infoUpdate,
+		setInfoUpdate,
+	} = props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
 
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		const result = await axios.get(
-	// 			`http://localhost:9006/ie/${wtbh}`
-	// 		);
-	// 		const temp: IEInfo = result.data;
-	// 		const data: IEInfo2 = result.data;
-	// 		data.bgrcsrq = dayjs(temp.bgrcsrq);
-	// 		data.ypxqjsrq = dayjs(temp.ypxqjsrq);
-	// 		data.ypxqksrq = dayjs(temp.ypxqksrq);
-	// 		data.pjrq = dayjs(temp.pjrq);
-	// 		setIeInfo(data);
-	// 	};
-	// 	fetchData();
-	// }, [wtbh, taskUpdate]);
+	const { dxbh } = selectRecord;
+
+	const [crp, setCrp] = useState<CorrectionPeople>(defaultCrp);
+	useEffect(() => {
+		if (dxbh) {
+			getCrpById(
+				dxbh,
+				(crp: CorrectionPeople) => {
+					crp.csrq = dayjs(crp.csrq);
+					setCrp(crp);
+				},
+				() => gMsg.onError("找不到此对象!")
+			);
+
+			console.log(crp);
+		}
+	}, [dxbh, infoUpdate]);
 
 	const [form] = Form.useForm();
 
 	useEffect(() => {
 		form.resetFields();
-		// form.setFieldsValue(ieInfo);
+		form.setFieldsValue(crp);
 	});
 
 	const onFinish = async (values: any) => {
-		// const info = IeFormConvert2IeInfo(values);
-		// selectTask.name = info.bgrxm;
-		// await updateIEInfoData(info);
-		// setTableUpdate(!tableUpdate);
-		// setTaskUpdate(!taskUpdate);
-		// gMsg.onSuccess("修改成功!");
+		const crp = values as CorrectionPeople;
+		crp.csrq = getDate(crp.csrq);
+		mzMap.forEach((obj) => {
+			if (obj.code == crp.mz) {
+				crp.mz = obj.value;
+				return;
+			}
+		});
+		updateCrp(
+			crp,
+			() => {
+				gMsg.onSuccess("修改成功！");
+			},
+			(msg: string) => {
+				gMsg.onError("修改失败！" + msg);
+			},
+			() => {
+				setTableUpdate(!tableUpdate);
+				setInfoUpdate(!infoUpdate);
+			}
+		);
 	};
 
 	const handleOk = () => {
@@ -54,30 +110,7 @@ export default function CrpModifyModal(props: {
 		setTimeout(() => {
 			setOpen(false);
 			setConfirmLoading(false);
-			gMsg.onSuccess("修改成功！");
-		}, 1000);
-	};
-
-	const info: CorrectionPeople = {
-		sqjzdxbh: "",
-		sfdcpg: false,
-		jzlb: "",
-		xm: selectRecord.name,
-		xb: "",
-		mz: "",
-		gj: "",
-		hjlx: "",
-		sfzhm: "",
-		csrq: "",
-		whcd: "",
-		hyzk: "",
-		jyjxqk: "",
-		xzzmm: "",
-		xgzdw: "",
-		dwlxdh: "",
-		grlxdh: "",
-		ywjtcyjzyshgx: "",
-		zp: "",
+		}, 500);
 	};
 
 	return (
@@ -96,7 +129,7 @@ export default function CrpModifyModal(props: {
 					<RegisterForm
 						form={form}
 						onFinish={onFinish}
-						initialValues={info}
+						initialValues={crp}
 					/>
 				</Card>
 			</Space>

@@ -3,13 +3,29 @@ import { Card, Form, Modal } from "antd";
 
 import { GMessage } from "@/coderepo/msg/GMsg";
 import { RegisterForm } from "../../Form/RegisterForm";
+import { CorrectionPeople } from "@/entity/IC/Crp";
+import { getDate } from "@/coderepo/ie";
+import { registerCrp } from "@/api/ic";
+import { mzMap } from "@/coderepo";
 
 const RegisterModal = (props: {
 	open: boolean;
 	setOpen: any;
 	gMsg: GMessage;
+	tableUpdate: boolean;
+	setTableUpdate: any;
+	infoUpdate: any;
+	setInfoUpdate: any;
 }) => {
-	const { setOpen, open, gMsg } = props;
+	const {
+		setOpen,
+		open,
+		gMsg,
+		tableUpdate,
+		setTableUpdate,
+		infoUpdate,
+		setInfoUpdate,
+	} = props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
@@ -20,12 +36,32 @@ const RegisterModal = (props: {
 		setTimeout(() => {
 			setOpen(false);
 			setConfirmLoading(false);
-		}, 1000);
+		}, 500);
 	};
 
 	// 提交表单时操作
 	const onFinish = async (values: any) => {
-		gMsg.onSuccess("新增入矫人员!");
+		const crp = values as CorrectionPeople;
+		crp.csrq = getDate(crp.csrq);
+		mzMap.forEach((obj) => {
+			if (obj.code == crp.mz) {
+				crp.mz = obj.value;
+				return;
+			}
+		});
+		registerCrp(
+			crp,
+			() => {
+				gMsg.onSuccess("登记成功！");
+			},
+			(msg: string) => {
+				gMsg.onError("登记失败！" + msg);
+			},
+			() => {
+				setTableUpdate(!tableUpdate);
+				setInfoUpdate(!infoUpdate);
+			}
+		);
 	};
 
 	return (

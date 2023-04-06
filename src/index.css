@@ -13,3 +13,11 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.spin {
+  position: absolute;
+  top:50%;
+  left: 50%;
+  text-align: center;
+  border-radius: 4px;
+}

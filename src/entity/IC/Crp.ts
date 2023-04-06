@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 // 社区矫正对象基本信息
 export interface CorrectionPeople {
 	sqjzdxbh: string;
@@ -9,7 +11,7 @@ export interface CorrectionPeople {
 	gj: string;
 	hjlx: string;
 	sfzhm: string;
-	csrq: string;
+	csrq: string | Dayjs;
 	whcd: string;
 	hyzk: string;
 	jyjxqk: string;

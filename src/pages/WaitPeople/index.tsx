@@ -1,4 +1,4 @@
-import { Button, message, Popconfirm, Space } from "antd";
+import { Button, message, Popconfirm, Space, Tag } from "antd";
 import {
 	CheckCircleOutlined,
 	CloseCircleFilled,
@@ -9,13 +9,15 @@ import {
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TemplateHome from "@/template/TemplateHome";
 import RegisterModal from "./Modal/RegisterModal";
 import { GMessage } from "@/coderepo/msg/GMsg";
 import CrpInfoModal from "./Modal/CrpInfoModal";
 import CrpModifyModal from "./Modal/CrpModifyModal";
 import CrpRecModal from "./Modal/CrpRecModal";
+import { getAllCrp } from "@/api/ic";
+import { CorrectionPeople } from "@/entity/IC/Crp";
 
 export interface DataType {
 	id: number;
@@ -51,16 +53,20 @@ const columns: ColumnsType<DataType> = [
 		title: "性别",
 		dataIndex: "sex",
 		key: "sex",
+		render: (value) => {
+			let v = "男";
+			if (value == "female") v = "女";
+			return <Tag>{v}</Tag>;
+		},
 	},
 	{
 		title: "是否调查评估",
 		dataIndex: "sfdcpg",
 		key: "sfdcpg",
 		align: "center",
-		render: (_, record) => {
-			const { sfdcpg } = record;
+		render: (value) => {
 			let loading;
-			if (sfdcpg)
+			if (value == "否")
 				loading = (
 					<Spin indicator={<CheckCircleOutlined />} />
 				);
@@ -73,6 +79,18 @@ const columns: ColumnsType<DataType> = [
 		title: "矫正状态",
 		dataIndex: "status",
 		key: "status",
+		render: (value) => {
+			let color = "blue";
+			switch (value) {
+				case "待入矫":
+					color = "magenta";
+					break;
+				case "在矫":
+					color = "#87d068";
+					break;
+			}
+			return <Tag color={color}>{value}</Tag>;
+		},
 	},
 	{
 		title: "操作",
@@ -91,6 +109,33 @@ export default function WaitPeople() {
 
 	const [selectRecord, setSelectRecord] =
 		useState<DataType>(defaultDataType);
+
+	const [tableData, setTableData] = useState<DataType[]>();
+
+	const [tableUpdate, setTableUpdate] = useState(false);
+	const [infoUpdate, setInfoUpdate] = useState(false);
+
+	useEffect(() => {
+		const crp2DataType = (crpList: CorrectionPeople[]) => {
+			return crpList.map((crp, idx: number) => {
+				return {
+					id: idx,
+					dxbh: crp.sqjzdxbh,
+					name: crp.xm,
+					sex: crp.xb,
+					sfdcpg: crp.sfdcpg,
+					status: idx % 2 == 0 ? "在矫" : "等待入矫",
+				} as DataType;
+			});
+		};
+		getAllCrp(
+			(crpList: CorrectionPeople[]) => {
+				const td = crp2DataType(crpList);
+				setTableData(td);
+			},
+			() => gMsg.onError("请求不到矫正人员的信息！")
+		);
+	}, [tableUpdate]);
 
 	const successMsg = (msg: string) => {
 		messageApi.open({
@@ -163,35 +208,34 @@ export default function WaitPeople() {
 		}
 	});
 
-	const tableData: DataType[] = [
-		{
-			id: 1,
-			dxbh: "111",
-			name: "xxx",
-			sex: "male",
-			sfdcpg: true,
-			status: "待入矫",
-		},
-	];
-
 	return (
 		<div>
 			<CrpInfoModal
 				open={crpInfoModalOpen}
 				setOpen={setCrpInfoModalOpen}
 				selectRecord={selectRecord}
+				gMsg={gMsg}
+				infoUpdate={infoUpdate}
 			/>
 
 			<RegisterModal
 				open={registerModalOpen}
 				setOpen={setRegisterOpen}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				infoUpdate={infoUpdate}
+				setInfoUpdate={setInfoUpdate}
 			/>
 			<CrpModifyModal
 				open={crpModifyModalOpen}
 				setOpen={setCrpModifyModalOpen}
 				selectRecord={selectRecord}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				infoUpdate={infoUpdate}
+				setInfoUpdate={setInfoUpdate}
 			/>
 			<CrpRecModal
 				open={crpRecModalOpen}
@@ -221,7 +265,7 @@ export default function WaitPeople() {
 					{ title: "待矫正人员总数", value: 999 },
 					{ title: "今日新增待矫正人员", value: 999 },
 				]}
-				tableData={tableData.length ? tableData : []}
+				tableData={tableData ? tableData : []}
 				tableOnRow={(record: any) => {
 					setSelectRecord(record);
 					console.log(record);

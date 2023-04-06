@@ -35,7 +35,7 @@ export default function CrpRecModal(props: {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		form.resetFields();
+		// form.resetFields();
 		// form.setFieldsValue(ieInfo);
 	});
 

@@ -5,6 +5,7 @@ import {
 	SearchOutlined,
 	TeamOutlined,
 } from "@ant-design/icons";
+import { LazyExoticComponent, lazy } from "react";
 
 // id -> 中文名
 export const routeNameMap = {
@@ -20,18 +21,18 @@ export const routeNameMap = {
 };
 
 interface IPageItem {
-	id: string;
+	pathname: string;
 	title: string;
-	component: () => JSX.Element;
+	component: LazyExoticComponent<any>;
 }
 
 export function getPageItem(
-	id: string,
+	pathname: string,
 	title: string,
-	component?: () => JSX.Element
+	component?: LazyExoticComponent<any>
 ) {
 	return {
-		id,
+		pathname,
 		title,
 		component,
 	} as IPageItem;
@@ -40,13 +41,21 @@ export function getPageItem(
 export const routeTable = [
 	{
 		url: "home",
-		page: getPageItem("home", routeNameMap.home, Home),
+		page: getPageItem(
+			"home",
+			routeNameMap.home,
+			lazy(() => import("@/pages/home"))
+		),
 		children: [],
 		icon: <HomeOutlined />,
 	},
 	{
 		url: "ie",
-		page: getPageItem("ie", routeNameMap.ie, IE),
+		page: getPageItem(
+			"ie",
+			routeNameMap.ie,
+			lazy(() => import("@/pages/investigators-evaluated"))
+		),
 		children: [],
 		icon: <SearchOutlined />,
 	},
@@ -60,7 +69,7 @@ export const routeTable = [
 				page: getPageItem(
 					"wait",
 					routeNameMap.wait,
-					WaitPeople
+					lazy(() => import("@/pages/WaitPeople"))
 				),
 				children: [],
 			},
@@ -69,7 +78,7 @@ export const routeTable = [
 				page: getPageItem(
 					"crteam",
 					routeNameMap.crteam,
-					CorrectionTeam
+					lazy(() => import("@/pages/CorrectionTeam"))
 				),
 				children: [],
 			},
@@ -78,7 +87,7 @@ export const routeTable = [
 				page: getPageItem(
 					"crplan",
 					routeNameMap.crteam,
-					CorrectionTeam
+					lazy(() => import("@/pages/CorrectionPlan"))
 				),
 				children: [],
 			},

@@ -93,10 +93,10 @@ export default function AppSider(props: ISiderProps) {
 				style={{
 					height: 32,
 					margin: "20px auto",
-					color: "white",
+					color: "black",
 					textAlign: "center",
 				}}>
-				<h1>社区矫正</h1>
+				<h1>社区矫正监督管理子系统</h1>
 			</div>
 
 			<Menu

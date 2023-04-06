@@ -112,9 +112,9 @@ export const jyjxqkMap = [
 export const generateSelect = (selectList: any) => {
 	return (
 		<Select style={{ width: 120 }}>
-			{selectList.map((obj: any, idx: number) => {
+			{selectList.map((obj: any) => {
 				return (
-					<Select.Option value={obj.code} key={idx}>
+					<Select.Option value={obj.code} key={obj.value}>
 						{obj.value}
 					</Select.Option>
 				);

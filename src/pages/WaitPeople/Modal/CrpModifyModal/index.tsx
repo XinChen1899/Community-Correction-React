@@ -93,14 +93,12 @@ export default function CrpModifyModal(props: {
 			crp,
 			() => {
 				gMsg.onSuccess("修改成功！");
+				setTableUpdate(!tableUpdate);
+				setInfoUpdate(!infoUpdate);
 			},
 			(msg: string) => {
 				gMsg.onError("修改失败！" + msg);
 			},
-			() => {
-				setTableUpdate(!tableUpdate);
-				setInfoUpdate(!infoUpdate);
-			}
 		);
 	};
 

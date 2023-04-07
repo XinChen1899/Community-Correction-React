@@ -1,5 +1,48 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
+
+export const apiPost = async (
+	api: AxiosInstance,
+	url: string,
+	data: any,
+	onSuccess?: any,
+	onError?: any,
+) => {
+	await api
+		.post(url, data)
+		.then(({ data }) => {
+			console.log(data);
+			if (data.status == "200") {
+				onSuccess(data.data);
+			} else {
+				onError(data.message);
+			}
+		})
+		.catch((reason) => {
+			onError(reason.message);
+		})
+};
+
+export const apiGet = async (
+	api: AxiosInstance,
+	url: string,
+	onSuccess?: any,
+	onError?: any,
+) => {
+	await api
+		.get(url)
+		.then(({ data }) => {
+			console.log(data);
+			if (data.status == "200") {
+				onSuccess(data.data);
+			} else {
+				onError(data.message);
+			}
+		})
+		.catch((reason) => {
+			onError(reason.message);
+		});
+};
 
 const useRequest = (
 	url: string,

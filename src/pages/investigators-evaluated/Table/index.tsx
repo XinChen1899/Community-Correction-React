@@ -17,7 +17,7 @@ import { FilterConfirmProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { GMessage } from "@/coderepo/msg/GMsg";
-import { getAll } from "@/api/ie";
+import { getAllIEInfos } from "@/api/ie";
 
 // 调查评估表 元组的数据类型
 export interface DataType {
@@ -57,24 +57,15 @@ export default function TaskForm(props: ITaskForm) {
 	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [taskUpdate, setTaskUpdate] = useState(false);
 
-	const fetchData = () => {
-		// axios.get("http://localhost:9006/ie/all").then((res) => {
-		// 	setTableData(ieInfo2DataType(res.data));
-		// });
-		getAll(ieInfo2DataType, setTableData);
-	};
-
 	useEffect(() => {
-		fetchData();
+		getAllIEInfos(
+			(infoList: IEInfo[]) => {
+				const td = ieInfo2DataType(infoList);
+				setTableData(td);
+			},
+			() => gMsg.onError("请求不到调查评估的所有信息！")
+		);
 	}, [tableUpdate]);
-
-	const showInfoModal = () => {
-		setOpenInfo(true);
-	};
-
-	const showModifyModel = () => {
-		setOpenModify(true);
-	};
 
 	type DataIndex = keyof DataType;
 	const [searchText, setSearchText] = useState("");
@@ -256,14 +247,14 @@ export default function TaskForm(props: ITaskForm) {
 					<Space size="middle">
 						<Button
 							type={"dashed"}
-							onClick={showInfoModal}>
+							onClick={() => setOpenInfo(true)}>
 							调查评估信息表
 						</Button>
 						<Button
 							type={"dashed"}
 							danger
 							icon={<EditOutlined />}
-							onClick={showModifyModel}>
+							onClick={() => setOpenModify(true)}>
 							修改信息
 						</Button>
 
@@ -296,6 +287,7 @@ export default function TaskForm(props: ITaskForm) {
 				onRow={(record) => {
 					return {
 						onClick: () => {
+							console.log(record);
 							setSelectTask(record);
 						}, // 点击行
 					};
@@ -307,6 +299,7 @@ export default function TaskForm(props: ITaskForm) {
 				setOpen={setOpenInfo}
 				selectTask={selectTask}
 				taskUpdate={taskUpdate}
+				gMsg={gMsg}
 			/>
 			<TaskModifyModal
 				open={openModify}

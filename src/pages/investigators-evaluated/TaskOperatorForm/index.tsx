@@ -31,14 +31,8 @@ export default function TaskOperatorForm(props: {
 	const [infoCount, setInfoCount] = useState(0);
 
 	useEffect(() => {
-		// const fetchData = async () => {
-		// 	const result = await axios.get(
-		// 		`http://localhost:9006/ie/count`
-		// 	);
-		// 	setInfoCount(result.data);
-		// };
-		// fetchData();
 		getCount(setInfoCount);
+		console.log(infoCount);
 	}, [tableUpdate]);
 
 	const ieData: IEData = {

@@ -39,7 +39,7 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 				{info.sfzhm}
 			</Descriptions.Item>
 			<Descriptions.Item label="出生日期">
-				{info.csrq}
+				{info.csrq.toString()}
 			</Descriptions.Item>
 			<Descriptions.Item label="文化程度">
 				{info.whcd}

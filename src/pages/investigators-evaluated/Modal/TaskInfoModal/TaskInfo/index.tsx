@@ -17,70 +17,65 @@ const TaskInfo = (props: { info: IEInfo }) => {
 			<Descriptions.Item label="调查评估委托函">
 				{info.wtdch}
 			</Descriptions.Item>
-			<Descriptions.Item label="被调查评估对象的类型"
-			>
+			<Descriptions.Item label="被调查评估对象的类型">
 				{transform("bdcpgrdlx", info.bdcpgrdlx)}
 			</Descriptions.Item>
-			<Descriptions.Item label="被调查评估对象姓名"
-			>
+			<Descriptions.Item label="被调查评估对象姓名">
 				{info.bgrxm}
 			</Descriptions.Item>
-			<Descriptions.Item label="被调查评估对象身份证"
-			>
+			<Descriptions.Item label="被调查评估对象身份证">
 				{info.bgrsfzh}
 			</Descriptions.Item>
-			<Descriptions.Item label="被调查评估对象性别"
-							   span={1.5}>
+			<Descriptions.Item label="被调查评估对象性别" span={1.5}>
 				{transform("bgrxb", info.bgrxb)}
 			</Descriptions.Item>
-			<Descriptions.Item label="被调查评估对象出生日期"
-			>
-				{info.bgrcsrq}
+			<Descriptions.Item label="被调查评估对象出生日期">
+				{info.bgrcsrq.toString()}
 			</Descriptions.Item>
-			{<Descriptions.Item label="被调查评估对象居住地地址"
-			>
-				{info.bgrjzddz}
-			</Descriptions.Item>}
-			<Descriptions.Item label="被调查评估对象工作单位"
-			>{info.bgrgzdw}
+			{
+				<Descriptions.Item label="被调查评估对象居住地地址">
+					{info.bgrjzddz}
+				</Descriptions.Item>
+			}
+			<Descriptions.Item label="被调查评估对象工作单位">
+				{info.bgrgzdw}
 			</Descriptions.Item>
-			<Descriptions.Item label="罪名"
-			>{transform("zm", info.zm)}
+			<Descriptions.Item label="罪名">
+				{transform("zm", info.zm)}
 			</Descriptions.Item>
-			<Descriptions.Item label="原判判刑"
-			>{info.ypxq}
+			<Descriptions.Item label="原判判刑">
+				{info.ypxq}
 			</Descriptions.Item>
-			<Descriptions.Item label="原判刑期开始日期"
-			>{info.ypxqksrq}</Descriptions.Item>
-			<Descriptions.Item label="原判刑期结束日期"
-			>{info.ypxqjsrq}</Descriptions.Item>
-			<Descriptions.Item label="原判刑罚"
-			>
+			<Descriptions.Item label="原判刑期开始日期">
+				{info.ypxqksrq.toString()}
+			</Descriptions.Item>
+			<Descriptions.Item label="原判刑期结束日期">
+				{info.ypxqjsrq.toString()}
+			</Descriptions.Item>
+			<Descriptions.Item label="原判刑罚">
 				{transform("ypxf", info.ypxf)}
 			</Descriptions.Item>
-			<Descriptions.Item label="附加邢"
-			>
+			<Descriptions.Item label="附加邢">
 				{transform("fjx", info.fjx)}
 			</Descriptions.Item>
-			<Descriptions.Item label="判决机关"
-			>
+			<Descriptions.Item label="判决机关">
 				{transform("pjjg", info.pjjg)}
 			</Descriptions.Item>
-			<Descriptions.Item
-				label="判决日期">
-				{info.pjrq}
+			<Descriptions.Item label="判决日期">
+				{info.pjrq.toString()}
 			</Descriptions.Item>
-			<Descriptions.Item
-				label="拟使用矫正类别">
+			<Descriptions.Item label="拟使用矫正类别">
 				{transform("nsyjzlb", info.nsyjzlb)}
 			</Descriptions.Item>
 			<Descriptions.Item label="接收委托的县级社区矫正机构">
 				{info.dcdwxqj}
 			</Descriptions.Item>
-			<Descriptions.Item label="调查评估意见审核人"
-			>{info.dcyjshr}</Descriptions.Item>
-			<Descriptions.Item label="调查评估意见"
-			>{info.dcpgyj}</Descriptions.Item>
+			<Descriptions.Item label="调查评估意见审核人">
+				{info.dcyjshr}
+			</Descriptions.Item>
+			<Descriptions.Item label="调查评估意见">
+				{info.dcpgyj}
+			</Descriptions.Item>
 			<Descriptions.Item label="调查评估意见书">
 				附件
 			</Descriptions.Item>

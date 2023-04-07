@@ -1,15 +1,13 @@
-import { Card, Form, Input, Modal } from "antd";
+import { Card, Form, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { DataType } from "@/pages/investigators-evaluated/Table";
-import { IEInfo } from "@/entity/IE/IEInfo";
 import { Space } from "antd/lib";
-import axios from "axios";
-import { IEInfo2 } from "@/entity/IE/IEInfo2";
-import dayjs from "dayjs";
-import { getById, updateIEInfoData } from "@/api/ie";
-import { getDate, IeFormConvert2IeInfo } from "@/coderepo/ie";
+import { getIEInfoById, updateIEInfoData } from "@/api/ie";
+import { IeFormConvert2IeInfo } from "@/coderepo/ie";
 import { IEInfoForm } from "@/pages/investigators-evaluated/Form/IEInfoForm";
 import { GMessage } from "@/coderepo/msg/GMsg";
+import { IEInfo } from "@/entity/IE/IEInfo";
+import dayjs from "dayjs";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -36,9 +34,9 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 
 	const { wtbh } = selectTask;
 
-	const tempIeInfo: IEInfo2 = {
+	const tempIeInfo: IEInfo = {
 		bdcpgrdlx: "",
-		bgrcsrq: dayjs(),
+		bgrcsrq: "",
 		bgrgzdw: "",
 		bgrjzddz: "",
 		bgrsfzh: "",
@@ -50,35 +48,37 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		fjx: "",
 		nsyjzlb: "",
 		pjjg: "",
-		pjrq: dayjs(),
+		pjrq: "",
 		wtdch: "",
 		wtdw: "",
 		ypxf: "",
 		ypxq: "",
-		ypxqjsrq: dayjs(),
-		ypxqksrq: dayjs(),
+		ypxqjsrq: "",
+		ypxqksrq: "",
 		zm: "",
-		wtbh: selectTask.wtbh,
+		wtbh: "",
 		bgrxm: selectTask.name,
 	};
 
-	const [ieInfo, setIeInfo] = useState<IEInfo2>(tempIeInfo);
+	const [ieInfo, setIeInfo] = useState<IEInfo>(tempIeInfo);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			// const result = await axios.get(
-			// 	`http://localhost:9006/ie/${wtbh}`
-			// );
-			const result = await getById(wtbh);
-			const data: IEInfo2 = result;
-			data.bgrcsrq = dayjs(result.bgrcsrq);
-			data.ypxqjsrq = dayjs(result.ypxqjsrq);
-			data.ypxqksrq = dayjs(result.ypxqksrq);
-			data.pjrq = dayjs(result.pjrq);
-			setIeInfo(data);
-		};
-		fetchData();
+		if (wtbh != undefined && wtbh != "" && wtbh) {
+			getIEInfoById(
+				wtbh,
+				(info: IEInfo) => {
+					info.pjrq = dayjs(info.pjrq);
+					info.bgrcsrq = dayjs(info.bgrcsrq);
+					info.ypxqjsrq = dayjs(info.ypxqjsrq);
+					info.ypxqksrq = dayjs(info.ypxqksrq);
+					setIeInfo(info);
+				},
+				() => gMsg.onError("找不到此更新对象!")
+			);
+
+			console.log(ieInfo);
+		}
 	}, [wtbh, taskUpdate]);
 
 	const [form] = Form.useForm();
@@ -88,13 +88,22 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		form.setFieldsValue(ieInfo);
 	});
 
-	const onFinish = async (values: any) => {
+	const onFinish = (values: any) => {
 		const info = IeFormConvert2IeInfo(values);
+		console.log(info);
+
 		selectTask.name = info.bgrxm;
-		await updateIEInfoData(info);
-		setTableUpdate(!tableUpdate);
-		setTaskUpdate(!taskUpdate);
-		gMsg.onSuccess("修改成功!");
+		updateIEInfoData(
+			info,
+			() => {
+				gMsg.onSuccess("修改成功！");
+				setTableUpdate(!tableUpdate);
+				setTaskUpdate(!taskUpdate);
+			},
+			(msg: string) => {
+				gMsg.onError("修改失败！" + msg);
+			}
+		);
 	};
 
 	const handleOk = () => {
@@ -103,11 +112,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		setTimeout(() => {
 			setOpen(false);
 			setConfirmLoading(false);
-		}, 1000);
-	};
-	// 点击对话框的取消按钮
-	const handleCancel = () => {
-		setOpen(false);
+		}, 500);
 	};
 
 	return (
@@ -117,7 +122,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 			width={1000}
 			title={"修改" + selectTask.name + "的调查评估信息"}
 			onOk={handleOk}
-			onCancel={handleCancel}
+			onCancel={() => setOpen(false)}
 			confirmLoading={confirmLoading}>
 			<Space direction={"vertical"}>
 				<Card

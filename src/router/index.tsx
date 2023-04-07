@@ -1,4 +1,3 @@
-import { CorrectionTeam, Home, IE, WaitPeople } from "@/pages";
 import { Route } from "react-router-dom";
 import {
 	HomeOutlined,
@@ -86,7 +85,7 @@ export const routeTable = [
 				url: "ic/crplan",
 				page: getPageItem(
 					"crplan",
-					routeNameMap.crteam,
+					routeNameMap.crplan,
 					lazy(() => import("@/pages/CorrectionPlan"))
 				),
 				children: [],

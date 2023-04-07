@@ -53,14 +53,12 @@ const RegisterModal = (props: {
 			crp,
 			() => {
 				gMsg.onSuccess("登记成功！");
+				setTableUpdate(!tableUpdate);
+				setInfoUpdate(!infoUpdate);
 			},
 			(msg: string) => {
 				gMsg.onError("登记失败！" + msg);
 			},
-			() => {
-				setTableUpdate(!tableUpdate);
-				setInfoUpdate(!infoUpdate);
-			}
 		);
 	};
 

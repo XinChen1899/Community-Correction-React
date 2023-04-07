@@ -1,4 +1,4 @@
-import { Button, Space } from "antd";
+import { Space } from "antd";
 
 import "react";
 import { useState } from "react";
@@ -6,7 +6,6 @@ import TaskForm, {
 	DataType,
 } from "@/pages/investigators-evaluated/Table";
 import TaskOperatorForm from "@/pages/investigators-evaluated/TaskOperatorForm";
-import useRequest from "@/api";
 import { message } from "antd";
 
 /**
@@ -20,13 +19,11 @@ import { message } from "antd";
 export default function IE() {
 	const [selectTask, setSelectTask] = useState<DataType>({
 		isFinished: false,
-		wtbh: "00000000",
+		wtbh: "",
 		name: "null",
 	});
 	// 是否需要更新表格
 	const [tableUpdate, setTableUpdate] = useState(false);
-	// api测试
-	const result = useRequest("/ie/test", "get");
 
 	const [messageApi, contextHolder] = message.useMessage();
 
@@ -51,7 +48,7 @@ export default function IE() {
 				direction="vertical"
 				size="middle"
 				style={{ display: "flex" }}>
-				<h2>调查评估 Test: {result.result}</h2>
+				<h2>调查评估 </h2>
 				{/* 操作区 */}
 				<div style={{ padding: "0px 15px" }}>
 					<TaskOperatorForm

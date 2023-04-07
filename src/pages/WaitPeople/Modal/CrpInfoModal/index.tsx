@@ -5,6 +5,7 @@ import { CorrectionPeople } from "@/entity/IC/Crp";
 import { useEffect, useState } from "react";
 import { getCrpById } from "@/api/ic";
 import { GMessage } from "@/coderepo/msg/GMsg";
+import TemplateModal from "@/template/Modal";
 
 const defaultCrp: CorrectionPeople = {
 	sqjzdxbh: "",
@@ -38,30 +39,23 @@ export default function CrpInfoModal(props: {
 	const { dxbh } = selectRecord;
 
 	const [crp, setCrp] = useState<CorrectionPeople>(defaultCrp);
-	useEffect(() => {
-		if (dxbh) {
-			getCrpById(dxbh, setCrp, () =>
-				gMsg.onError("找不到此对象!")
-			);
-
-			console.log(crp);
-		}
-	}, [dxbh, infoUpdate]);
 
 	return (
-		<Modal
-			style={{ top: 20 }}
-			open={open}
-			width={1000}
-			onOk={() => setOpen(false)}
-			onCancel={() => setOpen(false)}>
-			<Card>
-				<Space direction={"vertical"}>
-					<Card hoverable style={{ width: "900px" }}>
-						<CrpInfo info={crp} />
-					</Card>
-				</Space>
-			</Card>
-		</Modal>
+		<>
+			<TemplateModal
+				InfoDescriptions={<CrpInfo info={crp} />}
+				open={open}
+				setOpen={setOpen}
+				recordId={dxbh}
+				infoUpdate={infoUpdate}
+				getAPI={(id: any) => {
+					getCrpById(id, setCrp, () =>
+						gMsg.onError("找不到此对象!")
+					);
+					console.log(crp);
+				}}
+				confirmLoading={false}
+			/>
+		</>
 	);
 }

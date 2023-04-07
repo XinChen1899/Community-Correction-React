@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Card, Form, Modal } from "antd";
+import { Form } from "antd";
 
 import "@/entity/IE/IEInfo";
 import { saveIEInfoData } from "@/api/ie";
 import { IEInfoForm } from "@/pages/investigators-evaluated/Form/IEInfoForm";
 import { IeFormConvert2IeInfo } from "@/coderepo/ie";
 import { GMessage } from "@/coderepo/msg/GMsg";
+import TemplateModal from "@/template/Modal";
 
 const TaskAddModal = (props: {
 	open: boolean;
@@ -31,11 +32,8 @@ const TaskAddModal = (props: {
 	const handleOk = () => {
 		setConfirmLoading(true);
 		form.submit();
-		setTimeout(() => {
-			setOpen(false);
-			setConfirmLoading(false);
-		}, 1000);
 	};
+
 	const getWTBH = (ieInfoCounts: number) => {
 		const s = ieInfoCounts.toString();
 		const len = 8 - s.length;
@@ -55,6 +53,8 @@ const TaskAddModal = (props: {
 			() => {
 				gMsg.onSuccess("新增调查评估!");
 				setTableUpdate(!tableUpdate);
+				setOpen(false);
+				setConfirmLoading(false);
 			},
 			(msg: string) => {
 				gMsg.onError("登记失败！" + msg);
@@ -63,13 +63,8 @@ const TaskAddModal = (props: {
 	};
 
 	return (
-		<Modal
-			width={1000}
-			open={open}
-			onCancel={() => setOpen(false)}
-			confirmLoading={confirmLoading}
-			onOk={handleOk}>
-			<Card title={"调查评估信息表"}>
+		<TemplateModal
+			InfoDescriptions={
 				<IEInfoForm
 					form={form}
 					onFinish={onFinish}
@@ -84,8 +79,14 @@ const TaskAddModal = (props: {
 						nsyjzlb: "02",
 					}}
 				/>
-			</Card>
-		</Modal>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={confirmLoading}
+			getAPI={undefined}
+			recordId={undefined}
+		/>
 	);
 };
 

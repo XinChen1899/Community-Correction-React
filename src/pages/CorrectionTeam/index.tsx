@@ -7,7 +7,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddTeamModal from "./Modal/AddTeamModal";
-import TemplateHome from "@/template/TemplateHome";
+import TemplateHome from "@/template/OperatorAndTable";
 import TeamInfoModal from "./Modal/TeamInfoModal";
 import TeamModifyModal from "./Modal/TeamModifyModal";
 import { GMessage } from "@/coderepo/msg/GMsg";

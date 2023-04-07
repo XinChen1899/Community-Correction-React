@@ -1,6 +1,5 @@
-import { Card, Form, Modal } from "antd";
+import { Form } from "antd";
 import { useEffect, useState } from "react";
-import { Space } from "antd/lib";
 import { GMessage } from "@/coderepo/msg/GMsg";
 import { DataType } from "../..";
 import { RegisterForm } from "../../Form/RegisterForm";
@@ -9,6 +8,7 @@ import { getCrpById, updateCrp } from "@/api/ic";
 import dayjs from "dayjs";
 import { getDate } from "@/coderepo/ie";
 import { mzMap } from "@/coderepo";
+import TemplateModal from "@/template/Modal";
 
 const defaultCrp: CorrectionPeople = {
 	sqjzdxbh: "",
@@ -58,20 +58,6 @@ export default function CrpModifyModal(props: {
 	const { dxbh } = selectRecord;
 
 	const [crp, setCrp] = useState<CorrectionPeople>(defaultCrp);
-	useEffect(() => {
-		if (dxbh) {
-			getCrpById(
-				dxbh,
-				(crp: CorrectionPeople) => {
-					crp.csrq = dayjs(crp.csrq);
-					setCrp(crp);
-				},
-				() => gMsg.onError("找不到此对象!")
-			);
-
-			console.log(crp);
-		}
-	}, [dxbh, infoUpdate]);
 
 	const [form] = Form.useForm();
 
@@ -98,7 +84,7 @@ export default function CrpModifyModal(props: {
 			},
 			(msg: string) => {
 				gMsg.onError("修改失败！" + msg);
-			},
+			}
 		);
 	};
 
@@ -112,25 +98,35 @@ export default function CrpModifyModal(props: {
 	};
 
 	return (
-		<Modal
-			style={{ top: 20 }}
-			open={open}
-			width={1000}
-			title={"修改" + selectRecord.name + "的基本信息"}
-			onOk={handleOk}
-			onCancel={() => setOpen(false)}
-			confirmLoading={confirmLoading}>
-			<Space direction={"vertical"}>
-				<Card
-					title={"社区矫正对象信息表"}
-					style={{ width: "900px" }}>
+		<>
+			<TemplateModal
+				InfoDescriptions={
 					<RegisterForm
 						form={form}
 						onFinish={onFinish}
 						initialValues={crp}
 					/>
-				</Card>
-			</Space>
-		</Modal>
+				}
+				open={open}
+				setOpen={setOpen}
+				recordId={dxbh}
+				getAPI={(id: string) => {
+					if (id && id != "") {
+						getCrpById(
+							id,
+							(crp: CorrectionPeople) => {
+								crp.csrq = dayjs(crp.csrq);
+								setCrp(crp);
+							},
+							() => gMsg.onError("找不到此对象!")
+						);
+
+						console.log(crp);
+					}
+				}}
+				onOk={handleOk}
+				confirmLoading={confirmLoading}
+			/>
+		</>
 	);
 }

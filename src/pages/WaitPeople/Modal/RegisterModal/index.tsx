@@ -7,6 +7,7 @@ import { CorrectionPeople } from "@/entity/IC/Crp";
 import { getDate } from "@/coderepo/ie";
 import { registerCrp } from "@/api/ic";
 import { mzMap } from "@/coderepo";
+import TemplateModal from "@/template/Modal";
 
 const RegisterModal = (props: {
 	open: boolean;
@@ -58,37 +59,40 @@ const RegisterModal = (props: {
 			},
 			(msg: string) => {
 				gMsg.onError("登记失败！" + msg);
-			},
+			}
 		);
 	};
 
 	return (
-		<Modal
-			width={1000}
-			open={open}
-			onCancel={() => setOpen(false)}
-			confirmLoading={confirmLoading}
-			onOk={handleOk}>
-			<Card title={"矫正人员登记表"}>
-				<RegisterForm
-					form={form}
-					onFinish={onFinish}
-					initialValues={{
-						sqjzdxbh: "00000001",
-						sfdcpg: "否",
-						jzlb: "管制",
-						xb: "男",
-						mz: "汉族",
-						gj: "中国籍",
-						hjlx: "乡村人口",
-						whcd: "其他",
-						hyzk: "其他",
-						jyjxqk: "就业",
-						ywjtcyjzyshgx: "是",
-					}}
-				/>
-			</Card>
-		</Modal>
+		<>
+			<TemplateModal
+				InfoDescriptions={
+					<RegisterForm
+						form={form}
+						onFinish={onFinish}
+						initialValues={{
+							sqjzdxbh: "00000001",
+							sfdcpg: "否",
+							jzlb: "管制",
+							xb: "男",
+							mz: "汉族",
+							gj: "中国籍",
+							hjlx: "乡村人口",
+							whcd: "其他",
+							hyzk: "其他",
+							jyjxqk: "就业",
+							ywjtcyjzyshgx: "是",
+						}}
+					/>
+				}
+				open={open}
+				setOpen={setOpen}
+				onOk={handleOk}
+				confirmLoading={confirmLoading}
+				getAPI={undefined}
+				recordId={undefined}
+			/>
+		</>
 	);
 };
 

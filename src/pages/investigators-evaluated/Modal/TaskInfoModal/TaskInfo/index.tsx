@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Descriptions } from "antd";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { transform } from "@/coderepo/ie";

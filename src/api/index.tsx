@@ -6,7 +6,7 @@ export const apiPost = async (
 	url: string,
 	data: any,
 	onSuccess?: any,
-	onError?: any,
+	onError?: any
 ) => {
 	await api
 		.post(url, data)
@@ -20,14 +20,14 @@ export const apiPost = async (
 		})
 		.catch((reason) => {
 			onError(reason.message);
-		})
+		});
 };
 
 export const apiGet = async (
 	api: AxiosInstance,
 	url: string,
 	onSuccess?: any,
-	onError?: any,
+	onError?: any
 ) => {
 	await api
 		.get(url)

@@ -17,7 +17,7 @@ import {
 import Table, { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal/AddTeam";
-import TemplateHome from "@/template/TemplateHome";
+import TemplateHome from "@/template/OperatorAndTable";
 
 export interface DataType {
 	id: string; // 小组编号

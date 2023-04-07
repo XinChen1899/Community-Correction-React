@@ -17,7 +17,7 @@ const CrpInfo = (props: { info: CorrectionTeam }) => {
 			</Descriptions.Item>
 			<Descriptions.Item label="小组成员">
 				{info.workers.map((rec, idx) => {
-					return <div>{rec.xm}</div>;
+					return <div key={rec.rybm}>{rec.xm}</div>;
 				})}
 			</Descriptions.Item>
 		</Descriptions>

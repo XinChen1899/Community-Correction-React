@@ -16,7 +16,7 @@ export const routeNameMap = {
 	crteam: "矫正小组",
 	noExit: "不准出境",
 	security: "权限",
-	worker: "行政人员",
+	worker: "工作人员",
 };
 
 interface IPageItem {
@@ -91,6 +91,22 @@ export const routeTable = [
 				children: [],
 			},
 		],
+	},
+	{
+		url: "security",
+		page: getPageItem("security", routeNameMap.security),
+		children: [
+			{
+				url: "security/worker",
+				page: getPageItem(
+					"worker",
+					routeNameMap.worker,
+					lazy(() => import("@/pages/Woker"))
+				),
+				children: [],
+			},
+		],
+		icon: <SearchOutlined />,
 	},
 ];
 

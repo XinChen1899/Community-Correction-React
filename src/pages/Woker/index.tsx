@@ -20,7 +20,7 @@ import {
 import Table, { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
 import { useState } from "react";
-import TemplateHome from "@/template/TemplateHome";
+import TemplateHome from "@/template/OperatorAndTable";
 import AddModal from "./Modal/AddModal/AddPeople";
 
 export interface DataType {

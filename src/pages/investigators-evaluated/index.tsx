@@ -11,7 +11,7 @@ import Highlighter from "react-highlight-words";
 import "react";
 import { useEffect, useRef, useState } from "react";
 import { message } from "antd";
-import OperatorAndTable from "@/template/TemplateHome";
+import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import {
 	LoadingOutlined,
 	CheckCircleOutlined,
@@ -99,7 +99,8 @@ export default function IE() {
 				const td = ieInfo2DataType(infoList);
 				setTableData(td);
 			},
-			() => gMsg.onError("请求不到调查评估的所有信息！")
+			(msg: string) =>
+				gMsg.onError("请求不到调查评估的所有信息！" + msg)
 		);
 		getCount(setInfoCount);
 	}, [tableUpdate]);
@@ -342,7 +343,7 @@ export default function IE() {
 				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 			/>
-			<OperatorAndTable
+			<TemplateOperatorAndTable
 				columns={columns}
 				cardExtra={
 					<>

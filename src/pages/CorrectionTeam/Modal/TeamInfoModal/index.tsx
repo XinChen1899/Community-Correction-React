@@ -1,7 +1,7 @@
-import { Card, Modal, Space } from "antd";
 import CrpInfo from "./TeamInfo";
 import { DataType } from "../..";
 import { CorrectionTeam } from "@/entity/IC/Cteam";
+import TemplateModal from "@/template/Modal";
 
 export default function TeamInfoModal(props: {
 	open: boolean;
@@ -19,19 +19,15 @@ export default function TeamInfoModal(props: {
 	};
 
 	return (
-		<Modal
-			style={{ top: 20 }}
-			open={open}
-			width={1000}
-			onOk={() => setOpen(false)}
-			onCancel={() => setOpen(false)}>
-			<Card>
-				<Space direction={"vertical"}>
-					<Card hoverable style={{ width: "900px" }}>
-						<CrpInfo info={info} />
-					</Card>
-				</Space>
-			</Card>
-		</Modal>
+		<>
+			<TemplateModal
+				InfoDescriptions={<CrpInfo info={info} />}
+				open={open}
+				setOpen={setOpen}
+				// recordId={dxbh}
+				// infoUpdate={infoUpdate}
+				getAPI={() => {}}
+			/>
+		</>
 	);
 }

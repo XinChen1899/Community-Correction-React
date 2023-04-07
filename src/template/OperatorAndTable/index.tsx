@@ -2,7 +2,7 @@ import { Card, Col, Descriptions, Row, Space, Statistic } from "antd";
 
 import Table from "antd/es/table";
 
-export default function OperatorAndTable(props: {
+export default function TemplateOperatorAndTable(props: {
 	columns: any;
 	cardExtra: any;
 	cardTitle: string;

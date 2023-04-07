@@ -28,8 +28,8 @@ function getItem(
 
 const generateMenu = (routeTable: any[]) => {
 	const menus: MenuItem[] = [];
-	const menuChildren: MenuItem[] = [];
 	routeTable.forEach((route: any) => {
+		const menuChildren: MenuItem[] = [];
 		if (route.children.length) {
 			menuChildren.push(...generateMenu(route.children));
 			menus.push(
@@ -53,9 +53,10 @@ const menuItemsTemp = generateMenu(routeTable);
 
 // 设置菜单默认的选择
 const findDefaultMenuItem = (pathname: string) => {
-	const pathList = pathname.split("/").slice(2);
+	const pathList = pathname.split("/").slice(1);
+
 	if (pathList.length == 1) {
-		return [[], pathList];
+		return [[], [pathList[0]]];
 	} else {
 		let full = "";
 		for (let i = 0; i < pathList.length; i++) {

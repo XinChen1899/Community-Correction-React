@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Form, Modal } from "antd";
 
 import "@/entity/IE/IEInfo";
@@ -26,7 +26,7 @@ const TaskAddModal = (props: {
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
-	const [wtbh, setWTBH] = useState("00000000");
+	const [wtbh, setWTBH] = useState("");
 
 	const handleOk = () => {
 		setConfirmLoading(true);
@@ -42,6 +42,7 @@ const TaskAddModal = (props: {
 		return "0".repeat(len) + s;
 	};
 	useEffect(() => {
+		form.resetFields();
 		setWTBH(getWTBH(tableCount + 1));
 	}, [tableUpdate]);
 

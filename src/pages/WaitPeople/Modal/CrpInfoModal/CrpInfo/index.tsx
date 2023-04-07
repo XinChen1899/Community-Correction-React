@@ -1,5 +1,4 @@
 import { Descriptions } from "antd";
-import { transform } from "@/coderepo/ie";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 
 const CrpInfo = (props: { info: CorrectionPeople }) => {

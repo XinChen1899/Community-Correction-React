@@ -11,6 +11,7 @@ export default function TemplateModal(props: {
 	confirmLoading?: boolean;
 	recordId: any;
 	infoUpdate?: any;
+	title?: string;
 }) {
 	const {
 		open,
@@ -22,6 +23,7 @@ export default function TemplateModal(props: {
 		confirmLoading,
 		onOk,
 		onCancel,
+		title,
 	} = props;
 
 	useEffect(() => {
@@ -33,8 +35,10 @@ export default function TemplateModal(props: {
 	return (
 		<Modal
 			style={{ top: 20 }}
+			title={title}
+			centered
 			open={open}
-			width={1000}
+			width={980}
 			confirmLoading={confirmLoading}
 			onOk={onOk != undefined ? onOk : () => setOpen(false)}
 			onCancel={
@@ -42,13 +46,11 @@ export default function TemplateModal(props: {
 					? onCancel
 					: () => setOpen(false)
 			}>
-			<Card>
-				<Space direction={"vertical"}>
-					<Card hoverable style={{ width: "900px" }}>
-						{InfoDescriptions}
-					</Card>
-				</Space>
-			</Card>
+			<Space direction={"vertical"}>
+				<Card hoverable style={{ width: "900px" }}>
+					{InfoDescriptions}
+				</Card>
+			</Space>
 		</Modal>
 	);
 }

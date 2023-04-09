@@ -7,16 +7,16 @@ export default function TemplateOperatorAndTable(props: {
 	cardExtra: any;
 	cardTitle: string;
 	statisticList: any;
-	tableData: any;
 	tableOnRow: any;
+	tableData: any;
 }) {
 	const {
 		columns,
 		cardExtra,
 		cardTitle,
 		statisticList,
-		tableData,
 		tableOnRow,
+		tableData,
 	} = props;
 
 	return (

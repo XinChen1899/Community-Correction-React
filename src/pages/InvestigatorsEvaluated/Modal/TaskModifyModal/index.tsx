@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Space } from "antd/lib";
 import { getIEInfoById, updateIEInfoData } from "@/api/ie";
 import { IeFormConvert2IeInfo } from "@/coderepo/ie";
-import { IEInfoForm } from "@/pages/investigators-evaluated/Form/IEInfoForm";
+import { IEInfoForm } from "@/pages/InvestigatorsEvaluated/Form/IEInfoForm";
 import { GMessage } from "@/coderepo/msg/GMsg";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import dayjs from "dayjs";
@@ -44,6 +44,7 @@ const defaultIEInfo: IEInfo = {
 	zm: "",
 	wtbh: "",
 	bgrxm: "",
+	finish: -1,
 };
 export default function TaskModifyModal(props: ITaskInfoModal) {
 	const {
@@ -109,7 +110,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 				getAPI={(id: string) => {
 					if (id && id != "") {
 						getIEInfoById(
-							wtbh,
+							id,
 							(info: IEInfo) => {
 								info.pjrq = dayjs(info.pjrq);
 								info.bgrcsrq = dayjs(info.bgrcsrq);

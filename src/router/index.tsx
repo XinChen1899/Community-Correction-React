@@ -1,10 +1,18 @@
 import { Route } from "react-router-dom";
 import {
+	ApartmentOutlined,
+	DeleteRowOutlined,
+	DeploymentUnitOutlined,
+	EyeOutlined,
 	HomeOutlined,
+	ScheduleOutlined,
 	SearchOutlined,
+	SolutionOutlined,
 	TeamOutlined,
+	UsergroupDeleteOutlined,
 } from "@ant-design/icons";
 import { LazyExoticComponent, lazy } from "react";
+import NoExit from "@/pages/NoExit";
 
 // id -> 中文名
 export const routeNameMap = {
@@ -17,6 +25,14 @@ export const routeNameMap = {
 	noExit: "不准出境",
 	security: "权限",
 	worker: "工作人员",
+	noexit: "不准出境",
+	category: "分类管理",
+	individual: "个别化矫正",
+	daily: "日常管理",
+	business: "业务审批 ",
+	assesment: "考核奖惩",
+	termination: "终止矫正",
+	uncorrected: "解除矫正",
 };
 
 interface IPageItem {
@@ -43,7 +59,7 @@ export const routeTable = [
 		page: getPageItem(
 			"home",
 			routeNameMap.home,
-			lazy(() => import("@/pages/home"))
+			lazy(() => import("@/pages/Home"))
 		),
 		children: [],
 		icon: <HomeOutlined />,
@@ -53,7 +69,7 @@ export const routeTable = [
 		page: getPageItem(
 			"ie",
 			routeNameMap.ie,
-			lazy(() => import("@/pages/investigators-evaluated"))
+			lazy(() => import("@/pages/InvestigatorsEvaluated"))
 		),
 		children: [],
 		icon: <SearchOutlined />,
@@ -91,6 +107,86 @@ export const routeTable = [
 				children: [],
 			},
 		],
+	},
+	{
+		url: "noexit",
+		page: getPageItem(
+			"noexit",
+			routeNameMap.noexit,
+			lazy(() => import("@/pages/NoExit"))
+		),
+		children: [],
+		icon: <DeleteRowOutlined />,
+	},
+	{
+		url: "category",
+		page: getPageItem(
+			"category",
+			routeNameMap.category,
+			lazy(() => import("@/pages/Category"))
+		),
+		children: [],
+		icon: <DeploymentUnitOutlined />,
+	},
+	{
+		url: "individual",
+		page: getPageItem(
+			"individual",
+			routeNameMap.individual,
+			lazy(() => import("@/pages/IndividualCorrection"))
+		),
+		children: [],
+		icon: <SolutionOutlined />,
+	},
+	{
+		url: "daily",
+		page: getPageItem(
+			"daily",
+			routeNameMap.daily,
+			lazy(() => import("@/pages/DailyManagement"))
+		),
+		children: [],
+		icon: <ApartmentOutlined />,
+	},
+	{
+		url: "business",
+		page: getPageItem(
+			"business",
+			routeNameMap.business,
+			lazy(() => import("@/pages/BusinessApproval"))
+		),
+		children: [],
+		icon: <ScheduleOutlined />,
+	},
+	{
+		url: "assessment",
+		page: getPageItem(
+			"assessment",
+			routeNameMap.assesment,
+			lazy(() => import("@/pages/BusinessApproval"))
+		),
+		children: [],
+		icon: <EyeOutlined />,
+	},
+	{
+		url: "termination",
+		page: getPageItem(
+			"termination",
+			routeNameMap.termination,
+			lazy(() => import("@/pages/TerminationCorrection"))
+		),
+		children: [],
+		icon: <UsergroupDeleteOutlined />,
+	},
+	{
+		url: "uncorrected",
+		page: getPageItem(
+			"uncorrected",
+			routeNameMap.uncorrected,
+			lazy(() => import("@/pages/UnCorrected"))
+		),
+		children: [],
+		icon: <UsergroupDeleteOutlined />,
 	},
 	{
 		url: "security",

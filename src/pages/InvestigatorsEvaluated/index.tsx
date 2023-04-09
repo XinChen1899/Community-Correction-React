@@ -1,10 +1,12 @@
 import {
 	Button,
+	Dropdown,
 	Input,
 	InputRef,
 	Popconfirm,
 	Space,
 	Spin,
+	Tag,
 } from "antd";
 // @ts-ignore
 import Highlighter from "react-highlight-words";
@@ -19,6 +21,9 @@ import {
 	DeleteOutlined,
 	PlusOutlined,
 	SearchOutlined,
+	InfoCircleFilled,
+	DownOutlined,
+	AppstoreAddOutlined,
 } from "@ant-design/icons";
 import { ColumnType, ColumnsType } from "antd/es/table";
 import TaskAddModal from "./Modal/TaskAddModal";
@@ -28,6 +33,11 @@ import { IEInfo } from "@/entity/IE/IEInfo";
 import { FilterConfirmProps } from "antd/es/table/interface";
 import TaskInfoModal from "./Modal/TaskInfoModal";
 import TaskModifyModal from "./Modal/TaskModifyModal";
+import { MenuProps } from "antd/lib";
+import TaskAddTimeModal from "./Modal/TaskAddTimeModal";
+import TaskRecvModal from "./Modal/TaskRecvModal";
+import { map2Value } from "@/coderepo/ie";
+import { wtdwMap } from "@/coderepo";
 
 /**
  * 调查评估:
@@ -39,33 +49,38 @@ import TaskModifyModal from "./Modal/TaskModifyModal";
 
 // 调查评估表 元组的数据类型
 export interface DataType {
-	isFinished: boolean; // 是否结束
+	id: number;
+	isFinished: number; // 是否结束
 	wtbh: string; // 委托编号
 	name: string; // 被调查人姓名
+	wtdw: string; // 委托单位
 }
 
 const ieInfo2DataType = (infoList: IEInfo[]) => {
-	return infoList.map((item: IEInfo) => {
+	return infoList.map((item: IEInfo, idx: number) => {
 		return {
-			isFinished: false,
+			id: idx,
+			isFinished: item.finish,
 			wtbh: item.wtbh,
 			name: item.bgrxm,
+			wtdw: item.wtdw,
 		} as DataType;
 	});
 };
 
 export default function IE() {
-	const [selectTask, setSelectTask] = useState<DataType>({
-		isFinished: false,
-		wtbh: "",
-		name: "null",
-	});
+	const [selectTask, setSelectTask] = useState<DataType>(
+		{} as DataType
+	);
 	// 是否需要更新表格
 	const [tableUpdate, setTableUpdate] = useState(false);
 
-	const [addModalOpen, setAddModalOpen] = useState(false);
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
+	const [openRecv, setOpenRecv] = useState(false);
+	const [openAddTime, setOpenAddTime] = useState(false);
+
+	const [tableData, setTableData] = useState<DataType[]>([]);
 
 	const [messageApi, contextHolder] = message.useMessage();
 
@@ -90,7 +105,6 @@ export default function IE() {
 
 	const [infoCount, setInfoCount] = useState(0);
 
-	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [taskUpdate, setTaskUpdate] = useState(false);
 
 	useEffect(() => {
@@ -241,13 +255,16 @@ export default function IE() {
 			title: "进度",
 			dataIndex: "isFinished",
 			key: "isFinished",
-			width: 50,
+			width: 100,
 			render: (_, record) => {
 				const { isFinished } = record;
 				let loading;
-				if (!isFinished)
+				if (isFinished != 0)
 					loading = (
-						<Spin indicator={<LoadingOutlined />} />
+						<Space>
+							<Spin indicator={<LoadingOutlined />} />
+							还需{isFinished}日
+						</Space>
 					);
 				else
 					loading = (
@@ -264,6 +281,13 @@ export default function IE() {
 			...getColumnSearchProps("wtbh"),
 		},
 		{
+			title: "委托单位",
+			dataIndex: "wtdw",
+			key: "wtdw",
+			width: 150,
+			...getColumnSearchProps("wtdw"),
+		},
+		{
 			title: "姓名",
 			dataIndex: "name",
 			key: "name",
@@ -276,6 +300,65 @@ export default function IE() {
 			width: 200,
 		},
 	];
+
+	const items: MenuProps["items"] = [
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<EditOutlined />}
+					onClick={() => setOpenModify(true)}>
+					修改信息
+				</Button>
+			),
+			key: "0",
+		},
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<AppstoreAddOutlined />}
+					onClick={() => setOpenAddTime(true)}>
+					延长调查期限
+				</Button>
+			),
+			key: "01",
+		},
+		{
+			type: "divider",
+		},
+		{
+			label: (
+				<Button
+					block
+					type={"text"}
+					onClick={() =>
+						gMsg.onSuccess("给委托方发送调查评估信息表")
+					}
+					icon={<InfoCircleFilled />}>
+					委托方
+				</Button>
+			),
+			key: "23",
+		},
+		{
+			label: (
+				<Button
+					block
+					type={"text"}
+					onClick={() =>
+						gMsg.onSuccess("给检察院发送调查评估信息表")
+					}
+					icon={<InfoCircleFilled />}>
+					检查方
+				</Button>
+			),
+			key: "3",
+		},
+	];
+
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
@@ -287,49 +370,49 @@ export default function IE() {
 							onClick={() => setOpenInfo(true)}>
 							调查评估信息表
 						</Button>
-						<Button
-							type={"dashed"}
-							danger
-							icon={<EditOutlined />}
-							onClick={() => setOpenModify(true)}>
-							修改信息
-						</Button>
 
-						<Popconfirm
-							title="是否删除"
-							description="是否删除该调查评估信息！"
-							onConfirm={confirm}
-							onOpenChange={() =>
-								console.log("open change")
-							}>
-							<Button
-								type={"primary"}
-								danger
-								icon={<DeleteOutlined />}>
-								删除!
-							</Button>
-						</Popconfirm>
+						<Dropdown
+							menu={{ items }}
+							trigger={["click"]}>
+							<a onClick={(e) => e.preventDefault()}>
+								<Space>
+									操作
+									<DownOutlined />
+								</Space>
+							</a>
+						</Dropdown>
 					</Space>
 				);
 			};
+		} else if (column.key == "wtdw") {
+			column.render = (_, rec) => (
+				<Tag>{map2Value(wtdwMap, rec.wtdw)}</Tag>
+			);
 		}
 	});
 
 	return (
-		<div>
+		<>
 			{contextHolder}
-			<TaskAddModal
-				open={addModalOpen}
-				setOpen={setAddModalOpen}
+			<TaskRecvModal
+				open={openRecv}
+				setOpen={setOpenRecv}
 				tableUpdate={tableUpdate}
+				taskUpdate={taskUpdate}
 				setTableUpdate={setTableUpdate}
-				tableCount={infoCount}
 				gMsg={gMsg}
 			/>
+			<TaskAddTimeModal
+				open={openAddTime}
+				setOpen={setOpenAddTime}
+				time={selectTask.isFinished}
+				gMsg={gMsg}
+			/>
+
 			<TaskInfoModal
 				open={openInfo}
 				setOpen={setOpenInfo}
-				selectTask={selectTask}
+				wtbh={selectTask.wtbh}
 				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 			/>
@@ -343,29 +426,35 @@ export default function IE() {
 				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 			/>
+
 			<TemplateOperatorAndTable
+				tableData={tableData}
 				columns={columns}
 				cardExtra={
 					<>
-						<Button
-							onClick={() => setAddModalOpen(true)}
-							type={"primary"}
-							icon={<PlusOutlined />}>
-							新增调查评估
-						</Button>
+						<Space>
+							<Button
+								onClick={() => setOpenRecv(true)}
+								type={"primary"}
+								icon={<PlusOutlined />}>
+								接受委托
+							</Button>
+						</Space>
 					</>
 				}
 				cardTitle={"调查评估操作区"}
 				statisticList={[
 					{ title: "调查评估总数", value: 999 },
 					{ title: "今日新增调查评估数", value: 999 },
-					{ title: "正在处理中的调查评估数", value: 999 },
+					{
+						title: "正在处理中的调查评估数",
+						value: 999,
+					},
 				]}
-				tableData={tableData}
 				tableOnRow={(record: any) => {
 					setSelectTask(record);
 				}}
 			/>
-		</div>
+		</>
 	);
 }

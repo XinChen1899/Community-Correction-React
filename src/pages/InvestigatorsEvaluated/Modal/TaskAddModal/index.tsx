@@ -2,47 +2,33 @@ import { useEffect, useState } from "react";
 import { Form } from "antd";
 
 import "@/entity/IE/IEInfo";
-import { saveIEInfoData } from "@/api/ie";
-import { IEInfoForm } from "@/pages/investigators-evaluated/Form/IEInfoForm";
+import { getIEInfoById, saveIEInfoData } from "@/api/ie";
+import { IEInfoForm } from "@/pages/InvestigatorsEvaluated/Form/IEInfoForm";
 import { IeFormConvert2IeInfo } from "@/coderepo/ie";
 import { GMessage } from "@/coderepo/msg/GMsg";
 import TemplateModal from "@/template/Modal";
+import { IEInfo } from "@/entity/IE/IEInfo";
+import dayjs from "dayjs";
 
 const TaskAddModal = (props: {
 	open: boolean;
 	setOpen: any;
 	tableUpdate: boolean;
 	setTableUpdate: any;
-	tableCount: number;
+	wtbh: string;
 	gMsg: GMessage;
 }) => {
-	const {
-		setOpen,
-		open,
-		setTableUpdate,
-		tableUpdate,
-		tableCount,
-		gMsg,
-	} = props;
+	const { setOpen, open, setTableUpdate, tableUpdate, wtbh, gMsg } =
+		props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
+	const [info, setInfo] = useState<IEInfo>();
 	const [form] = Form.useForm();
-	const [wtbh, setWTBH] = useState("");
 
 	const handleOk = () => {
 		setConfirmLoading(true);
 		form.submit();
 	};
-
-	const getWTBH = (ieInfoCounts: number) => {
-		const s = ieInfoCounts.toString();
-		const len = 8 - s.length;
-		return "0".repeat(len) + s;
-	};
-	useEffect(() => {
-		form.resetFields();
-		setWTBH(getWTBH(tableCount + 1));
-	}, [tableUpdate]);
 
 	// 提交表单时操作
 	// 新增调查评估时，同时新增调查评估信息
@@ -69,7 +55,8 @@ const TaskAddModal = (props: {
 					form={form}
 					onFinish={onFinish}
 					initialValues={{
-						wtbh: wtbh,
+						wtbh,
+						wtdw: "01",
 						bdcpgrdlx: "01",
 						bgrxb: "male",
 						zm: "01",
@@ -84,8 +71,20 @@ const TaskAddModal = (props: {
 			setOpen={setOpen}
 			onOk={handleOk}
 			confirmLoading={confirmLoading}
-			getAPI={undefined}
-			recordId={undefined}
+			getAPI={(id: string) => {
+				if (id && id != "") {
+					getIEInfoById(id, (info: IEInfo) => {
+						info.pjrq = dayjs(info.pjrq);
+						info.bgrcsrq = dayjs(info.bgrcsrq);
+						info.ypxqjsrq = dayjs(info.ypxqjsrq);
+						info.ypxqksrq = dayjs(info.ypxqksrq);
+						setInfo(info);
+					});
+
+					console.log(info);
+				}
+			}}
+			recordId={wtbh}
 		/>
 	);
 };

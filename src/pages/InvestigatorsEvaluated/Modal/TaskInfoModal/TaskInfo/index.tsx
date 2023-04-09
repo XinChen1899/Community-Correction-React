@@ -1,7 +1,16 @@
-
 import { Descriptions } from "antd";
 import { IEInfo } from "@/entity/IE/IEInfo";
-import { transform } from "@/coderepo/ie";
+import { map2Value } from "@/coderepo/ie";
+import {
+	bdcpgrdlxMap,
+	fjxMap,
+	nsyjzlbMap,
+	pjjgMap,
+	wtdwMap,
+	xbMap,
+	ypxfMap,
+	zmMap,
+} from "@/coderepo";
 
 const TaskInfo = (props: { info: IEInfo }) => {
 	const { info } = props;
@@ -12,13 +21,15 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				{info.wtbh}
 			</Descriptions.Item>
 			<Descriptions.Item label="委托单位">
-				{info.wtdw}
+				{map2Value(wtdwMap, info.wtdw)}
 			</Descriptions.Item>
 			<Descriptions.Item label="调查评估委托函">
 				{info.wtdch}
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象的类型">
-				{transform("bdcpgrdlx", info.bdcpgrdlx)}
+				{/* {info.bdcpgrdlx} */}
+				{map2Value(bdcpgrdlxMap, info.bdcpgrdlx)}
+				{/* {transform("bdcpgrdlx", info.bdcpgrdlx)} */}
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象姓名">
 				{info.bgrxm}
@@ -27,7 +38,8 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				{info.bgrsfzh}
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象性别" span={1.5}>
-				{transform("bgrxb", info.bgrxb)}
+				{map2Value(xbMap, info.bgrxb)}
+				{/* {transform("bgrxb", info.bgrxb)} */}
 			</Descriptions.Item>
 			<Descriptions.Item label="被调查评估对象出生日期">
 				{info.bgrcsrq.toString()}
@@ -41,7 +53,8 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				{info.bgrgzdw}
 			</Descriptions.Item>
 			<Descriptions.Item label="罪名">
-				{transform("zm", info.zm)}
+				{map2Value(zmMap, info.zm)}
+				{/* {transform("zm", info.zm)} */}
 			</Descriptions.Item>
 			<Descriptions.Item label="原判判刑">
 				{info.ypxq}
@@ -53,19 +66,19 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				{info.ypxqjsrq.toString()}
 			</Descriptions.Item>
 			<Descriptions.Item label="原判刑罚">
-				{transform("ypxf", info.ypxf)}
+				{map2Value(ypxfMap, info.ypxf)}
 			</Descriptions.Item>
 			<Descriptions.Item label="附加邢">
-				{transform("fjx", info.fjx)}
+				{map2Value(fjxMap, info.fjx)}
 			</Descriptions.Item>
 			<Descriptions.Item label="判决机关">
-				{transform("pjjg", info.pjjg)}
+				{map2Value(pjjgMap, info.pjjg)}
 			</Descriptions.Item>
 			<Descriptions.Item label="判决日期">
 				{info.pjrq.toString()}
 			</Descriptions.Item>
 			<Descriptions.Item label="拟使用矫正类别">
-				{transform("nsyjzlb", info.nsyjzlb)}
+				{map2Value(nsyjzlbMap, info.nsyjzlb)}
 			</Descriptions.Item>
 			<Descriptions.Item label="接收委托的县级社区矫正机构">
 				{info.dcdwxqj}

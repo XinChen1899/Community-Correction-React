@@ -2,6 +2,7 @@ import { Dayjs } from "dayjs";
 
 export interface IEInfo {
 	wtbh: string; // 委托编号
+	finish: number; // 完成时间
 	wtdw: string; // 委托单位
 	wtdch: string; // 调查评估委托函
 	bdcpgrdlx: string; // 被调查评估对象的类型

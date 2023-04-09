@@ -1,54 +1,65 @@
 import { Select } from "antd";
 
-export const bdcpgrdlxMap = {
-	"01": "被告人",
-	"02": "罪犯",
-	"99": "其他",
-};
+export const bdcpgrdlxMap = [
+	{ code: "01", value: "被告人" },
+	{ code: "02", value: "罪犯" },
+	{ code: "99", value: "其他" },
+];
 
-export const xxMap = [{ code: "01", value: "xxx" }];
+export const xbMap = [
+	{ code: "01", value: "男" },
+	{ code: "02", value: "女" },
+];
 
-export const zmMap = {
-	"01": "危害国家安全",
-	"02": "危害公共安全",
-	"03": "破坏社会主义市场经济秩序",
-	"04": "侵犯公民人身权利、民主权利",
-	"05": "侵犯财产",
-	"06": "妨害社会管理秩序",
-	"07": "危害国防利益",
-	"08": "贪污受贿",
-	"09": "渎职",
-	"99": "其他",
-};
+export const zmMap = [
+	{ code: "01", value: "危害国家安全" },
+	{ code: "02", value: "危害公共安全" },
+	{ code: "03", value: "破坏社会主义市场经济秩序" },
+	{ code: "04", value: "侵犯公民人身权利、民主权利" },
+	{ code: "05", value: "侵犯财产" },
+	{ code: "06", value: "妨害社会管理秩序" },
+	{ code: "07", value: "危害国防利益" },
+	{ code: "08", value: "贪污受贿" },
+	{ code: "09", value: "渎职" },
+	{ code: "99", value: "其他" },
+];
 
-export const ypxfMap = {
-	"01": "死刑缓期两年执行",
-	"02": "无期徒刑",
-	"03": "有期徒刑",
-	"04": "拘役",
-	"05": "管制",
-};
+export const ypxfMap = [
+	{ code: "01", value: "死刑缓期两年执行" },
+	{ code: "02", value: "无期徒刑" },
+	{ code: "03", value: "有期徒刑" },
+	{ code: "04", value: "拘役" },
+	{ code: "05", value: "管制" },
+];
 
-export const fjxMap = {
-	"01": "罚金",
-	"02": "剥夺政治权利",
-	"03": "没收财产",
-	"04": "驱逐出境",
-	"05": "无",
-	"99": "其他",
-};
+export const fjxMap = [
+	{ code: "01", value: "罚金" },
+	{ code: "02", value: "剥夺政治权利" },
+	{ code: "03", value: "没收财产" },
+	{ code: "04", value: "驱逐出境" },
+	{ code: "05", value: "无" },
+	{ code: "99", value: "其他" },
+];
 
-export const pjjgMap = {
-	"01": "人民法院",
-	"02": "公安机关",
-	"03": "监狱管理机关",
-};
+export const pjjgMap = [
+	{ code: "01", value: "人民法院" },
+	{ code: "02", value: "公安机关" },
+	{ code: "03", value: "监狱管理机关" },
+];
 
-export const nsyjzlbMap = {
-	"01": "宽松",
-	"02": "普通",
-	"03": "严格",
-};
+export const nsyjzlbMap = [
+	{ code: "01", value: "宽松" },
+	{ code: "02", value: "普通" },
+	{ code: "03", value: "严格" },
+];
+// 法院、侦查机关、检察院、公安、监狱局、监狱
+export const wtdwMap = [
+	{ code: "01", value: "法院" },
+	{ code: "02", value: "检察院" },
+	{ code: "03", value: "公安" },
+	{ code: "04", value: "监狱" },
+	{ code: "05", value: "侦查机关" },
+];
 
 export const jzlbMap = [
 	{ code: "01", value: "管制" },

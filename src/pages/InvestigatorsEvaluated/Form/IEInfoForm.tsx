@@ -8,6 +8,17 @@ import {
 	Upload,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import {
+	bdcpgrdlxMap,
+	fjxMap,
+	generateSelect,
+	nsyjzlbMap,
+	pjjgMap,
+	wtdwMap,
+	xbMap,
+	ypxfMap,
+	zmMap,
+} from "@/coderepo";
 
 const { TextArea } = Input;
 
@@ -26,7 +37,9 @@ export function IEInfoForm(props: {
 				<Input disabled />
 			</Form.Item>
 			<Form.Item name={"wtdw"} label="委托单位">
-				<Input placeholder={"请输入委托单位"} />
+				{/* <Input placeholder={"请输入委托单位"} /> */}
+
+				{generateSelect(wtdwMap)}
 			</Form.Item>
 			<Form.Item name={"wtdch"} label="委托调查函">
 				<TextArea placeholder={"请输入委托调查函"} />
@@ -34,20 +47,18 @@ export function IEInfoForm(props: {
 			<Form.Item
 				name={"bdcpgrdlx"}
 				label="被调查评估对象的类型">
-				<Select style={{ width: 120 }}>
+				{generateSelect(bdcpgrdlxMap)}
+				{/* <Select style={{ width: 120 }}>
 					<Select.Option value="01">被告人</Select.Option>
 					<Select.Option value="02">罪犯</Select.Option>
 					<Select.Option value="99">其他</Select.Option>
-				</Select>
+				</Select> */}
 			</Form.Item>
 			<Form.Item name={"bgrxm"} label="被调查评估对象姓名">
 				<Input placeholder={"请输入姓名"} />
 			</Form.Item>
 			<Form.Item name={"bgrxb"} label="被调查评估对象性别">
-				<Select defaultValue="男" style={{ width: 120 }}>
-					<Select.Option value="male">男</Select.Option>
-					<Select.Option value="female">女</Select.Option>
-				</Select>
+				{generateSelect(xbMap)}
 			</Form.Item>
 			<Form.Item
 				name={"bgrsfzh"}
@@ -70,30 +81,7 @@ export function IEInfoForm(props: {
 				<Input placeholder={"请输入工作单位"} />
 			</Form.Item>
 			<Form.Item name={"zm"} label="罪名">
-				<Select style={{ width: 230 }}>
-					<Select.Option value="01">
-						危害国家安全
-					</Select.Option>
-					<Select.Option value="02">
-						危害公共安全
-					</Select.Option>
-					<Select.Option value="03">
-						破坏社会主义市场经济秩序
-					</Select.Option>
-					<Select.Option value="04">
-						侵犯公民人身权利、民主权利
-					</Select.Option>
-					<Select.Option value="05">侵犯财产</Select.Option>
-					<Select.Option value="06">
-						妨害社会管理秩序
-					</Select.Option>
-					<Select.Option value="07">
-						危害国防利益
-					</Select.Option>
-					<Select.Option value="08">贪污受贿</Select.Option>
-					<Select.Option value="09">渎职</Select.Option>
-					<Select.Option value="99">其他</Select.Option>
-				</Select>
+				{generateSelect(zmMap)}
 			</Form.Item>
 			<Form.Item name={"ypxq"} label="原判刑期">
 				<Input placeholder={"请输入原判刑期"} />
@@ -105,46 +93,19 @@ export function IEInfoForm(props: {
 				<DatePicker />
 			</Form.Item>
 			<Form.Item name={"ypxf"} label="原判刑罚">
-				<Select style={{ width: 170 }}>
-					<Select.Option value="01">
-						死刑缓期两年执行
-					</Select.Option>
-					<Select.Option value="02">无期徒刑</Select.Option>
-					<Select.Option value="03">有期徒刑</Select.Option>
-					<Select.Option value="04">拘役</Select.Option>
-					<Select.Option value="05">管制</Select.Option>
-				</Select>
+				{generateSelect(ypxfMap)}
 			</Form.Item>
 			<Form.Item name={"fjx"} label="附加刑">
-				<Select style={{ width: 170 }}>
-					<Select.Option value="01">罚金</Select.Option>
-					<Select.Option value="02">
-						剥夺政治权利
-					</Select.Option>
-					<Select.Option value="03">没收财产</Select.Option>
-					<Select.Option value="04">驱逐出境</Select.Option>
-					<Select.Option value="05">无</Select.Option>
-					<Select.Option value="99">其他</Select.Option>
-				</Select>
+				{generateSelect(fjxMap)}
 			</Form.Item>
 			<Form.Item name={"pjjg"} label="判决机关">
-				<Select style={{ width: 170 }}>
-					<Select.Option value="01">人民法院</Select.Option>
-					<Select.Option value="02">公安机关</Select.Option>
-					<Select.Option value="03">
-						监狱管理机关
-					</Select.Option>
-				</Select>
+				{generateSelect(pjjgMap)}
 			</Form.Item>
 			<Form.Item name={"pjrq"} label="判决日期">
 				<DatePicker />
 			</Form.Item>
 			<Form.Item name={"nsyjzlb"} label="拟适用矫正类别">
-				<Select style={{ width: 170 }}>
-					<Select.Option value="01">宽松</Select.Option>
-					<Select.Option value="02">普通</Select.Option>
-					<Select.Option value="03">严格</Select.Option>
-				</Select>
+				{generateSelect(nsyjzlbMap)}
 			</Form.Item>
 
 			<Form.Item

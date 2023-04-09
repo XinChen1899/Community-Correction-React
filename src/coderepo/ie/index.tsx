@@ -21,23 +21,13 @@ export const IeFormConvert2IeInfo = (formData: any) => {
 	return tempInfo;
 };
 
-export const transform = (type: string, value: any) => {
-	switch (type) {
-		case "bdcpgrdlx":
-			return bdcpgrdlxMap[value as keyof object];
-		case "bgrxb":
-			return value === "male" ? "男" : "女";
-		case "zm":
-			return zmMap[value as keyof object];
-		case "ypxf":
-			return ypxfMap[value as keyof object];
-		case "fjx":
-			return fjxMap[value as keyof object];
-		case "pjjg":
-			return pjjgMap[value as keyof object];
-		case "nsyjzlb":
-			return nsyjzlbMap[value as keyof object];
-		default:
-			return "UnKnown";
-	}
+export const map2Value = (map: any[], code: string) => {
+	let value;
+	map.forEach((item) => {
+		if (item.code == code) {
+			value = item.value;
+			return;
+		}
+	});
+	return value;
 };

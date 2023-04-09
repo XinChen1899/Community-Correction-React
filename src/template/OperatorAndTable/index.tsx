@@ -24,16 +24,19 @@ export default function TemplateOperatorAndTable(props: {
 			<Space direction={"vertical"}>
 				<Card title={cardTitle} extra={cardExtra}>
 					<Row gutter={16}>
-						{statisticList.map((s: any, idx: number) => {
-							return (
-								<Col span={12} key={idx}>
-									<Statistic
-										title={s.title}
-										value={s.value}
-									/>
-								</Col>
-							);
-						})}
+						{statisticList &&
+							statisticList.map(
+								(s: any, idx: number) => {
+									return (
+										<Col span={12} key={idx}>
+											<Statistic
+												title={s.title}
+												value={s.value}
+											/>
+										</Col>
+									);
+								}
+							)}
 					</Row>
 					<Descriptions></Descriptions>
 				</Card>
@@ -45,7 +48,7 @@ export default function TemplateOperatorAndTable(props: {
 					onRow={(record) => {
 						return {
 							onClick: () => {
-								tableOnRow(record);
+								if (tableOnRow) tableOnRow(record);
 							}, // 点击行
 						};
 					}}

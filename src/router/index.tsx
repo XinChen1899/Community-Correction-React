@@ -12,7 +12,6 @@ import {
 	UsergroupDeleteOutlined,
 } from "@ant-design/icons";
 import { LazyExoticComponent, lazy } from "react";
-import NoExit from "@/pages/NoExit";
 
 // id -> 中文名
 export const routeNameMap = {

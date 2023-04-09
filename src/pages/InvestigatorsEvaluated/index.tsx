@@ -26,7 +26,6 @@ import {
 	AppstoreAddOutlined,
 } from "@ant-design/icons";
 import { ColumnType, ColumnsType } from "antd/es/table";
-import TaskAddModal from "./Modal/TaskAddModal";
 import { GMessage } from "@/coderepo/msg/GMsg";
 import { getAllIEInfos, getCount } from "@/api/ie";
 import { IEInfo } from "@/entity/IE/IEInfo";
@@ -36,8 +35,7 @@ import TaskModifyModal from "./Modal/TaskModifyModal";
 import { MenuProps } from "antd/lib";
 import TaskAddTimeModal from "./Modal/TaskAddTimeModal";
 import TaskRecvModal from "./Modal/TaskRecvModal";
-import { map2Value } from "@/coderepo/ie";
-import { wtdwMap } from "@/coderepo";
+import { map2Value, wtdwMap } from "@/coderepo";
 
 /**
  * 调查评估:

@@ -27,7 +27,7 @@ export default function TemplateModal(props: {
 	} = props;
 
 	useEffect(() => {
-		if (recordId) {
+		if (recordId && getAPI) {
 			getAPI(recordId);
 		}
 	}, [recordId, infoUpdate]);

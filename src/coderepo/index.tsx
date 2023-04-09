@@ -120,9 +120,18 @@ export const jyjxqkMap = [
 	{ code: "03", value: "就学" },
 ];
 
+export const crjzjzlMap = [
+	{ code: "01", value: "普通护照" },
+	{ code: "02", value: "往来港澳通行证及签注" },
+	{ code: "03", value: "前往港澳通行证" },
+	{ code: "04", value: "往来台湾通行证及签注" },
+	{ code: "05", value: "中华人民共和国出入境通行证" },
+	{ code: "06", value: "中华人民共和国边境地区出入境通行证" },
+];
+
 export const generateSelect = (selectList: any) => {
 	return (
-		<Select style={{ width: 120 }}>
+		<Select style={{ width: 290 }}>
 			{selectList.map((obj: any) => {
 				return (
 					<Select.Option value={obj.code} key={obj.value}>
@@ -132,4 +141,15 @@ export const generateSelect = (selectList: any) => {
 			})}
 		</Select>
 	);
+};
+
+export const map2Value = (map: any[], code: string) => {
+	let value;
+	map.forEach((item) => {
+		if (item.code == code) {
+			value = item.value;
+			return;
+		}
+	});
+	return value;
 };

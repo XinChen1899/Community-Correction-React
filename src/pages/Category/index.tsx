@@ -1,4 +1,4 @@
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import { DownOutlined, EditOutlined } from "@ant-design/icons";
 import {

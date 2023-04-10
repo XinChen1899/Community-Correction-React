@@ -12,7 +12,7 @@ import { Spin } from "antd/lib";
 import { useEffect, useState } from "react";
 import TemplateHome from "@/template/OperatorAndTable";
 import RegisterModal from "./Modal/RegisterModal";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import CrpInfoModal from "./Modal/CrpInfoModal";
 import CrpModifyModal from "./Modal/CrpModifyModal";
 import CrpRecModal from "./Modal/CrpRecModal";

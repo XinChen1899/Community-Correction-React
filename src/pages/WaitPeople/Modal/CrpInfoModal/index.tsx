@@ -4,7 +4,7 @@ import { DataType } from "../..";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import { useEffect, useState } from "react";
 import { getCrpById } from "@/api/ic";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import TemplateModal from "@/template/Modal";
 
 const defaultCrp: CorrectionPeople = {

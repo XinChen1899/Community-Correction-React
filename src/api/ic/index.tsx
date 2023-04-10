@@ -1,9 +1,9 @@
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import axios from "axios";
-import { apiGet, apiPost } from "..";
+import { ServerTable, useAPI } from "..";
 
 const api = axios.create({
-	baseURL: "http://localhost:9007/ic/crp",
+	baseURL: `${ServerTable.ic}/ic/crp`,
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
@@ -12,7 +12,12 @@ export const registerCrp = (
 	onSuccess?: any,
 	onError?: any
 ) => {
-	apiPost(api, "/register", crp, onSuccess, onError);
+	useAPI(
+		api,
+		{ url: "/register", method: "post", data: crp },
+		onSuccess,
+		onError
+	);
 };
 
 export const updateCrp = (
@@ -20,7 +25,12 @@ export const updateCrp = (
 	onSuccess?: any,
 	onError?: any
 ) => {
-	apiPost(api, "/update", crp, onSuccess, onError);
+	useAPI(
+		api,
+		{ url: "update", method: "post", data: crp },
+		onSuccess,
+		onError
+	);
 };
 
 export const getCrpById = (
@@ -28,9 +38,9 @@ export const getCrpById = (
 	onSuccess?: any,
 	onError?: any
 ) => {
-	return apiGet(api, id, onSuccess, onError);
+	useAPI(api, { url: `/${id}`, method: "get" }, onSuccess, onError);
 };
 
 export const getAllCrp = (onSuccess?: any, onError?: any) => {
-	return apiGet(api, "/all", onSuccess, onError);
+	useAPI(api, { url: "/all", method: "get" }, onSuccess, onError);
 };

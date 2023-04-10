@@ -1,7 +1,26 @@
-import { useEffect, useState } from "react";
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 
-export const apiPost = async (
+export const ServerTable = {
+	ie: "http://localhost:9006",
+	ic: "http://localhost:9007",
+	noexit: "http://localhost:9008",
+};
+
+export const useAPI = (
+	api: AxiosInstance,
+	config: { url: string; method: string; data?: any },
+	onSuccess?: any,
+	onError?: any
+) => {
+	const { url, method, data } = config;
+	if (method.toLowerCase() == "get") {
+		apiGet(api, url, onSuccess, onError);
+	} else if (method.toLowerCase() == "post") {
+		apiPost(api, url, data, onSuccess, onError);
+	}
+};
+
+const apiPost = async (
 	api: AxiosInstance,
 	url: string,
 	data: any,
@@ -23,7 +42,7 @@ export const apiPost = async (
 		});
 };
 
-export const apiGet = async (
+const apiGet = async (
 	api: AxiosInstance,
 	url: string,
 	onSuccess?: any,
@@ -44,49 +63,4 @@ export const apiGet = async (
 		});
 };
 
-const useRequest = (
-	url: string,
-	method: string,
-	data: any = {},
-	config: any = {}
-) => {
-	const [loading, setLoading] = useState(true);
-	const [result, setResult] = useState(null);
-	const [error, setError] = useState<Error>(new Error());
-
-	const request = async () => {
-		setLoading(true);
-		try {
-			const result = await axios({
-				url,
-				params: data,
-				method,
-				headers: { "Access-Control-Allow-Origin": "*" },
-				...config,
-			});
-			if (
-				result &&
-				result.status >= 200 &&
-				result.status <= 304
-			) {
-				setResult(result.data);
-			} else {
-				setError(new Error("get data error in index"));
-			}
-		} catch (reason: any) {
-			setError(reason);
-		}
-		setLoading(false);
-	};
-	useEffect(() => {
-		request();
-	}, []);
-
-	return {
-		loading,
-		result,
-		error,
-	};
-};
-
-export default useRequest;
+export default useAPI;

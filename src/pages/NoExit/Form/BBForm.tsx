@@ -1,7 +1,7 @@
 import "react";
 import TemplateForm from "@/template/Form";
 import { DatePicker, Input } from "antd";
-import { crjzjzlMap, generateSelect, xbMap } from "@/coderepo";
+import { crjzjzlMap, generateSelect, xbMap } from "@/utils";
 
 /**
  * 出入境报备信息 表单

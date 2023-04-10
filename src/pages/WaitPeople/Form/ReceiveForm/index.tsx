@@ -1,7 +1,7 @@
 import "react";
 import { DatePicker, Form, Input, Select } from "antd";
 import { useState } from "react";
-import { generateSelect, jzlbMap } from "@/coderepo";
+import { generateSelect, jzlbMap } from "@/utils";
 
 export function ReceiveForm(props: {
 	form: any;

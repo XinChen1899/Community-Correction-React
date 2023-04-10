@@ -1,6 +1,7 @@
 import { IEInfo } from "@/entity/IE/IEInfo";
+import { Dayjs } from "dayjs";
 
-export const getDate = (date: any) => {
+export const getDate = (date: Dayjs) => {
 	return `${date.year()}/${date.month() + 1}/${date.date()}`;
 };
 

@@ -10,7 +10,7 @@ import AddTeamModal from "./Modal/AddTeamModal";
 import TemplateHome from "@/template/OperatorAndTable";
 import TeamInfoModal from "./Modal/TeamInfoModal";
 import TeamModifyModal from "./Modal/TeamModifyModal";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 
 export interface DataType {
 	id: string; // 小组编号

@@ -1,9 +1,9 @@
 import axios from "axios";
-import { apiGet, apiPost } from "..";
+import { ServerTable, useAPI } from "..";
 import { BBInfo } from "@/entity/NoExit/BBInfo";
 
 const api = axios.create({
-	baseURL: "http://localhost:9008/noexit",
+	baseURL: `${ServerTable.noexit}/noexit`,
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
@@ -12,7 +12,12 @@ export const getBBForm = (
 	onSuccess: any,
 	onError: any
 ) => {
-	apiGet(api, `/bb/${dxbh}`, onSuccess, onError);
+	useAPI(
+		api,
+		{ url: `/bb/${dxbh}`, method: "get" },
+		onSuccess,
+		onError
+	);
 };
 
 export const updateBBForm = (
@@ -20,7 +25,12 @@ export const updateBBForm = (
 	onSuccess: any,
 	onError: any
 ) => {
-	apiPost(api, "/bb/update", bbInfo, onSuccess, onError);
+	useAPI(
+		api,
+		{ url: `/bb/update`, method: "post", data: bbInfo },
+		onSuccess,
+		onError
+	);
 };
 
 export const getExitInfoByDXBH = (
@@ -28,9 +38,19 @@ export const getExitInfoByDXBH = (
 	onSuccess: any,
 	onError: any
 ) => {
-	apiGet(api, `/info/${dxbh}`, onSuccess, onError);
+	useAPI(
+		api,
+		{ url: `/info/${dxbh}`, method: "get" },
+		onSuccess,
+		onError
+	);
 };
 
 export const getAllInfos = (onSuccess?: any, onError?: any) => {
-	return apiGet(api, "/info/all", onSuccess, onError);
+	useAPI(
+		api,
+		{ url: "/info/all", method: "get" },
+		onSuccess,
+		onError
+	);
 };

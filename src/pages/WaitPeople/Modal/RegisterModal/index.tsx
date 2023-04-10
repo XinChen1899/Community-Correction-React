@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Card, Form, Modal } from "antd";
 
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import { RegisterForm } from "../../Form/RegisterForm";
 import { CorrectionPeople } from "@/entity/IC/Crp";
-import { getDate } from "@/coderepo/ie";
+import { getDate } from "@/utils/ie";
 import { registerCrp } from "@/api/ic";
-import { mzMap } from "@/coderepo";
+import { mzMap } from "@/utils";
 import TemplateModal from "@/template/Modal";
 
 const RegisterModal = (props: {

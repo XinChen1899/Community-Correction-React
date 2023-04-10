@@ -106,8 +106,8 @@ export default function AppSider(props: ISiderProps) {
 				defaultSelectedKeys={defaultMenuItem[1]}
 				mode="inline"
 				items={menuItemsTemp}
-				onClick={({ key }) => {
-					navigate(key);
+				onClick={(d) => {
+					navigate(d.key);
 				}}
 			/>
 		</Sider>

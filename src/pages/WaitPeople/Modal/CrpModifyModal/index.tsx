@@ -1,13 +1,13 @@
 import { Form } from "antd";
 import { useEffect, useState } from "react";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
 import { RegisterForm } from "../../Form/RegisterForm";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import { getCrpById, updateCrp } from "@/api/ic";
 import dayjs from "dayjs";
-import { getDate } from "@/coderepo/ie";
-import { mzMap } from "@/coderepo";
+import { getDate } from "@/utils/ie";
+import { mzMap } from "@/utils";
 import TemplateModal from "@/template/Modal";
 
 const defaultCrp: CorrectionPeople = {

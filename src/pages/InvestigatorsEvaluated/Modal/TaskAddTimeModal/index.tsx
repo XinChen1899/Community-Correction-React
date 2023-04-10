@@ -1,4 +1,4 @@
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import TemplateModal from "@/template/Modal";
 import { Space, Input, InputRef } from "antd";
 import { useRef } from "react";

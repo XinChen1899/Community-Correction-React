@@ -15,7 +15,7 @@ import { ColumnsType } from "antd/es/table";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import TaskAddModal from "../TaskAddModal";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import TaskInfoModal from "../TaskInfoModal";
 
 interface DataType {

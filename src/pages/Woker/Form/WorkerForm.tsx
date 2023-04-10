@@ -10,7 +10,7 @@ import {
 	jzlbMap,
 	mzMap,
 	whcdMap,
-} from "@/coderepo";
+} from "@/utils";
 import Upload, {
 	RcFile,
 	UploadChangeParam,

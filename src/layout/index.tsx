@@ -1,6 +1,6 @@
-import { Layout, theme } from "antd";
+import { Layout, Tabs, theme } from "antd";
 import { SiderTheme } from "antd/es/layout/Sider";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import AppContent from "./Content";
 import AppFooter from "./Footer";
@@ -8,6 +8,7 @@ import AppHeader from "./Header";
 import AppSider from "./Sider";
 
 // 导航栏
+
 
 export default function AppLayout(props: { children: any }) {
 	const {
@@ -22,24 +23,17 @@ export default function AppLayout(props: { children: any }) {
 		setSiderTheme(value ? "dark" : "light");
 	};
 
-	// const [curPath, dispatch] = useReducer(
-	// 	(state: any, action: any) => {
-	// 		return {
-	// 			path: action.path
-	// 		};
-	// 	},
-	// 	{ path: "/home" }
-	// );
-
 	return (
 		<Layout style={{ minHeight: "100vh" }}>
-			<AppSider appTheme={siderTheme} />
+			<AppSider
+				appTheme={siderTheme}
+			/>
 
 			<Layout
 				className="site-layout"
 				style={{ marginLeft: 200 }}>
 				<AppHeader colorBgContainer={colorBgContainer} />
-
+				
 				<AppContent
 					colorBgContainer={colorBgContainer}
 					children={children}

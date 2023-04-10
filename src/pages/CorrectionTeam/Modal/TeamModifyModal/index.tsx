@@ -1,7 +1,7 @@
 import { Card, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { Space } from "antd/lib";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import { CorrectionTeam } from "@/entity/IC/Cteam";

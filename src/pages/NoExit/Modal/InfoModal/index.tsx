@@ -1,5 +1,5 @@
 import { getExitInfoByDXBH } from "@/api/NoExit";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";

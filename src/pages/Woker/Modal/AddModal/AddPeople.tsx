@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, Form, Modal } from "antd";
 
 import "@/entity/IE/IEInfo";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import { WorkerForm } from "../../Form/WorkerForm";
 
 const AddModal = (props: {

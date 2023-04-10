@@ -18,7 +18,7 @@ import {
 	xbMap,
 	ypxfMap,
 	zmMap,
-} from "@/coderepo";
+} from "@/utils";
 
 const { TextArea } = Input;
 

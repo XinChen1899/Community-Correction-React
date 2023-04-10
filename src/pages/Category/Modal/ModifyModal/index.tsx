@@ -3,9 +3,9 @@ import { Card, Form, Steps } from "antd";
 import { BBInfo } from "@/entity/NoExit/BBInfo";
 import { getBBForm, updateBBForm } from "@/api/NoExit";
 import { useState } from "react";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import dayjs from "dayjs";
-import { getDate } from "@/coderepo/ie";
+import { getDate } from "@/utils/ie";
 import { CategoryForm } from "../../Form/CategoryForm";
 import { CategoryInfo } from "@/entity/Category/CategoryInfo";
 

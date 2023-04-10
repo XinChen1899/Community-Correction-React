@@ -3,7 +3,7 @@ import TaskInfo from "@/pages/InvestigatorsEvaluated/Modal/TaskInfoModal/TaskInf
 
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { getIEInfoById } from "@/api/ie";
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import TemplateModal from "@/template/Modal";
 import { Card, Steps } from "antd";
 

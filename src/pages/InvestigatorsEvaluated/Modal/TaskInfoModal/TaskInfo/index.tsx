@@ -9,7 +9,7 @@ import {
 	xbMap,
 	ypxfMap,
 	zmMap,
-} from "@/coderepo";
+} from "@/utils";
 import TemplateDescriptions from "@/template/Descriptions";
 
 const TaskInfo = (props: { info: IEInfo }) => {

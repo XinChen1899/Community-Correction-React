@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, Form, Modal } from "antd";
 
-import { GMessage } from "@/coderepo/msg/GMsg";
+import { GMessage } from "@/utils/msg/GMsg";
 import { AddTeamForm } from "../../Form/AddTeamForm";
 
 const AddTeamModal = (props: {

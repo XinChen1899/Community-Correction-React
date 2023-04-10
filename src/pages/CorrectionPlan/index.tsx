@@ -1,20 +1,15 @@
 import {
 	Button,
-	Card,
-	Col,
-	Descriptions,
 	message,
 	Popconfirm,
-	Row,
 	Space,
-	Statistic,
 } from "antd";
 import {
 	DeleteOutlined,
 	EditOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
-import Table, { ColumnsType } from "antd/es/table";
+import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal/AddTeam";
 import TemplateHome from "@/template/OperatorAndTable";

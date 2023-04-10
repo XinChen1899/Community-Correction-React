@@ -13,7 +13,7 @@ import BusinessApproval from "./BusinessApproval";
 import Assessment from "./Assessment";
 import TerminationCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected";
-
+import PlanRepository from "./PlanRepository";
 export {
 	Home,
 	IE,
@@ -29,4 +29,5 @@ export {
 	Assessment,
 	TerminationCorrection,
 	UnCorrected,
+	PlanRepository,
 };

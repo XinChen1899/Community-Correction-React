@@ -37,8 +37,6 @@ export function IEInfoForm(props: {
 				<Input disabled />
 			</Form.Item>
 			<Form.Item name={"wtdw"} label="委托单位">
-				{/* <Input placeholder={"请输入委托单位"} /> */}
-
 				{generateSelect(wtdwMap)}
 			</Form.Item>
 			<Form.Item name={"wtdch"} label="委托调查函">
@@ -48,11 +46,6 @@ export function IEInfoForm(props: {
 				name={"bdcpgrdlx"}
 				label="被调查评估对象的类型">
 				{generateSelect(bdcpgrdlxMap)}
-				{/* <Select style={{ width: 120 }}>
-					<Select.Option value="01">被告人</Select.Option>
-					<Select.Option value="02">罪犯</Select.Option>
-					<Select.Option value="99">其他</Select.Option>
-				</Select> */}
 			</Form.Item>
 			<Form.Item name={"bgrxm"} label="被调查评估对象姓名">
 				<Input placeholder={"请输入姓名"} />

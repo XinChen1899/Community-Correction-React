@@ -32,6 +32,7 @@ export const routeNameMap = {
 	assesment: "考核奖惩",
 	termination: "终止矫正",
 	uncorrected: "解除矫正",
+	planrepo: "方案库",
 };
 
 interface IPageItem {
@@ -96,15 +97,6 @@ export const routeTable = [
 				),
 				children: [],
 			},
-			{
-				url: "ic/crplan",
-				page: getPageItem(
-					"crplan",
-					routeNameMap.crplan,
-					lazy(() => import("@/pages/CorrectionPlan"))
-				),
-				children: [],
-			},
 		],
 	},
 	{
@@ -134,7 +126,26 @@ export const routeTable = [
 			routeNameMap.individual,
 			lazy(() => import("@/pages/IndividualCorrection"))
 		),
-		children: [],
+		children: [
+			{
+				url: "individual/crplan",
+				page: getPageItem(
+					"crplan",
+					routeNameMap.crplan,
+					lazy(() => import("@/pages/CorrectionPlan"))
+				),
+				children: [],
+			},
+			{
+				url: "individual/planrepo",
+				page: getPageItem(
+					"planrepo",
+					routeNameMap.planrepo,
+					lazy(() => import("@/pages/PlanRepository"))
+				),
+				children: [],
+			},
+		],
 		icon: <SolutionOutlined />,
 	},
 	{

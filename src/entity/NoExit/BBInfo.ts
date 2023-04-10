@@ -12,4 +12,5 @@ export interface BBInfo {
 	bbrq: string | Dayjs; // 报备日期
 	bbksrq: string | Dayjs; // 报备开始日期
 	bbjsrq: string | Dayjs; // 报备结束日期
+	step: number; // 当前的状态
 }

@@ -15,14 +15,16 @@ import {
 	message,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InfoModal from "./Modal/InfoModal";
 import BBModal from "./Modal/BBModal";
+import { getAllInfos } from "@/api/NoExit";
+import { Exit } from "@/entity/NoExit/Exit";
 
 export interface DataType {
 	id: number;
 	dxbh: string; // 矫正对象编号
-	name: string; // 矫正对象姓名
+	xm: string; // 矫正对象姓名
 	bb: boolean; // 报备
 	zj: string; // 证件
 	bk: boolean; // 边控
@@ -38,8 +40,8 @@ const columns: ColumnsType<DataType> = [
 	},
 	{
 		title: "姓名",
-		dataIndex: "name",
-		key: "name",
+		dataIndex: "xm",
+		key: "xm",
 		align: "center",
 	},
 	{
@@ -79,16 +81,16 @@ const columns: ColumnsType<DataType> = [
 const staticTableData: DataType[] = [
 	{
 		id: 1,
-		dxbh: "111",
-		name: "xxx",
+		dxbh: "00000001",
+		xm: "xxx",
 		bb: false,
 		zj: "代管",
 		bk: true,
 	},
 	{
 		id: 2,
-		dxbh: "222",
-		name: "yyy",
+		dxbh: "00000002",
+		xm: "yyy",
 		bb: true,
 		zj: "归还",
 		bk: false,
@@ -108,6 +110,10 @@ export default function NoExit() {
 	} as DataType);
 	const [infoModal, setInfoModal] = useState(false);
 	const [bbModal, setBBModal] = useState(false);
+	const [infoUpdate, setInfoUpdate] = useState(false);
+	const [tableData, setTableData] =
+		useState<DataType[]>(staticTableData);
+	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [messageApi, contextHolder] = message.useMessage();
 
@@ -139,7 +145,6 @@ export default function NoExit() {
 					icon={<EditOutlined />}
 					onClick={() => {
 						setBBModal(true);
-						gMsg.onSuccess("报备");
 					}}>
 					报备
 				</Button>
@@ -208,6 +213,29 @@ export default function NoExit() {
 		}
 	});
 
+	useEffect(() => {
+		const exit2DataType = (infos: Exit[]) => {
+			return infos.map((info, idx) => {
+				return {
+					id: idx,
+					dxbh: info.dxbh,
+					xm: info.xm,
+					bb: info.bb,
+					zj: info.zj,
+					bk: info.bk,
+				};
+			});
+		};
+		getAllInfos(
+			(infoList: Exit[]) => {
+				const td = exit2DataType(infoList);
+				setTableData(td);
+			},
+			(msg: string) =>
+				gMsg.onError("请求不到出入境的所有信息！" + msg)
+		);
+	}, [tableUpdate]);
+
 	return (
 		<>
 			<BBModal
@@ -215,6 +243,8 @@ export default function NoExit() {
 				setOpen={setBBModal}
 				dxbh={record.dxbh}
 				gMsg={gMsg}
+				infoUpdate={infoUpdate}
+				setInfoUpdate={setInfoUpdate}
 			/>
 			<InfoModal
 				open={infoModal}
@@ -232,7 +262,7 @@ export default function NoExit() {
 					{ title: "今日新增待备案人数", value: 999 },
 				]}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
-				tableData={staticTableData}
+				tableData={tableData}
 			/>
 		</>
 	);

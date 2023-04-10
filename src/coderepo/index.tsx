@@ -46,11 +46,12 @@ export const pjjgMap = [
 	{ code: "02", value: "公安机关" },
 	{ code: "03", value: "监狱管理机关" },
 ];
-
+// 对社矫对象的管理类别
 export const nsyjzlbMap = [
-	{ code: "01", value: "宽松" },
-	{ code: "02", value: "普通" },
-	{ code: "03", value: "严格" },
+	{ code: "01", value: "基础" },
+	{ code: "02", value: "宽松" },
+	{ code: "03", value: "普通" },
+	{ code: "04", value: "严格" },
 ];
 // 法院、侦查机关、检察院、公安、监狱局、监狱
 export const wtdwMap = [

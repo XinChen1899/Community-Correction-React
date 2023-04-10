@@ -5,6 +5,7 @@ import { IEInfo } from "@/entity/IE/IEInfo";
 import { getIEInfoById } from "@/api/ie";
 import { GMessage } from "@/coderepo/msg/GMsg";
 import TemplateModal from "@/template/Modal";
+import { Card, Steps } from "antd";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -56,7 +57,24 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 					gMsg.onError("找不到此对象!")
 				);
 				console.log(info);
-			}}
-		/>
+			}}>
+			<Card>
+				<Steps
+					current={1}
+					// status="wait" // wait process finish error
+					items={[
+						{
+							title: "委托方发起调查评估委托",
+						},
+						{
+							title: "社区矫正系统进行调查评估",
+						},
+						{
+							title: "调查评估完成",
+						},
+					]}
+				/>
+			</Card>
+		</TemplateModal>
 	);
 }

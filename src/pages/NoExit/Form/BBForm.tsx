@@ -10,10 +10,15 @@ export function BBForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
+	disabled?: boolean;
 }) {
-	const { form, onFinish, initialValues } = props;
+	const { form, onFinish, initialValues, disabled } = props;
+	// useEffect(() => {
+	// 	form.resetFields();
+	// }, []);
 	return (
 		<TemplateForm
+			disabled={disabled}
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}

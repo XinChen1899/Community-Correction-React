@@ -12,6 +12,7 @@ export default function TemplateModal(props: {
 	recordId: any;
 	infoUpdate?: any;
 	title?: string;
+	children?: any;
 }) {
 	const {
 		open,
@@ -24,6 +25,7 @@ export default function TemplateModal(props: {
 		onOk,
 		onCancel,
 		title,
+		children,
 	} = props;
 
 	useEffect(() => {
@@ -50,6 +52,7 @@ export default function TemplateModal(props: {
 				<Card hoverable style={{ width: "900px" }}>
 					{InfoDescriptions}
 				</Card>
+				{children}
 			</Space>
 		</Modal>
 	);

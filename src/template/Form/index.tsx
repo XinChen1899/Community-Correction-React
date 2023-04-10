@@ -1,17 +1,26 @@
 import { Form } from "antd";
+import { useEffect } from "react";
 
 export default function TemplateForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
 	formTable: any[];
+	disabled?: boolean;
 }) {
-	const { form, onFinish, initialValues, formTable } = props;
+	const { form, onFinish, initialValues, formTable, disabled } =
+		props;
 	// const formTable = [
 	// 	{ name: "xxx", label: "xxx", component: <></> },
 	// ];
+
+	useEffect(() => {
+		form.resetFields();
+		form.setFieldsValue(initialValues);
+	}, [initialValues]);
 	return (
 		<Form
+			disabled={disabled}
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>

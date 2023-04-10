@@ -3,7 +3,7 @@ import { GMessage } from "@/coderepo/msg/GMsg";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 /**
  * 查询所有社矫对象（可选择类别：在
@@ -23,7 +23,7 @@ export default function InfoModal(props: {
 	const { open, setOpen, dxbh, gMsg } = props;
 	const exit: Exit = {
 		dxbh: dxbh,
-		name: "xxx",
+		xm: "xxx",
 		bb: false,
 		zj: "代管/归还/收缴/吊销/作废",
 		bk: false,
@@ -33,7 +33,7 @@ export default function InfoModal(props: {
 	const getInfos = (exitInfo: Exit) => {
 		return [
 			{ label: "对象编号", value: exitInfo.dxbh },
-			{ label: "姓名", value: exitInfo.name },
+			{ label: "姓名", value: exitInfo.xm },
 			{
 				label: "报备状态",
 				value: exitInfo.bb ? "已报备" : "待报备",
@@ -60,12 +60,11 @@ export default function InfoModal(props: {
 				getExitInfoByDXBH(
 					id,
 					(data: any) => {
-						// setExitInfo(data);
 						setInfos(getInfos(data));
 						gMsg.onSuccess("获取出入境信息成功！");
 					},
 					(err: any) => {
-						setInfos(getInfos(exit));
+						setInfos([]);
 						gMsg.onError("获取出入境信息失败！" + err);
 					}
 				);

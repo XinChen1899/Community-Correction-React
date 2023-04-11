@@ -34,6 +34,7 @@ import { MenuProps } from "antd/lib";
 import TaskAddTimeModal from "./Modal/TaskAddTimeModal";
 import TaskRecvModal from "./Modal/TaskRecvModal";
 import { map2Value, wtdwMap } from "@/utils";
+import SuggestModal from "./Modal/SuggestModal";
 
 /**
  * 调查评估:
@@ -75,6 +76,7 @@ export default function IE() {
 	const [openModify, setOpenModify] = useState(false);
 	const [openRecv, setOpenRecv] = useState(false);
 	const [openAddTime, setOpenAddTime] = useState(false);
+	const [openSuggest, setOpenSuggest] = useState(false);
 
 	const [tableData, setTableData] = useState<DataType[]>([]);
 
@@ -315,6 +317,18 @@ export default function IE() {
 				<Button
 					block
 					type="text"
+					icon={<EditOutlined />}
+					onClick={() => setOpenSuggest(true)}>
+					调查评估意见书编辑
+				</Button>
+			),
+			key: "001",
+		},
+		{
+			label: (
+				<Button
+					block
+					type="text"
 					icon={<AppstoreAddOutlined />}
 					onClick={() => setOpenAddTime(true)}>
 					延长调查期限
@@ -390,6 +404,13 @@ export default function IE() {
 	return (
 		<>
 			{contextHolder}
+			<SuggestModal
+				open={openSuggest}
+				setOpen={setOpenSuggest}
+				taskUpdate={false}
+				wtbh={selectTask.wtbh}
+				gMsg={gMsg}
+			/>
 			<TaskRecvModal
 				open={openRecv}
 				setOpen={setOpenRecv}
@@ -403,6 +424,11 @@ export default function IE() {
 				setOpen={setOpenAddTime}
 				time={selectTask.isFinished}
 				gMsg={gMsg}
+				wtbh={selectTask.wtbh}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				taskUpdate={taskUpdate}
+				setTaskUpdate={setTaskUpdate}
 			/>
 
 			<TaskInfoModal

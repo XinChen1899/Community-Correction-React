@@ -48,3 +48,42 @@ export const getIEInfoById = (
 ) => {
 	useAPI(api, { url: `/${id}`, method: "get" }, onSuccess, onError);
 };
+
+export const getSuggestInfoById = (
+	id: string,
+	onSuccess?: any,
+	onError?: any
+) => {
+	useAPI(
+		api,
+		{ url: `suggest/${id}`, method: "get" },
+		onSuccess,
+		onError
+	);
+};
+
+export const updateSuggestInfoData = (
+	data: { wtbh: string; yjs: string },
+	onSuccess?: any,
+	onError?: any
+) => {
+	useAPI(
+		api,
+		{ url: "/suggest/update", method: "post", data: data },
+		onSuccess,
+		onError
+	);
+};
+
+export const updateIEInfoTimeData = (
+	data: IEInfo,
+	onSuccess?: any,
+	onError?: any
+) => {
+	useAPI(
+		api,
+		{ url: "/update/time", method: "post", data: data },
+		onSuccess,
+		onError
+	);
+};

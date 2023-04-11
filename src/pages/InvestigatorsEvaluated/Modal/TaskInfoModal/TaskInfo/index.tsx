@@ -98,10 +98,6 @@ const TaskInfo = (props: { info: IEInfo }) => {
 					label: "调查评估意见",
 					value: info.dcpgyj,
 				},
-				{
-					label: "调查评估意见书",
-					value: "见附件",
-				},
 			]}
 		/>
 	);

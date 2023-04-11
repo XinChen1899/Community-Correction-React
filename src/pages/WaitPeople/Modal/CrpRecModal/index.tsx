@@ -5,6 +5,7 @@ import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import { ReceiveForm } from "../../Form/ReceiveForm";
+import TemplateModal from "@/template/Modal";
 
 export default function CrpRecModal(props: {
 	open: boolean;
@@ -85,22 +86,27 @@ export default function CrpRecModal(props: {
 	};
 
 	return (
-		<Modal
-			style={{ top: 20 }}
-			open={open}
-			width={1000}
-			onOk={handleOk}
-			onCancel={handleCancel}
-			confirmLoading={confirmLoading}>
-			<Space direction={"vertical"}>
-				<Card title={"接收入矫"} style={{ width: "900px" }}>
-					<ReceiveForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={info}
-					/>
-				</Card>
-			</Space>
-		</Modal>
+		<>
+			<TemplateModal
+				InfoDescriptions={
+					<Card
+						title={"接收入矫"}
+						style={{ width: "900px" }}>
+						<ReceiveForm
+							form={form}
+							onFinish={onFinish}
+							initialValues={info}
+						/>
+					</Card>
+				}
+				open={open}
+				setOpen={setOpen}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				getAPI={undefined}
+				recordId={undefined}
+				confirmLoading={confirmLoading}
+			/>
+		</>
 	);
 }

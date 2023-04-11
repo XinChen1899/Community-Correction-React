@@ -27,6 +27,7 @@ const defaultCrp: CorrectionPeople = {
 	grlxdh: "",
 	ywjtcyjzyshgx: "",
 	zp: "",
+	team: "",
 };
 export default function CrpInfoModal(props: {
 	open: boolean;
@@ -48,11 +49,10 @@ export default function CrpInfoModal(props: {
 				setOpen={setOpen}
 				recordId={dxbh}
 				infoUpdate={infoUpdate}
-				getAPI={(id: any) => {
+				getAPI={(id: string) => {
 					getCrpById(id, setCrp, () =>
 						gMsg.onError("找不到此对象!")
 					);
-					console.log(crp);
 				}}
 				confirmLoading={false}
 			/>

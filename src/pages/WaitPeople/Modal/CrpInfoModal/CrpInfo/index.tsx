@@ -1,5 +1,16 @@
 import { Descriptions } from "antd";
 import { CorrectionPeople } from "@/entity/IC/Crp";
+import {
+	gjMap,
+	hjlxMap,
+	hyzkMap,
+	jyjxqkMap,
+	jzlbMap,
+	map2Value,
+	mzMap,
+	whcdMap,
+	xbMap,
+} from "@/utils";
 
 const CrpInfo = (props: { info: CorrectionPeople }) => {
 	const { info } = props;
@@ -15,24 +26,26 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 			<Descriptions.Item label="是否调查评估">
 				{info.sfdcpg}
 			</Descriptions.Item>
+			<Descriptions.Item label="矫正小组">
+				{info.team}
+			</Descriptions.Item>
 			<Descriptions.Item label="矫正类别">
-				{info.jzlb}
+				{map2Value(jzlbMap, info.jzlb)}
 			</Descriptions.Item>
 			<Descriptions.Item label="姓名">
 				{info.xm}
 			</Descriptions.Item>
 			<Descriptions.Item label="性别">
-				{info.xb}
+				{map2Value(xbMap, info.xb)}
 			</Descriptions.Item>
 			<Descriptions.Item label="民族">
-				{info.mz}
+				{map2Value(mzMap, info.mz)}
 			</Descriptions.Item>
 			<Descriptions.Item label="国籍">
-				{info.gj}
+				{map2Value(gjMap, info.gj)}
 			</Descriptions.Item>
 			<Descriptions.Item label="户籍类型">
-				{/* {transform("bgrxb", info.bgrxb)} */}
-				{info.hjlx}
+				{map2Value(hjlxMap, info.hjlx)}
 			</Descriptions.Item>
 			<Descriptions.Item label="社区矫正对象身份证">
 				{info.sfzhm}
@@ -41,14 +54,13 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 				{info.csrq.toString()}
 			</Descriptions.Item>
 			<Descriptions.Item label="文化程度">
-				{info.whcd}
+				{map2Value(whcdMap, info.whcd)}
 			</Descriptions.Item>
 			<Descriptions.Item label="婚姻状况">
-				{/* {transform("zm", info.zm)} */}
-				{info.hyzk}
+				{map2Value(hyzkMap, info.hyzk)}
 			</Descriptions.Item>
 			<Descriptions.Item label="就业就学情况">
-				{info.jyjxqk}
+				{map2Value(jyjxqkMap, info.jyjxqk)}
 			</Descriptions.Item>
 			<Descriptions.Item label="现政治面貌">
 				{info.xzzmm}
@@ -57,15 +69,12 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 				{info.xgzdw}
 			</Descriptions.Item>
 			<Descriptions.Item label="单位联系电话">
-				{/* {transform("ypxf", info.ypxf)} */}
 				{info.dwlxdh}
 			</Descriptions.Item>
 			<Descriptions.Item label="个人联系电话">
-				{/* {transform("fjx", info.fjx)} */}
 				{info.grlxdh}
 			</Descriptions.Item>
 			<Descriptions.Item label="有无家庭成员及主要社会关系">
-				{/* {transform("pjjg", info.pjjg)} */}
 				{info.ywjtcyjzyshgx}
 			</Descriptions.Item>
 			<Descriptions.Item label="照片">

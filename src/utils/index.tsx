@@ -131,6 +131,7 @@ export const crjzjzlMap = [
 ];
 
 export const generateSelect = (selectList: any) => {
+	if (!selectList) return;
 	return (
 		<Select style={{ width: 290 }}>
 			{selectList.map((obj: any) => {

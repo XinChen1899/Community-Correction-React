@@ -54,7 +54,7 @@ export const getCrpById = (
 ) => {
 	useAPI(
 		api,
-		{ url: `"/crp/${id}`, method: "get" },
+		{ url: `/crp/${id}`, method: "get" },
 		onSuccess,
 		onError
 	);

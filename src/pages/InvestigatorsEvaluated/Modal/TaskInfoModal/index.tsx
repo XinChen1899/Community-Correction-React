@@ -63,8 +63,8 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 					current={
 						info.finish != -1
 							? info.finish > 0
-								? 1
-								: 2
+								? 2
+								: 3
 							: 1
 					}
 					// status="wait" // wait process finish error
@@ -73,7 +73,11 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 							title: "委托方发起调查评估委托",
 						},
 						{
-							title: "社区矫正系统进行调查评估",
+							title: "社区矫正系统接收",
+						},
+
+						{
+							title: "委托司法所进行调查评估",
 						},
 						{
 							title: "调查评估完成",

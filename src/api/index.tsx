@@ -30,7 +30,7 @@ const apiPost = async (
 	await api
 		.post(url, data)
 		.then(({ data }) => {
-			console.log(data);
+			console.log(`post url: ${url}: response `, data);
 			if (data.status == "200") {
 				onSuccess(data.data);
 			} else {
@@ -51,7 +51,7 @@ const apiGet = async (
 	await api
 		.get(url)
 		.then(({ data }) => {
-			console.log(data);
+			console.log(`get url: ${url}: response`, data);
 			if (data.status == "200") {
 				onSuccess(data.data);
 			} else {

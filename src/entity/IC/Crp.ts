@@ -21,4 +21,5 @@ export interface CorrectionPeople {
 	grlxdh: string;
 	ywjtcyjzyshgx: string;
 	zp: string;
+	team: string;
 }

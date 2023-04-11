@@ -1,6 +1,6 @@
 import "react";
 import { DatePicker, Form, Input, Select, message } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	generateSelect,
 	gjMap,
@@ -10,6 +10,7 @@ import {
 	jzlbMap,
 	mzMap,
 	whcdMap,
+	xbMap,
 } from "@/utils";
 import Upload, {
 	RcFile,
@@ -18,6 +19,8 @@ import Upload, {
 	UploadProps,
 } from "antd/es/upload";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { Cteam } from "@/entity/IC/Cteam";
+import { getAllCrt } from "@/api/ic";
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
 	const reader = new FileReader();
@@ -48,6 +51,7 @@ export function RegisterForm(props: {
 	const { form, onFinish, initialValues } = props;
 	const [loading, setLoading] = useState(false);
 	const [imageUrl, setImageUrl] = useState<string>();
+	const [team, setTeam] = useState<any[]>();
 
 	const handleChange: UploadProps["onChange"] = (
 		info: UploadChangeParam<UploadFile>
@@ -71,6 +75,24 @@ export function RegisterForm(props: {
 		</div>
 	);
 
+	useEffect(() => {
+		getAllCrt(
+			(teamList: any[]) => {
+				if (teamList != undefined) {
+					const temp = teamList.map((team: Cteam) => {
+						return {
+							code: team.id,
+							value: team.teamName,
+						};
+					});
+
+					setTeam(temp);
+				}
+			},
+			() => {}
+		);
+	}, [form]);
+
 	return (
 		<Form
 			form={form}
@@ -88,14 +110,14 @@ export function RegisterForm(props: {
 			<Form.Item name={"jzlb"} label="矫正类别">
 				{generateSelect(jzlbMap)}
 			</Form.Item>
+			<Form.Item name={"team"} label="确定矫正小组">
+				{generateSelect(team)}
+			</Form.Item>
 			<Form.Item name={"xm"} label="姓名">
 				<Input placeholder={"请输入姓名"} />
 			</Form.Item>
 			<Form.Item name={"xb"} label="性别">
-				<Select style={{ width: 120 }}>
-					<Select.Option value="male">男</Select.Option>
-					<Select.Option value="female">女</Select.Option>
-				</Select>
+				{generateSelect(xbMap)}
 			</Form.Item>
 			<Form.Item name={"mz"} label="民族">
 				{generateSelect(mzMap)}

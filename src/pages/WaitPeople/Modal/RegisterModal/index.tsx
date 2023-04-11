@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, Form, Modal } from "antd";
+import { Form } from "antd";
 
 import { GMessage } from "@/utils/msg/GMsg";
 import { RegisterForm } from "../../Form/RegisterForm";
@@ -32,30 +32,23 @@ const RegisterModal = (props: {
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
-		setConfirmLoading(true);
+		// setConfirmLoading(true);
 		form.submit();
-		setTimeout(() => {
-			setOpen(false);
-			setConfirmLoading(false);
-		}, 500);
 	};
 
 	// 提交表单时操作
-	const onFinish = async (values: any) => {
+	const onFinish = (values: any) => {
 		const crp = values as CorrectionPeople;
 		crp.csrq = getDate(crp.csrq);
-		mzMap.forEach((obj) => {
-			if (obj.code == crp.mz) {
-				crp.mz = obj.value;
-				return;
-			}
-		});
+
 		registerCrp(
 			crp,
 			() => {
 				gMsg.onSuccess("登记成功！");
 				setTableUpdate(!tableUpdate);
 				setInfoUpdate(!infoUpdate);
+				setOpen(false);
+				setConfirmLoading(false);
 			},
 			(msg: string) => {
 				gMsg.onError("登记失败！" + msg);
@@ -70,19 +63,7 @@ const RegisterModal = (props: {
 					<RegisterForm
 						form={form}
 						onFinish={onFinish}
-						initialValues={{
-							sqjzdxbh: "00000001",
-							sfdcpg: "否",
-							jzlb: "管制",
-							xb: "男",
-							mz: "汉族",
-							gj: "中国籍",
-							hjlx: "乡村人口",
-							whcd: "其他",
-							hyzk: "其他",
-							jyjxqk: "就业",
-							ywjtcyjzyshgx: "是",
-						}}
+						initialValues={{}}
 					/>
 				}
 				open={open}

@@ -21,7 +21,6 @@ import TeamModifyModal from "./Modal/TeamModifyModal";
 import { GMessage } from "@/utils/msg/GMsg";
 import { getAllCrt, getAllWorkers } from "@/api/ic";
 import { Worker } from "@/entity/IC/Worker";
-import { Cteam } from "@/entity/IC/Cteam";
 
 export interface DataType {
 	id: string; // 小组编号

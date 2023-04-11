@@ -33,6 +33,7 @@ export const routeNameMap = {
 	termination: "终止矫正",
 	uncorrected: "解除矫正",
 	planrepo: "方案库",
+	announcement: "入矫宣告",
 };
 
 interface IPageItem {
@@ -94,6 +95,15 @@ export const routeTable = [
 					"crteam",
 					routeNameMap.crteam,
 					lazy(() => import("@/pages/CorrectionTeam"))
+				),
+				children: [],
+			},
+			{
+				url: "ic/announcement",
+				page: getPageItem(
+					"announcement",
+					routeNameMap.announcement,
+					lazy(() => import("@/pages/Announcement"))
 				),
 				children: [],
 			},

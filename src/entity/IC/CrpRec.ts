@@ -9,7 +9,7 @@ export interface CorrectionPeopleRec {
 	sfzhm: string;
 	csrq: string;
 	grlxdh: string;
-    xgrq: Dayjs;
+	xgrq: Dayjs | string;
 	zp: string;
-    jzxz: number;
+	jzxz: number;
 }

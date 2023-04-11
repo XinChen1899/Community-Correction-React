@@ -13,9 +13,7 @@ export function BBForm(props: {
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;
-	// useEffect(() => {
-	// 	form.resetFields();
-	// }, []);
+
 	return (
 		<TemplateForm
 			disabled={disabled}

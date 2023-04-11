@@ -14,6 +14,7 @@ import Assessment from "./Assessment";
 import TerminationCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected";
 import PlanRepository from "./PlanRepository";
+import Announcement from "./Announcement";
 export {
 	Home,
 	IE,
@@ -30,4 +31,5 @@ export {
 	TerminationCorrection,
 	UnCorrected,
 	PlanRepository,
+	Announcement,
 };

@@ -4,7 +4,7 @@ import { Space } from "antd/lib";
 import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
 import { CorrectionPeople } from "@/entity/IC/Crp";
-import { CorrectionTeam } from "@/entity/IC/Cteam";
+import { Cteam } from "@/entity/IC/Cteam";
 import { AddTeamForm } from "../../Form/AddTeamForm";
 
 export default function TeamModifyModal(props: {
@@ -59,10 +59,10 @@ export default function TeamModifyModal(props: {
 		}, 1000);
 	};
 
-	const info: CorrectionTeam = {
+	const info: Cteam = {
 		id: selectRecord.id,
 		teamName: selectRecord.teamName,
-		monitorName: selectRecord.monitorName,
+		monitor: selectRecord.monitor,
 		teamNumber: selectRecord.teamNumber,
 		workers: [],
 	};
@@ -84,6 +84,7 @@ export default function TeamModifyModal(props: {
 						form={form}
 						onFinish={onFinish}
 						initialValues={info}
+						worker={undefined}
 					/>
 				</Card>
 			</Space>

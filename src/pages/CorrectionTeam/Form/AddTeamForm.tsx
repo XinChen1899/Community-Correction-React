@@ -1,6 +1,9 @@
 import "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Tag } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { getAllWorkers } from "@/api/ic";
+import { Worker } from "@/entity/IC/Worker";
 
 const formItemLayout = {
 	labelCol: {
@@ -24,8 +27,9 @@ export function AddTeamForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
+	worker: any;
 }) {
-	const { form, onFinish, initialValues } = props;
+	const { form, onFinish, initialValues, worker } = props;
 
 	return (
 		<Form
@@ -38,11 +42,18 @@ export function AddTeamForm(props: {
 			<Form.Item name={"teamName"} label={"矫正小组名"}>
 				<Input placeholder={"请输入矫正小组名"} />
 			</Form.Item>
-			<Form.Item name={"monitorName"} label="选择小组队长">
-				<Select style={{ width: 120 }}>
-					<Select.Option value="1">人员1</Select.Option>
-					<Select.Option value="2">人员2</Select.Option>
-					<Select.Option value="3">谢xx</Select.Option>
+			<Form.Item name={"monitor"} label="选择小组队长">
+				<Select style={{ width: 180 }}>
+					{worker?.map((item: Worker) => {
+						return (
+							<Select.Option
+								value={item.rybm}
+								key={item.rybm}>
+								{item.xm} 所属小队:
+								<Tag>{item.team}</Tag>
+							</Select.Option>
+						);
+					})}
 				</Select>
 			</Form.Item>
 			<Form.List
@@ -83,13 +94,28 @@ export function AddTeamForm(props: {
 										},
 									]}
 									noStyle>
-									<Select style={{ width: 120 }}>
-										<Select.Option value="1">
-											人员1
-										</Select.Option>
-										<Select.Option value="2">
-											人员2
-										</Select.Option>
+									<Select style={{ width: 180 }}>
+										{worker?.map(
+											(item: Worker) => {
+												return (
+													<Select.Option
+														value={
+															item.rybm
+														}
+														key={
+															item.rybm
+														}>
+														{item.xm}{" "}
+														所属小队:
+														<Tag>
+															{
+																item.team
+															}
+														</Tag>
+													</Select.Option>
+												);
+											}
+										)}
 									</Select>
 								</Form.Item>
 								{fields.length > 1 ? (

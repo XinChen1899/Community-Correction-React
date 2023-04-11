@@ -1,29 +1,42 @@
-import { Button, message, Popconfirm, Space } from "antd";
+import {
+	Button,
+	Dropdown,
+	MenuProps,
+	message,
+	Popconfirm,
+	Space,
+} from "antd";
 import {
 	DeleteOutlined,
+	DownOutlined,
 	EditOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTeamModal from "./Modal/AddTeamModal";
 import TemplateHome from "@/template/OperatorAndTable";
 import TeamInfoModal from "./Modal/TeamInfoModal";
 import TeamModifyModal from "./Modal/TeamModifyModal";
 import { GMessage } from "@/utils/msg/GMsg";
+import { getAllCrt, getAllWorkers } from "@/api/ic";
+import { Worker } from "@/entity/IC/Worker";
+import { Cteam } from "@/entity/IC/Cteam";
 
 export interface DataType {
 	id: string; // 小组编号
 	teamName: string; // 小组名
-	monitorName: string; // 组长姓名
+	monitor: string; // 组长姓名
 	teamNumber: number; // 小组人数
+	workers?: string[];
 }
 
 const defaultDataType: DataType = {
 	id: "",
 	teamName: "",
-	monitorName: "",
+	monitor: "",
 	teamNumber: 0,
+	workers: [],
 };
 
 const columns: ColumnsType<DataType> = [
@@ -40,8 +53,8 @@ const columns: ColumnsType<DataType> = [
 	},
 	{
 		title: "组长姓名",
-		dataIndex: "monitorName",
-		key: "monitorName",
+		dataIndex: "monitor",
+		key: "monitor",
 	},
 	{
 		title: "小组人数",
@@ -57,10 +70,16 @@ const columns: ColumnsType<DataType> = [
 export default function CorrectionTeam() {
 	const [messageApi, contextHolder] = message.useMessage();
 
+	const [tableUpdate, setTableUpdate] = useState(false);
+
 	const [addModalOpen, setAddModalOpen] = useState(false);
 	const [teamInfoModalOpen, setTeamInfoModalOpen] = useState(false);
 	const [teamModifyModalOpen, setTeamModifyModalOpen] =
 		useState(false);
+
+	const [tableData, setTableData] = useState<DataType[]>();
+	const [worker, setWorker] = useState<Worker[]>();
+	const [workerMap, setWorkerMap] = useState<any>();
 
 	const [selectRecord, setSelectRecord] =
 		useState<DataType>(defaultDataType);
@@ -78,7 +97,38 @@ export default function CorrectionTeam() {
 			content: msg,
 		});
 	};
-
+	const items: MenuProps["items"] = [
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<EditOutlined />}
+					onClick={() => setTeamModifyModalOpen(true)}>
+					修改小组信息
+				</Button>
+			),
+			key: "0",
+		},
+		{ type: "divider" },
+		{
+			label: (
+				<Popconfirm
+					title="是否删除"
+					description="是否删除该调查评估信息！"
+					onOpenChange={() => console.log("open change")}>
+					<Button
+						type={"primary"}
+						danger
+						block
+						icon={<DeleteOutlined />}>
+						删除!
+					</Button>
+				</Popconfirm>
+			),
+			key: "0",
+		},
+	];
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
@@ -92,60 +142,65 @@ export default function CorrectionTeam() {
 							}>
 							小组信息
 						</Button>
-						<Button
-							type={"dashed"}
-							danger
-							icon={<EditOutlined />}
-							onClick={() =>
-								setTeamModifyModalOpen(true)
-							}>
-							修改小组信息
-						</Button>
-
-						<Popconfirm
-							title="是否删除"
-							description="是否删除该调查评估信息！"
-							onOpenChange={() =>
-								console.log("open change")
-							}>
-							<Button
-								type={"primary"}
-								danger
-								icon={<DeleteOutlined />}>
-								删除!
-							</Button>
-						</Popconfirm>
+						<Dropdown
+							menu={{ items }}
+							trigger={["click"]}>
+							<a onClick={(e) => e.preventDefault()}>
+								<Space>
+									操作
+									<DownOutlined />
+								</Space>
+							</a>
+						</Dropdown>
 					</Space>
 				);
 			};
 		}
 	});
 
-	const tableData: DataType[] = [
-		{
-			id: "1",
-			teamName: "team1",
-			monitorName: "谢xx",
-			teamNumber: 3,
-		},
-	];
-
 	const gMsg: GMessage = {
 		onSuccess: successMsg,
 		onError: errorMsg,
 	};
 
+	useEffect(() => {
+		getAllWorkers(
+			(data: any) => {
+				setWorker(data);
+				const temp: any = {};
+				data.forEach((element: Worker) => {
+					temp[element.rybm] = element.xm;
+				});
+				setWorkerMap(temp);
+			},
+			() => {}
+		);
+	}, []);
+
+	useEffect(() => {
+		getAllCrt(
+			(data: any) => {
+				setTableData(data);
+			},
+			() => {}
+		);
+	}, [tableUpdate]);
+
 	return (
-		<div>
+		<>
 			<AddTeamModal
 				open={addModalOpen}
 				setOpen={setAddModalOpen}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				worker={worker}
 			/>
 			<TeamInfoModal
 				open={teamInfoModalOpen}
 				setOpen={setTeamInfoModalOpen}
 				selectRecord={selectRecord}
+				workerMap={workerMap}
 			/>
 			<TeamModifyModal
 				open={teamModifyModalOpen}
@@ -174,9 +229,9 @@ export default function CorrectionTeam() {
 				statisticList={[
 					{ title: "矫正小组总数", value: 999 },
 				]}
-				tableData={tableData.length ? tableData : []}
+				tableData={tableData}
 				tableOnRow={(record: any) => setSelectRecord(record)}
 			/>
-		</div>
+		</>
 	);
 }

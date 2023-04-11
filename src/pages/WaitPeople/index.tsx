@@ -1,8 +1,18 @@
-import { Button, message, Popconfirm, Space, Tag } from "antd";
 import {
+	Button,
+	Dropdown,
+	MenuProps,
+	message,
+	Popconfirm,
+	Space,
+	Tag,
+} from "antd";
+import {
+	CheckCircleFilled,
 	CheckCircleOutlined,
 	CloseCircleFilled,
 	DeleteOutlined,
+	DownOutlined,
 	EditOutlined,
 	PlusCircleFilled,
 	PlusOutlined,
@@ -155,6 +165,52 @@ export default function WaitPeople() {
 		onSuccess: successMsg,
 		onError: errorMsg,
 	};
+	const items: MenuProps["items"] = [
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<EditOutlined />}
+					onClick={() => setCrpModifyModalOpen(true)}>
+					修改信息
+				</Button>
+			),
+			key: "0",
+		},
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<CheckCircleFilled />}
+					onClick={() => setCrpRecModalOpen(true)}>
+					接收入矫
+				</Button>
+			),
+			key: "1",
+		},
+		{
+			type: "divider",
+		},
+		{
+			label: (
+				<Popconfirm
+					title="是否删除"
+					description="是否删除该调查评估信息！"
+					onOpenChange={() => console.log("open change")}>
+					<Button
+						type={"primary"}
+						danger
+						block
+						icon={<DeleteOutlined />}>
+						删除!
+					</Button>
+				</Popconfirm>
+			),
+			key: "2",
+		},
+	];
 
 	// 绑定操作栏的操作
 	columns.map((column) => {
@@ -170,37 +226,19 @@ export default function WaitPeople() {
 								}>
 								矫正对象信息表
 							</Button>
-							<Button
-								type={"dashed"}
-								danger
-								icon={<EditOutlined />}
-								onClick={() =>
-									setCrpModifyModalOpen(true)
-								}>
-								修改信息
-							</Button>
-							<Button
-								type={"primary"}
-								icon={<PlusCircleFilled />}
-								onClick={() =>
-									setCrpRecModalOpen(true)
-								}>
-								接收入矫
-							</Button>
-
-							<Popconfirm
-								title="是否删除"
-								description="是否删除该调查评估信息！"
-								onOpenChange={() =>
-									console.log("open change")
-								}>
-								<Button
-									type={"primary"}
-									danger
-									icon={<DeleteOutlined />}>
-									删除!
-								</Button>
-							</Popconfirm>
+							<Dropdown
+								menu={{ items }}
+								trigger={["click"]}>
+								<a
+									onClick={(e) =>
+										e.preventDefault()
+									}>
+									<Space>
+										操作
+										<DownOutlined />
+									</Space>
+								</a>
+							</Dropdown>
 						</Space>
 					);
 				};

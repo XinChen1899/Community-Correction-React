@@ -1,9 +1,10 @@
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import axios from "axios";
 import { ServerTable, useAPI } from "..";
+import { Cteam } from "@/entity/IC/Cteam";
 
 const api = axios.create({
-	baseURL: `${ServerTable.ic}/ic/crp`,
+	baseURL: `${ServerTable.ic}/ic`,
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
@@ -14,7 +15,20 @@ export const registerCrp = (
 ) => {
 	useAPI(
 		api,
-		{ url: "/register", method: "post", data: crp },
+		{ url: "/crp/register", method: "post", data: crp },
+		onSuccess,
+		onError
+	);
+};
+
+export const saveCrt = (
+	crp: Cteam,
+	onSuccess?: any,
+	onError?: any
+) => {
+	useAPI(
+		api,
+		{ url: "/crt/save", method: "post", data: crp },
 		onSuccess,
 		onError
 	);
@@ -27,7 +41,7 @@ export const updateCrp = (
 ) => {
 	useAPI(
 		api,
-		{ url: "update", method: "post", data: crp },
+		{ url: "/crp/update", method: "post", data: crp },
 		onSuccess,
 		onError
 	);
@@ -38,9 +52,37 @@ export const getCrpById = (
 	onSuccess?: any,
 	onError?: any
 ) => {
-	useAPI(api, { url: `/${id}`, method: "get" }, onSuccess, onError);
+	useAPI(
+		api,
+		{ url: `"/crp/${id}`, method: "get" },
+		onSuccess,
+		onError
+	);
 };
 
 export const getAllCrp = (onSuccess?: any, onError?: any) => {
-	useAPI(api, { url: "/all", method: "get" }, onSuccess, onError);
+	useAPI(
+		api,
+		{ url: "/crp/all", method: "get" },
+		onSuccess,
+		onError
+	);
+};
+
+export const getAllCrt = (onSuccess?: any, onError?: any) => {
+	useAPI(
+		api,
+		{ url: "/crt/all", method: "get" },
+		onSuccess,
+		onError
+	);
+};
+
+export const getAllWorkers = (onSuccess?: any, onError?: any) => {
+	useAPI(
+		api,
+		{ url: "/worker/all", method: "get" },
+		onSuccess,
+		onError
+	);
 };

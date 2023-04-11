@@ -22,10 +22,15 @@ import {
 	InfoCircleFilled,
 	DownOutlined,
 	AppstoreAddOutlined,
+	CheckCircleTwoTone,
 } from "@ant-design/icons";
 import { ColumnType, ColumnsType } from "antd/es/table";
 import { GMessage } from "@/utils/msg/GMsg";
-import { getAllIEInfos, getCount } from "@/api/ie";
+import {
+	getAllIEInfos,
+	getCount,
+	updateIEInfoTimeData,
+} from "@/api/ie";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { FilterConfirmProps } from "antd/es/table/interface";
 import TaskInfoModal from "./Modal/TaskInfoModal";
@@ -322,7 +327,7 @@ export default function IE() {
 					调查评估意见书编辑
 				</Button>
 			),
-			key: "001",
+			key: "1",
 		},
 		{
 			label: (
@@ -334,7 +339,7 @@ export default function IE() {
 					延长调查期限
 				</Button>
 			),
-			key: "01",
+			key: "2",
 		},
 		{
 			type: "divider",
@@ -344,25 +349,48 @@ export default function IE() {
 				<Button
 					block
 					type={"text"}
-					onClick={() =>
-						gMsg.onSuccess("给委托方发送调查评估信息表")
-					}
-					icon={<InfoCircleFilled />}>
-					委托方
-				</Button>
-			),
-			key: "23",
-		},
-		{
-			label: (
-				<Button
-					block
-					type={"text"}
-					onClick={() =>
-						gMsg.onSuccess("给检察院发送调查评估信息表")
-					}
-					icon={<InfoCircleFilled />}>
-					检查方
+					onClick={() => {
+						gMsg.onSuccess("给委托方发送调查评估意见书");
+						gMsg.onSuccess("给检察方抄送调查评估意见书");
+						const info: IEInfo = {
+							wtbh: selectTask.wtbh,
+							finish: 0,
+							wtdw: "",
+							wtdch: "",
+							bdcpgrdlx: "",
+							bgrxm: "",
+							bgrsfzh: "",
+							bgrxb: "",
+							bgrcsrq: "",
+							bgrjzddz: "",
+							bgrgzdw: "",
+							zm: "",
+							ypxq: "",
+							ypxqksrq: "",
+							ypxqjsrq: "",
+							ypxf: "",
+							fjx: "",
+							pjjg: "",
+							pjrq: "",
+							nsyjzlb: "",
+							dcdwxqj: "",
+							dcpgyj: "",
+							dcyjshr: "",
+							dcpgyjs: "",
+						};
+						updateIEInfoTimeData(
+							info,
+							() => {
+								setTableUpdate(!tableUpdate);
+								setTaskUpdate(!taskUpdate);
+							},
+							() => {
+								gMsg.onError("完成失败!");
+							}
+						);
+					}}
+					icon={<CheckCircleTwoTone />}>
+					完成
 				</Button>
 			),
 			key: "3",

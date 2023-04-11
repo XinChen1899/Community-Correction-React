@@ -60,7 +60,13 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 			}}>
 			<Card>
 				<Steps
-					current={1}
+					current={
+						info.finish != -1
+							? info.finish > 0
+								? 1
+								: 2
+							: 1
+					}
 					// status="wait" // wait process finish error
 					items={[
 						{

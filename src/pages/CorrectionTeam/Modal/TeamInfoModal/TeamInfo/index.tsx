@@ -1,9 +1,9 @@
-import { Descriptions } from "antd";
-import { CorrectionTeam } from "@/entity/IC/Cteam";
+import { Card, Descriptions, List } from "antd";
+import { Cteam } from "@/entity/IC/Cteam";
 
-const CrpInfo = (props: { info: CorrectionTeam }) => {
-	const { info } = props;
-
+const CrpInfo = (props: { info: Cteam; workerMap: any }) => {
+	const { info, workerMap } = props;
+	console.log(info, workerMap);
 	return (
 		<Descriptions title="矫正小组信息" bordered layout="vertical">
 			<Descriptions.Item label="矫正小组编号">
@@ -13,12 +13,22 @@ const CrpInfo = (props: { info: CorrectionTeam }) => {
 				{info.teamName}
 			</Descriptions.Item>
 			<Descriptions.Item label="组长姓名">
-				{info.monitorName}
+				{workerMap[info.monitor]}
 			</Descriptions.Item>
 			<Descriptions.Item label="小组成员">
-				{info.workers.map((rec, idx) => {
-					return <div key={rec.rybm}>{rec.xm}</div>;
-				})}
+				{
+					<List
+						grid={{ gutter: 16, column: 4 }}
+						dataSource={info.workers}
+						renderItem={(item) => (
+							<List.Item>
+								<Card title={workerMap[item]}>
+									Card content
+								</Card>
+							</List.Item>
+						)}
+					/>
+				}
 			</Descriptions.Item>
 		</Descriptions>
 	);

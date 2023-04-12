@@ -40,7 +40,9 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				},
 				{
 					label: "被调查评估对象出生日期",
-					value: info.bgrcsrq.toString(),
+					value: info.bgrcsrq
+						? info.bgrcsrq.toString()
+						: null,
 				},
 				{
 					label: "被调查评估对象居住地地址",
@@ -60,11 +62,15 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				},
 				{
 					label: "原判刑期开始日期",
-					value: info.ypxqksrq.toString(),
+					value: info.ypxqksrq
+						? info.ypxqksrq.toString()
+						: null,
 				},
 				{
 					label: "原判刑期结束日期",
-					value: info.ypxqjsrq.toString(),
+					value: info.ypxqjsrq
+						? info.ypxqjsrq.toString()
+						: null,
 				},
 				{
 					label: "原判刑罚",
@@ -80,7 +86,7 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				},
 				{
 					label: "判决日期",
-					value: info.pjrq.toString(),
+					value: info.pjrq ? info.pjrq.toString() : null,
 				},
 				{
 					label: "拟使用矫正类别",

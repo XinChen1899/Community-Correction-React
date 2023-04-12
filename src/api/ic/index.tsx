@@ -3,7 +3,7 @@ import axios from "axios";
 import { ServerTable, useAPI } from "..";
 import { Cteam } from "@/entity/IC/Cteam";
 
-const api = axios.create({
+export const api = axios.create({
 	baseURL: `${ServerTable.ic}/ic`,
 	headers: { "Access-Control-Allow-Origin": "*" },
 });

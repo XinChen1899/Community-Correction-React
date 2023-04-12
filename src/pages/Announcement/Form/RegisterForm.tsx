@@ -20,7 +20,7 @@ export default function RegisterForm(props: {
 				{
 					name: "dxbh",
 					label: "社区矫正对象编号",
-					component: <Input disabled />,
+					component: <Input />,
 				},
 				{
 					name: "xm",
@@ -35,7 +35,7 @@ export default function RegisterForm(props: {
 				{
 					name: "audio",
 					label: "宣告音频",
-					component: <DatePicker />,
+					component: <Input />,
 				},
 			]}
 		/>

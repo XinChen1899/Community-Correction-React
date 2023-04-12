@@ -1,41 +1,30 @@
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import { GMessage } from "@/utils/msg/GMsg";
+import { useMessage } from "@/utils/msg/GMsg";
 import {
 	EditOutlined,
 	DeleteOutlined,
 	DownOutlined,
-	PlusCircleFilled,
 	PlusOutlined,
 	CheckCircleFilled,
-	CheckCircleTwoTone,
 	LoadingOutlined,
 } from "@ant-design/icons";
-import {
-	Button,
-	Dropdown,
-	MenuProps,
-	Popconfirm,
-	Space,
-	message,
-} from "antd";
+import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RegisterModal from "./Modal/RegisterModal";
 import InfoModal from "./Modal/InfoModal";
-export interface DataType {
-	id: string;
-	dxbh: string; //对象编号
-	xm: string; // 宣告人
-	xgrq: string; // 宣告日期
-	finish: boolean; // 是否宣告
-}
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import { getAllAnnounces } from "@/api/ic/announce";
+import ModifyModal from "./Modal/ModifyModal";
+
+export type DataType = CrpAnnouncement;
 
 const defaultDataType: DataType = {
-	id: "1",
 	dxbh: "12",
 	xm: "2112",
 	xgrq: "21121",
 	finish: false,
+	audio: "",
 };
 
 const columns: ColumnsType<DataType> = [
@@ -71,40 +60,31 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const staticTableData: DataType[] = [
-	{ id: "1", dxbh: "12", xm: "2112", xgrq: "21121", finish: false },
 	{
-		id: "2",
+		dxbh: "12",
+		xm: "2112",
+		xgrq: "21121",
+		finish: false,
+		audio: "",
+	},
+	{
 		dxbh: "122",
 		xm: "21212",
 		xgrq: "211221",
 		finish: false,
+		audio: "",
 	},
 ];
 
 // 入矫宣告
 export default function Announcement() {
-	const [messageApi, contextHolder] = message.useMessage();
+	const [gMsg, contextHolder] = useMessage();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
-
 	const [tableData, setTableData] = useState<DataType[]>();
-
 	const [selectRecord, setSelectRecord] =
 		useState<DataType>(defaultDataType);
 
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
-
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
 	const items: MenuProps["items"] = [
 		{
 			label: (
@@ -112,7 +92,7 @@ export default function Announcement() {
 					block
 					type="text"
 					icon={<EditOutlined />}
-					onClick={() => {}}>
+					onClick={() => setOpenModify(true)}>
 					修改宣告书
 				</Button>
 			),
@@ -164,31 +144,41 @@ export default function Announcement() {
 		}
 	});
 
-	const gMsg: GMessage = {
-		onSuccess: successMsg,
-		onError: errorMsg,
-	};
-
 	const [openRegister, setOpenRegister] = useState(false);
 	const [openInfo, setOpenInfo] = useState(false);
+	const [openModify, setOpenModify] = useState(false);
+
+	useEffect(() => {
+		getAllAnnounces(
+			(infoList: CrpAnnouncement[]) => {
+				setTableData(infoList);
+			},
+			(msg: string) =>
+				gMsg.onError("请求不到入矫宣告的所有信息！" + msg)
+		);
+	}, [tableUpdate]);
 
 	return (
 		<>
+			<ModifyModal
+				open={openModify}
+				setOpen={setOpenModify}
+				info={selectRecord}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				gMsg={gMsg}
+			/>
 			<InfoModal
 				open={openInfo}
 				setOpen={setOpenInfo}
-				dxbh={selectRecord.dxbh}
-				gMsg={gMsg}
+				info={selectRecord}
 			/>
 			<RegisterModal
 				open={openRegister}
 				setOpen={setOpenRegister}
-				dxbh={selectRecord.dxbh}
 				gMsg={gMsg}
-				tableUpdate={false}
-				setTableUpdate={undefined}
-				infoUpdate={false}
-				setInfoUpdate={undefined}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
 			/>
 			{contextHolder}
 			<TemplateOperatorAndTable
@@ -208,7 +198,7 @@ export default function Announcement() {
 					{ title: "入矫宣告总数", value: 999 },
 				]}
 				tableOnRow={(rec: any) => setSelectRecord(rec)}
-				tableData={staticTableData}
+				tableData={tableData}
 			/>
 		</>
 	);

@@ -1,8 +1,5 @@
-import { useState } from "react";
 import TaskInfo from "@/pages/InvestigatorsEvaluated/Modal/TaskInfoModal/TaskInfo";
 
-import { IEInfo } from "@/entity/IE/IEInfo";
-import { getIEInfoById } from "@/api/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import TemplateModal from "@/template/Modal";
 import { Card, Steps } from "antd";
@@ -10,63 +7,31 @@ import { Card, Steps } from "antd";
 interface ITaskInfoModal {
 	open: boolean;
 	setOpen: any;
-	wtbh: string;
+	info: any;
 	taskUpdate: boolean;
 	gMsg: GMessage;
+	recv?: boolean;
 }
-const defaultIEInfo: IEInfo = {
-	bdcpgrdlx: "",
-	bgrcsrq: "",
-	bgrgzdw: "",
-	bgrjzddz: "",
-	bgrsfzh: "",
-	bgrxb: "",
-	bgrxm: "",
-	dcdwxqj: "",
-	dcpgyj: "",
-	dcpgyjs: "",
-	dcyjshr: "",
-	fjx: "",
-	nsyjzlb: "",
-	pjjg: "",
-	pjrq: "",
-	wtbh: "",
-	wtdch: "",
-	wtdw: "",
-	ypxf: "",
-	ypxq: "",
-	ypxqjsrq: "",
-	ypxqksrq: "",
-	zm: "",
-	finish: 0,
-};
 
 export default function TaskInfoModal(props: ITaskInfoModal) {
-	const { open, setOpen, wtbh, taskUpdate, gMsg } = props;
-	const [info, setInfo] = useState<IEInfo>(defaultIEInfo);
+	const { open, setOpen, info, taskUpdate, gMsg, recv } = props;
+
+	let current = 1;
+	if (!info || info.finish == -1 || recv) current = 1;
+	else if (info.finish > 0) current = 2;
+	else current = 3;
 
 	return (
 		<TemplateModal
 			InfoDescriptions={<TaskInfo info={info} />}
 			open={open}
 			setOpen={setOpen}
-			recordId={wtbh}
+			recordId={undefined}
 			infoUpdate={taskUpdate}
-			getAPI={(id: any) => {
-				getIEInfoById(id, setInfo, () =>
-					gMsg.onError("找不到此对象!")
-				);
-				console.log(info);
-			}}>
+			getAPI={() => {}}>
 			<Card>
 				<Steps
-					current={
-						info.finish != -1
-							? info.finish > 0
-								? 2
-								: 3
-							: 1
-					}
+					current={current}
 					// status="wait" // wait process finish error
 					items={[
 						{

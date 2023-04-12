@@ -1,4 +1,4 @@
-import { GMessage } from "@/utils/msg/GMsg";
+import { GMessage, useMessage } from "@/utils/msg/GMsg";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import {
 	EditOutlined,
@@ -21,14 +21,7 @@ import BBModal from "./Modal/BBModal";
 import { getAllInfos } from "@/api/NoExit";
 import { Exit } from "@/entity/NoExit/Exit";
 
-export interface DataType {
-	id: number;
-	dxbh: string; // 矫正对象编号
-	xm: string; // 矫正对象姓名
-	bb: boolean; // 报备
-	zj: string; // 证件
-	bk: boolean; // 边控
-}
+export type DataType = Exit;
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -80,7 +73,6 @@ const columns: ColumnsType<DataType> = [
 
 const staticTableData: DataType[] = [
 	{
-		id: 1,
 		dxbh: "00000001",
 		xm: "xxx",
 		bb: false,
@@ -88,7 +80,6 @@ const staticTableData: DataType[] = [
 		bk: true,
 	},
 	{
-		id: 2,
 		dxbh: "00000002",
 		xm: "yyy",
 		bb: true,
@@ -108,33 +99,16 @@ export default function NoExit() {
 	const [record, setRecord] = useState<DataType>({
 		dxbh: "",
 	} as DataType);
+
 	const [infoModal, setInfoModal] = useState(false);
 	const [bbModal, setBBModal] = useState(false);
 	const [infoUpdate, setInfoUpdate] = useState(false);
+
 	const [tableData, setTableData] =
 		useState<DataType[]>(staticTableData);
 	const [tableUpdate, setTableUpdate] = useState(false);
 
-	const [messageApi, contextHolder] = message.useMessage();
-
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
-
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
-
-	const gMsg: GMessage = {
-		onSuccess: successMsg,
-		onError: errorMsg,
-	};
+	const [gMsg, contextHolder] = useMessage();
 
 	const items: MenuProps["items"] = [
 		{
@@ -214,22 +188,9 @@ export default function NoExit() {
 	});
 
 	useEffect(() => {
-		const exit2DataType = (infos: Exit[]) => {
-			return infos.map((info, idx) => {
-				return {
-					id: idx,
-					dxbh: info.dxbh,
-					xm: info.xm,
-					bb: info.bb,
-					zj: info.zj,
-					bk: info.bk,
-				};
-			});
-		};
 		getAllInfos(
 			(infoList: Exit[]) => {
-				const td = exit2DataType(infoList);
-				setTableData(td);
+				setTableData(infoList);
 			},
 			(msg: string) =>
 				gMsg.onError("请求不到出入境的所有信息！" + msg)
@@ -249,7 +210,7 @@ export default function NoExit() {
 			<InfoModal
 				open={infoModal}
 				setOpen={setInfoModal}
-				dxbh={record.dxbh}
+				info={record}
 				gMsg={gMsg}
 			/>
 			{contextHolder}

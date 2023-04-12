@@ -25,7 +25,7 @@ import {
 	CheckCircleTwoTone,
 } from "@ant-design/icons";
 import { ColumnType, ColumnsType } from "antd/es/table";
-import { GMessage } from "@/utils/msg/GMsg";
+import { GMessage, useMessage } from "@/utils/msg/GMsg";
 import {
 	getAllIEInfos,
 	getCount,
@@ -50,25 +50,14 @@ import SuggestModal from "./Modal/SuggestModal";
  */
 
 // 调查评估表 元组的数据类型
-export interface DataType {
-	id: number;
-	isFinished: number; // 是否结束
-	wtbh: string; // 委托编号
-	name: string; // 被调查人姓名
-	wtdw: string; // 委托单位
-}
-
-const ieInfo2DataType = (infoList: IEInfo[]) => {
-	return infoList.map((item: IEInfo, idx: number) => {
-		return {
-			id: idx,
-			isFinished: item.finish,
-			wtbh: item.wtbh,
-			name: item.bgrxm,
-			wtdw: item.wtdw,
-		} as DataType;
-	});
-};
+export type DataType = IEInfo;
+// export interface DataType {
+// 	id: number;
+// 	isFinished: number; // 是否结束
+// 	wtbh: string; // 委托编号
+// 	name: string; // 被调查人姓名
+// 	wtdw: string; // 委托单位
+// }
 
 export default function IE() {
 	const [selectTask, setSelectTask] = useState<DataType>(
@@ -85,26 +74,7 @@ export default function IE() {
 
 	const [tableData, setTableData] = useState<DataType[]>([]);
 
-	const [messageApi, contextHolder] = message.useMessage();
-
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
-
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
-
-	const gMsg: GMessage = {
-		onSuccess: successMsg,
-		onError: errorMsg,
-	};
+	const [gMsg, contextHolder] = useMessage();
 
 	const [infoCount, setInfoCount] = useState(0);
 
@@ -113,8 +83,8 @@ export default function IE() {
 	useEffect(() => {
 		getAllIEInfos(
 			(infoList: IEInfo[]) => {
-				const td = ieInfo2DataType(infoList);
-				setTableData(td);
+				console.log(infoList);
+				setTableData(infoList);
 			},
 			(msg: string) =>
 				gMsg.onError("请求不到调查评估的所有信息！" + msg)
@@ -260,13 +230,13 @@ export default function IE() {
 			key: "isFinished",
 			width: 100,
 			render: (_, record) => {
-				const { isFinished } = record;
+				const { finish } = record;
 				let loading;
-				if (isFinished != 0)
+				if (finish != 0)
 					loading = (
 						<Space>
 							<Spin indicator={<LoadingOutlined />} />
-							还需{isFinished}日
+							还需{finish}日
 						</Space>
 					);
 				else
@@ -292,10 +262,10 @@ export default function IE() {
 		},
 		{
 			title: "姓名",
-			dataIndex: "name",
-			key: "name",
+			dataIndex: "bgrxm",
+			key: "bgrxm",
 			width: 150,
-			...getColumnSearchProps("name"),
+			...getColumnSearchProps("bgrxm"),
 		},
 		{
 			title: "操作",
@@ -450,30 +420,26 @@ export default function IE() {
 			<TaskAddTimeModal
 				open={openAddTime}
 				setOpen={setOpenAddTime}
-				time={selectTask.isFinished}
+				time={selectTask.finish}
 				gMsg={gMsg}
 				wtbh={selectTask.wtbh}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
-				taskUpdate={taskUpdate}
-				setTaskUpdate={setTaskUpdate}
 			/>
 
 			<TaskInfoModal
 				open={openInfo}
 				setOpen={setOpenInfo}
-				wtbh={selectTask.wtbh}
+				info={selectTask}
 				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 			/>
 			<TaskModifyModal
 				open={openModify}
 				setOpen={setOpenModify}
-				selectTask={selectTask}
+				info={selectTask}
 				setTableUpdate={setTableUpdate}
-				setTaskUpdate={setTaskUpdate}
 				tableUpdate={tableUpdate}
-				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 			/>
 

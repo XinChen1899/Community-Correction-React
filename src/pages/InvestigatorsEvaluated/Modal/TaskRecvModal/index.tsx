@@ -170,9 +170,10 @@ export default function TaskRecvModal(props: {
 			<TaskInfoModal
 				open={addModalOpen}
 				setOpen={setAddModalOpen}
-				wtbh={record.wtbh}
+				info={record}
 				taskUpdate={taskUpdate}
 				gMsg={gMsg}
+				recv={true}
 			/>
 
 			<TemplateModal

@@ -1,48 +1,25 @@
-import { getExitInfoByDXBH } from "@/api/NoExit";
 import { GMessage } from "@/utils/msg/GMsg";
-import { Exit } from "@/entity/NoExit/Exit";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { useState } from "react";
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 
-/**
- * 查询所有社矫对象（可选择类别：在
-矫、解矫）关于出入境方面的情况：
-是否已同级报备、证件是否已代管/
-归还/收缴/吊销/作废、是否有出境
-风险、是否已办边控手续（初态为：
-未边控）。
- * @returns 
- */
+
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
-	dxbh: string;
-	gMsg: GMessage;
+	info: any;
 }) {
-	const { open, setOpen, dxbh, gMsg } = props;
-	const exit: Exit = {
-		dxbh: dxbh,
-		xm: "xxx",
-		bb: false,
-		zj: "代管/归还/收缴/吊销/作废",
-		bk: false,
-	};
-	const [infos, setInfos] = useState<any[]>([]);
+	const { open, setOpen, info } = props;
 
-	const getInfos = (exitInfo: Exit) => {
+	const getInfos = (info: CrpAnnouncement) => {
 		return [
-			{ label: "对象编号", value: exitInfo.dxbh },
-			{ label: "姓名", value: exitInfo.xm },
+			{ label: "对象编号", value: info.dxbh },
+			{ label: "姓名", value: info.xm },
 			{
 				label: "宣告日期",
-				value: exitInfo.bb ? "已报备" : "待报备",
+				value: info.xgrq,
 			},
-			{ label: "宣告音频", value: exit.zj },
-			{
-				label: "边控状态",
-				value: exitInfo.bk ? "已边控" : "未边控",
-			},
+			{ label: "宣告音频", value: info.audio },
 		];
 	};
 
@@ -51,25 +28,11 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"入矫宣告信息表"}
-					info={infos}
+					info={getInfos(info)}
 				/>
 			}
 			open={open}
 			setOpen={setOpen}
-			getAPI={(id: string) => {
-				// getExitInfoByDXBH(
-				// 	id,
-				// 	(data: any) => {
-				// 		setInfos(getInfos(data));
-				// 		gMsg.onSuccess("获取出入境信息成功！");
-				// 	},
-				// 	(err: any) => {
-				// 		setInfos([]);
-				// 		gMsg.onError("获取出入境信息失败！" + err);
-				// 	}
-				// );
-			}}
-			recordId={dxbh}
 		/>
 	);
 }

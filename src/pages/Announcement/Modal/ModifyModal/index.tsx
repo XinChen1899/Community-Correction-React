@@ -1,14 +1,12 @@
-import { Card, Form, Modal } from "antd";
-import React, { useEffect, useState } from "react";
-import { Space } from "antd/lib";
-import { getIEInfoById, updateIEInfoData } from "@/api/ie";
-import { IeFormConvert2IeInfo, IeInfo2Ieform } from "@/utils/ie";
-import { IEInfoForm } from "@/pages/InvestigatorsEvaluated/Form/IEInfoForm";
+import { Form } from "antd";
+import { useEffect, useState } from "react";
+import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
-import { IEInfo } from "@/entity/IE/IEInfo";
-import dayjs from "dayjs";
 import TemplateModal from "@/template/Modal";
 import { DataType } from "../..";
+import RegisterForm from "../../Form/RegisterForm";
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import { updateAnnounce } from "@/api/ic/announce";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -19,7 +17,7 @@ interface ITaskInfoModal {
 	gMsg: GMessage;
 }
 
-export default function TaskModifyModal(props: ITaskInfoModal) {
+export default function ModifyModal(props: ITaskInfoModal) {
 	const { open, setOpen, info, setTableUpdate, tableUpdate, gMsg } =
 		props;
 
@@ -29,24 +27,24 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 
 	useEffect(() => {
 		form.resetFields();
-		form.setFieldsValue(IeInfo2Ieform(info));
+		form.setFieldsValue(info);
 	});
 
 	const onFinish = (values: any) => {
-		const info = IeFormConvert2IeInfo(values);
+		const info = values as CrpAnnouncement;
+		info.xgrq = getDate(info.xgrq);
 
-		updateIEInfoData(
+		updateAnnounce(
 			info,
 			() => {
 				setTableUpdate(!tableUpdate);
-
-				setConfirmLoading(false);
 				gMsg.onSuccess("修改成功！");
 			},
 			(msg: string) => {
 				gMsg.onError("修改失败！" + msg);
 			}
 		);
+		setConfirmLoading(false);
 		setOpen(false);
 	};
 
@@ -59,7 +57,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		<>
 			<TemplateModal
 				InfoDescriptions={
-					<IEInfoForm
+					<RegisterForm
 						form={form}
 						onFinish={onFinish}
 						initialValues={info}
@@ -67,8 +65,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 				}
 				open={open}
 				setOpen={setOpen}
-				recordId={""}
-				getAPI={() => {}}
 				onOk={handleOk}
 				confirmLoading={confirmLoading}
 			/>

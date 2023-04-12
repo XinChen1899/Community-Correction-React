@@ -5,14 +5,15 @@ export default function TemplateModal(props: {
 	InfoDescriptions: any;
 	open: boolean;
 	setOpen: any;
-	getAPI: any;
+	getAPI?: any;
 	onOk?: any;
 	onCancel?: any;
 	confirmLoading?: boolean;
-	recordId: any;
+	recordId?: any;
 	infoUpdate?: any;
 	title?: string;
 	children?: any;
+	footer?: any[];
 }) {
 	const {
 		open,
@@ -26,6 +27,7 @@ export default function TemplateModal(props: {
 		onCancel,
 		title,
 		children,
+		footer,
 	} = props;
 
 	useEffect(() => {
@@ -47,7 +49,8 @@ export default function TemplateModal(props: {
 				onCancel != undefined
 					? onCancel
 					: () => setOpen(false)
-			}>
+			}
+			footer={footer}>
 			<Space direction={"vertical"}>
 				<Card hoverable style={{ width: "900px" }}>
 					{InfoDescriptions}

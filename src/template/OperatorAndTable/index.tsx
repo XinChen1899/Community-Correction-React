@@ -4,9 +4,9 @@ import Table from "antd/es/table";
 
 export default function TemplateOperatorAndTable(props: {
 	columns: any;
-	cardExtra: any;
+	cardExtra?: any;
 	cardTitle: string;
-	statisticList: any;
+	statisticList?: any;
 	tableOnRow: any;
 	tableData: any;
 }) {
@@ -28,7 +28,9 @@ export default function TemplateOperatorAndTable(props: {
 							statisticList.map(
 								(s: any, idx: number) => {
 									return (
-										<Col span={12} key={idx}>
+										<Col
+											span={12}
+											key={`${s.title}${idx}`}>
 											<Statistic
 												title={s.title}
 												value={s.value}

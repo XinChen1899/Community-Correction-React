@@ -1,6 +1,6 @@
 import TemplateModal from "@/template/Modal";
 import { BBForm } from "../../Form/BBForm";
-import { Card, Form, Steps } from "antd";
+import { Button, Card, Form, Steps } from "antd";
 import { BBInfo } from "@/entity/NoExit/BBInfo";
 import { getBBForm, updateBBForm } from "@/api/NoExit";
 import { useState } from "react";
@@ -23,29 +23,30 @@ export default function BBModal(props: {
 	const [form] = Form.useForm();
 	const [bbForm, setBBForm] = useState<BBInfo>();
 
+	const [isSubmit, setSubmit] = useState(false);
+
 	const handleOk = () => {
 		form.submit();
 		setOpen(false);
 	};
 
 	const onFinish = (values: any) => {
-		console.log(values);
 		const bbInfo = values as BBInfo;
 		bbInfo.bbrq = getDate(bbInfo.bbrq);
 		bbInfo.bbjsrq = getDate(bbInfo.bbjsrq);
 		bbInfo.bbksrq = getDate(bbInfo.bbksrq);
-
+		if (isSubmit) bbInfo.step += 1;
 		updateBBForm(
 			bbInfo,
 			() => {
 				setInfoUpdate(!infoUpdate);
 				gMsg.onSuccess("更新成功!");
-				console.log(bbForm?.step);
 			},
 			(msg: string) => {
 				gMsg.onError("更新失败！" + msg);
 			}
 		);
+		setOpen(false);
 	};
 
 	const bbInfo: BBInfo = {
@@ -69,12 +70,29 @@ export default function BBModal(props: {
 			infoUpdate={infoUpdate}
 			InfoDescriptions={
 				<BBForm
-					disabled={bbForm ? bbForm.step == 3 : false}
+					disabled={bbForm ? bbForm.step > 0 : false}
 					form={form}
 					onFinish={onFinish}
 					initialValues={bbForm}
 				/>
 			}
+			footer={[
+				<Button
+					key="submit"
+					type="primary"
+					onClick={() => {
+						setSubmit(true);
+						handleOk();
+					}}>
+					提交给公安审核
+				</Button>,
+				<Button key="back" onClick={() => setOpen(false)}>
+					返回
+				</Button>,
+				<Button key="save" type="primary" onClick={handleOk}>
+					保存
+				</Button>,
+			]}
 			onOk={handleOk}
 			open={open}
 			setOpen={setOpen}

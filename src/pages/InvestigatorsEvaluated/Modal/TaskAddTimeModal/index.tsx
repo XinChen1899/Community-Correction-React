@@ -12,8 +12,6 @@ const TaskAddTimeModal = (props: {
 	wtbh: string;
 	tableUpdate: any;
 	setTableUpdate: any;
-	taskUpdate: any;
-	setTaskUpdate: any;
 	gMsg: GMessage;
 }) => {
 	const {
@@ -24,8 +22,6 @@ const TaskAddTimeModal = (props: {
 		wtbh,
 		tableUpdate,
 		setTableUpdate,
-		taskUpdate,
-		setTaskUpdate,
 	} = props;
 	const timeRef = useRef<InputRef>(null);
 
@@ -76,7 +72,6 @@ const TaskAddTimeModal = (props: {
 								`修改时间为${timeRef.current?.input?.value}`
 							);
 							setTableUpdate(!tableUpdate);
-							setTaskUpdate(!taskUpdate);
 						},
 						() => {
 							gMsg.onError("修改失败!");

@@ -35,9 +35,11 @@ export default function SuggestModal(props: {
 
 	const [form] = Form.useForm();
 	const [value, setValue] = useState(DefaultYJS); //value就是调查评估意见书
+	const [loading, setLoading] = useState(false);
 
 	const handleOk = () => {
 		form.submit();
+		setLoading(true);
 	};
 
 	return (
@@ -60,6 +62,7 @@ export default function SuggestModal(props: {
 									gMsg.onError("更新失败");
 								}
 							);
+							setLoading(false);
 							setOpen(false);
 						}}
 						initialValues={{ wtbh }}
@@ -86,6 +89,7 @@ export default function SuggestModal(props: {
 					);
 				}}
 				recordId={wtbh}
+				confirmLoading={loading}
 			/>
 		</>
 	);

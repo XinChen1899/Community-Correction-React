@@ -5,7 +5,7 @@ export default function TemplateDescriptions(props: {
 	info: any[];
 }) {
 	const { title, info } = props;
-	console.log(info);
+
 	return (
 		<Descriptions title={title} bordered layout="vertical">
 			{info.map((item, idx) => {

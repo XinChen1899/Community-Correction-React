@@ -4,9 +4,8 @@ import { Card, Form, Modal } from "antd";
 import { GMessage } from "@/utils/msg/GMsg";
 import { AddTeamForm } from "../../Form/AddTeamForm";
 import TemplateModal from "@/template/Modal";
-import TemplateForm from "@/template/Form";
-import { Cteam } from "@/entity/IC/Cteam";
-import { saveCrt } from "@/api/ic";
+import { CrTeam } from "@/entity/IC/CrTeam";
+import { saveCrt } from "@/api/ic/crteam";
 
 const AddTeamModal = (props: {
 	open: boolean;
@@ -29,13 +28,12 @@ const AddTeamModal = (props: {
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
-		setConfirmLoading(true);
 		form.submit();
 	};
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
-		const cteam = values as Cteam;
+		const cteam = values as CrTeam;
 		cteam.teamNumber = cteam.workers.length + 1;
 		cteam.workers.push(cteam.monitor);
 
@@ -43,15 +41,14 @@ const AddTeamModal = (props: {
 			cteam,
 			() => {
 				setOpen(false);
-				setConfirmLoading(true);
 				setTableUpdate(!tableUpdate);
 				gMsg.onSuccess("新增小组！");
 			},
 			(msg: string) => {
 				gMsg.onError("新增矫正小组!" + msg);
-			}
+			},
+			setConfirmLoading
 		);
-		console.log(cteam);
 	};
 
 	return (
@@ -70,8 +67,6 @@ const AddTeamModal = (props: {
 				onOk={handleOk}
 				open={open}
 				setOpen={setOpen}
-				getAPI={undefined}
-				recordId={undefined}
 				confirmLoading={confirmLoading}
 			/>
 		</>

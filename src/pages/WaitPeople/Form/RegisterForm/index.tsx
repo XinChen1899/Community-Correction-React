@@ -19,8 +19,8 @@ import Upload, {
 	UploadProps,
 } from "antd/es/upload";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Cteam } from "@/entity/IC/Cteam";
-import { getAllCrt } from "@/api/ic";
+import { CrTeam } from "@/entity/IC/CrTeam";
+import { getAllCrt } from "@/api/ic/crteam";
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
 	const reader = new FileReader();
@@ -79,7 +79,7 @@ export function RegisterForm(props: {
 		getAllCrt(
 			(teamList: any[]) => {
 				if (teamList != undefined) {
-					const temp = teamList.map((team: Cteam) => {
+					const temp = teamList.map((team: CrTeam) => {
 						return {
 							code: team.id,
 							value: team.teamName,

@@ -1,7 +1,7 @@
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import axios from "axios";
 import { ServerTable, useAPI } from "..";
-import { Cteam } from "@/entity/IC/Cteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
 import { CrpCategory } from "@/entity/Category/CategoryInfo";
 
 const api = axios.create({

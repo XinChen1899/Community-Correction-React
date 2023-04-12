@@ -1,7 +1,5 @@
-import { Worker } from "./Worker";
-
 // 矫正小组
-export interface Cteam {
+export interface CrTeam {
 	id: string; // 小组id
 	teamName: string; // 小组名
 	monitor: string; // 小组队长id

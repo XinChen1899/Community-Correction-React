@@ -6,7 +6,6 @@ import { RegisterForm } from "../../Form/RegisterForm";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import { getDate } from "@/utils/ie";
 import { registerCrp } from "@/api/ic";
-import { mzMap } from "@/utils";
 import TemplateModal from "@/template/Modal";
 
 const RegisterModal = (props: {
@@ -15,24 +14,14 @@ const RegisterModal = (props: {
 	gMsg: GMessage;
 	tableUpdate: boolean;
 	setTableUpdate: any;
-	infoUpdate: any;
-	setInfoUpdate: any;
 }) => {
-	const {
-		setOpen,
-		open,
-		gMsg,
-		tableUpdate,
-		setTableUpdate,
-		infoUpdate,
-		setInfoUpdate,
-	} = props;
+	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
+		props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
-		// setConfirmLoading(true);
 		form.submit();
 	};
 
@@ -44,15 +33,14 @@ const RegisterModal = (props: {
 		registerCrp(
 			crp,
 			() => {
-				gMsg.onSuccess("登记成功！");
 				setTableUpdate(!tableUpdate);
-				setInfoUpdate(!infoUpdate);
 				setOpen(false);
-				setConfirmLoading(false);
+				gMsg.onSuccess("登记成功！");
 			},
 			(msg: string) => {
 				gMsg.onError("登记失败！" + msg);
-			}
+			},
+			setConfirmLoading
 		);
 	};
 
@@ -70,8 +58,6 @@ const RegisterModal = (props: {
 				setOpen={setOpen}
 				onOk={handleOk}
 				confirmLoading={confirmLoading}
-				getAPI={undefined}
-				recordId={undefined}
 			/>
 		</>
 	);

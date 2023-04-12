@@ -135,6 +135,7 @@ export default function TerminationCorrection() {
 				statisticList={undefined}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={staticTableData}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>
 	);

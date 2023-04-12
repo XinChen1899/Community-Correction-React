@@ -30,6 +30,8 @@ const defaultCrp: CorrectionPeople = {
 	grlxdh: "",
 	ywjtcyjzyshgx: "",
 	zp: "",
+	team: "",
+	status: "",
 };
 
 export default function CrpModifyModal(props: {
@@ -39,8 +41,6 @@ export default function CrpModifyModal(props: {
 	gMsg: GMessage;
 	tableUpdate: boolean;
 	setTableUpdate: any;
-	infoUpdate: any;
-	setInfoUpdate: any;
 }) {
 	const {
 		open,
@@ -49,21 +49,15 @@ export default function CrpModifyModal(props: {
 		gMsg,
 		tableUpdate,
 		setTableUpdate,
-		infoUpdate,
-		setInfoUpdate,
 	} = props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
-
-	const { dxbh } = selectRecord;
-
-	const [crp, setCrp] = useState<CorrectionPeople>(defaultCrp);
-
 	const [form] = Form.useForm();
 
 	useEffect(() => {
 		form.resetFields();
-		form.setFieldsValue(crp);
+		selectRecord.csrq = dayjs(selectRecord.csrq);
+		form.setFieldsValue(selectRecord);
 	});
 
 	const onFinish = async (values: any) => {
@@ -80,21 +74,16 @@ export default function CrpModifyModal(props: {
 			() => {
 				gMsg.onSuccess("修改成功！");
 				setTableUpdate(!tableUpdate);
-				setInfoUpdate(!infoUpdate);
 			},
 			(msg: string) => {
 				gMsg.onError("修改失败！" + msg);
-			}
+			},
+			setConfirmLoading
 		);
 	};
 
 	const handleOk = () => {
 		form.submit();
-		setConfirmLoading(true);
-		setTimeout(() => {
-			setOpen(false);
-			setConfirmLoading(false);
-		}, 500);
 	};
 
 	return (
@@ -104,26 +93,11 @@ export default function CrpModifyModal(props: {
 					<RegisterForm
 						form={form}
 						onFinish={onFinish}
-						initialValues={crp}
+						initialValues={selectRecord}
 					/>
 				}
 				open={open}
 				setOpen={setOpen}
-				recordId={dxbh}
-				getAPI={(id: string) => {
-					if (id && id != "") {
-						getCrpById(
-							id,
-							(crp: CorrectionPeople) => {
-								crp.csrq = dayjs(crp.csrq);
-								setCrp(crp);
-							},
-							() => gMsg.onError("找不到此对象!")
-						);
-
-						console.log(crp);
-					}
-				}}
 				onOk={handleOk}
 				confirmLoading={confirmLoading}
 			/>

@@ -1,6 +1,6 @@
 import CrpInfo from "./TeamInfo";
 import { DataType } from "../..";
-import { Cteam } from "@/entity/IC/Cteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
 import TemplateModal from "@/template/Modal";
 import { useEffect, useState } from "react";
 
@@ -12,10 +12,10 @@ export default function TeamInfoModal(props: {
 }) {
 	const { open, setOpen, selectRecord, workerMap } = props;
 
-	const [info, setInfo] = useState<Cteam>({} as Cteam);
+	const [info, setInfo] = useState<CrTeam>({} as CrTeam);
 
 	useEffect(() => {
-		const temp: Cteam = {
+		const temp: CrTeam = {
 			id: selectRecord.id,
 			teamName: selectRecord.teamName,
 			monitor: selectRecord.monitor,
@@ -33,8 +33,6 @@ export default function TeamInfoModal(props: {
 				}
 				open={open}
 				setOpen={setOpen}
-				getAPI={() => {}}
-				recordId={undefined}
 			/>
 		</>
 	);

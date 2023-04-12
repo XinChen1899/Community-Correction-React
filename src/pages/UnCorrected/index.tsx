@@ -128,6 +128,7 @@ export default function Uncorrected() {
 				statisticList={undefined}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={staticTableData}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>
 	);

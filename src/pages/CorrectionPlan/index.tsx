@@ -1,9 +1,4 @@
-import {
-	Button,
-	message,
-	Popconfirm,
-	Space,
-} from "antd";
+import { Button, message, Popconfirm, Space } from "antd";
 import {
 	DeleteOutlined,
 	EditOutlined,
@@ -13,6 +8,7 @@ import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal/AddTeam";
 import TemplateHome from "@/template/OperatorAndTable";
+import { useMessage } from "@/utils/msg/GMsg";
 
 export interface DataType {
 	id: string; // 小组编号
@@ -38,29 +34,11 @@ const columns: ColumnsType<DataType> = [
 ];
 
 export default function CorrectionPlan() {
-	const [messageApi, contextHolder] = message.useMessage();
-	const [addModalOpen, setAddModalOpen] = useState(false);
+	const [gMsg, contextHolder] = useMessage();
+	const [openAdd, setOpenAdd] = useState(false);
 
 	const showAddModal = () => {
-		setAddModalOpen(true);
-	};
-
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
-
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
-
-	const dataCollection = {
-		totalNumber: 0,
+		setOpenAdd(true);
 	};
 
 	// 绑定操作栏的操作
@@ -109,12 +87,9 @@ export default function CorrectionPlan() {
 	return (
 		<div>
 			<AddModal
-				open={addModalOpen}
-				setOpen={setAddModalOpen}
-				gMsg={{
-					onSuccess: successMsg,
-					onError: errorMsg,
-				}}
+				open={openAdd}
+				setOpen={setOpenAdd}
+				gMsg={gMsg}
 			/>
 			{contextHolder}
 			<TemplateHome
@@ -139,6 +114,7 @@ export default function CorrectionPlan() {
 				]}
 				tableData={tableData.length ? tableData : []}
 				tableOnRow={undefined}
+				tableRowKey={(rec: DataType) => rec.id}
 			/>
 		</div>
 	);

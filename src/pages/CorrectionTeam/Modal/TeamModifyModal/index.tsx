@@ -1,93 +1,81 @@
-import { Card, Form, Modal } from "antd";
+import { Form } from "antd";
 import { useEffect, useState } from "react";
-import { Space } from "antd/lib";
 import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
-import { CorrectionPeople } from "@/entity/IC/Crp";
-import { Cteam } from "@/entity/IC/Cteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
 import { AddTeamForm } from "../../Form/AddTeamForm";
+import TemplateModal from "@/template/Modal";
+import { Worker } from "@/entity/IC/Worker";
+import { updateCrt } from "@/api/ic/crteam";
 
 export default function TeamModifyModal(props: {
 	open: boolean;
 	setOpen: any;
-	selectRecord: DataType;
+	worker: Worker[];
+	info: DataType;
 	gMsg: GMessage;
+	tableUpdate: boolean;
+	setTableUpdate: any;
 }) {
-	const { open, setOpen, selectRecord, gMsg } = props;
+	const {
+		open,
+		setOpen,
+		info,
+		gMsg,
+		worker,
+		tableUpdate,
+		setTableUpdate,
+	} = props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
-
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		const result = await axios.get(
-	// 			`http://localhost:9006/ie/${wtbh}`
-	// 		);
-	// 		const temp: IEInfo = result.data;
-	// 		const data: IEInfo2 = result.data;
-	// 		data.bgrcsrq = dayjs(temp.bgrcsrq);
-	// 		data.ypxqjsrq = dayjs(temp.ypxqjsrq);
-	// 		data.ypxqksrq = dayjs(temp.ypxqksrq);
-	// 		data.pjrq = dayjs(temp.pjrq);
-	// 		setIeInfo(data);
-	// 	};
-	// 	fetchData();
-	// }, [wtbh, taskUpdate]);
 
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		// form.resetFields();
-		// form.setFieldsValue(ieInfo);
+		form.resetFields();
+		form.setFieldsValue(info);
 	});
 
 	const onFinish = async (values: any) => {
-		// const info = IeFormConvert2IeInfo(values);
-		// selectTask.name = info.bgrxm;
-		// await updateIEInfoData(info);
-		// setTableUpdate(!tableUpdate);
-		// setTaskUpdate(!taskUpdate);
-		// gMsg.onSuccess("修改成功!");
+		const cteam = values as CrTeam;
+		cteam.teamNumber = cteam.workers.length;
+		// console.log(values);
+		// console.log(cteam);
+		updateCrt(
+			cteam,
+			() => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("修改成功！");
+			},
+			(msg: string) => {
+				gMsg.onError("修改矫正小组失败!" + msg);
+			},
+			setConfirmLoading
+		);
+		setOpen(false);
 	};
 
 	const handleOk = () => {
 		form.submit();
-		setConfirmLoading(true);
-		setTimeout(() => {
-			setOpen(false);
-			setConfirmLoading(false);
-			gMsg.onSuccess("修改成功！");
-		}, 1000);
-	};
-
-	const info: Cteam = {
-		id: selectRecord.id,
-		teamName: selectRecord.teamName,
-		monitor: selectRecord.monitor,
-		teamNumber: selectRecord.teamNumber,
-		workers: [],
 	};
 
 	return (
-		<Modal
-			style={{ top: 20 }}
-			open={open}
-			width={1000}
-			title={"修改" + selectRecord.id + "的小组信息"}
-			onOk={handleOk}
-			onCancel={() => setOpen(false)}
-			confirmLoading={confirmLoading}>
-			<Space direction={"vertical"}>
-				<Card
-					title={"矫正小组信息表"}
-					style={{ width: "900px" }}>
+		<>
+			<TemplateModal
+				title={"修改id为" + info.id + "的矫正小组信息"}
+				InfoDescriptions={
 					<AddTeamForm
 						form={form}
 						onFinish={onFinish}
 						initialValues={info}
-						worker={undefined}
+						worker={worker}
 					/>
-				</Card>
-			</Space>
-		</Modal>
+				}
+				onOk={handleOk}
+				open={open}
+				setOpen={setOpen}
+				confirmLoading={confirmLoading}
+			/>
+		</>
 	);
 }

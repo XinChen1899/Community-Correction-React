@@ -1,8 +1,6 @@
 import "react";
 import { Button, Form, Input, Select, Tag } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { getAllWorkers } from "@/api/ic";
 import { Worker } from "@/entity/IC/Worker";
 
 const formItemLayout = {
@@ -27,7 +25,7 @@ export function AddTeamForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
-	worker: any;
+	worker: any[];
 }) {
 	const { form, onFinish, initialValues, worker } = props;
 
@@ -76,7 +74,11 @@ export function AddTeamForm(props: {
 								{...(index === 0
 									? formItemLayout
 									: formItemLayoutWithOutLabel)}
-								label={index === 0 ? "小组成员" : ""}
+								label={
+									index === 0
+										? "小组成员"
+										: field.name
+								}
 								required={false}
 								key={field.key}>
 								<Form.Item

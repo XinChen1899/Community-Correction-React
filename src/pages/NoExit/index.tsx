@@ -224,6 +224,7 @@ export default function NoExit() {
 				]}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={tableData}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>
 	);

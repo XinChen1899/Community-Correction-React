@@ -67,7 +67,7 @@ export default function CrpRecModal(props: {
 		sqjzdxbh: "",
 		sfdcpg: false,
 		jzlb: "",
-		xm: selectRecord.name,
+		xm: selectRecord.xm,
 		xb: "",
 		mz: "",
 		gj: "",
@@ -83,6 +83,8 @@ export default function CrpRecModal(props: {
 		grlxdh: "",
 		ywjtcyjzyshgx: "",
 		zp: "",
+		team: "",
+		status: "",
 	};
 
 	return (

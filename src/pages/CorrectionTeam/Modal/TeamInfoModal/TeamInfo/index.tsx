@@ -1,9 +1,8 @@
 import { Card, Descriptions, List } from "antd";
-import { Cteam } from "@/entity/IC/Cteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
 
-const CrpInfo = (props: { info: Cteam; workerMap: any }) => {
+const CrpInfo = (props: { info: CrTeam; workerMap: any }) => {
 	const { info, workerMap } = props;
-	console.log(info, workerMap);
 	return (
 		<Descriptions title="矫正小组信息" bordered layout="vertical">
 			<Descriptions.Item label="矫正小组编号">
@@ -22,8 +21,10 @@ const CrpInfo = (props: { info: Cteam; workerMap: any }) => {
 						dataSource={info.workers}
 						renderItem={(item) => (
 							<List.Item>
-								<Card title={workerMap[item]}>
-									Card content
+								<Card
+									title={`人员编号为: ${item}`}
+									hoverable>
+									{workerMap[item]}
 								</Card>
 							</List.Item>
 						)}

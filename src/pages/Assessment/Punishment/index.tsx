@@ -140,6 +140,7 @@ export default function Punishment() {
 				statisticList={undefined}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={staticTableData}
+				tableRowKey={(rec: DataType) => rec.id}
 			/>
 		</>
 	);

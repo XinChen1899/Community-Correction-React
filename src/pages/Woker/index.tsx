@@ -170,6 +170,7 @@ export default function Worker() {
 				]}
 				tableData={tableData.length ? tableData : []}
 				tableOnRow={undefined}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</div>
 	);

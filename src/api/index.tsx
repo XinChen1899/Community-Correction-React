@@ -11,13 +11,14 @@ export const useAPI = (
 	api: AxiosInstance,
 	config: { url: string; method: string; data?: any },
 	onSuccess?: any,
-	onError?: any
+	onError?: any,
+	setConfimLoading?: any
 ) => {
 	const { url, method, data } = config;
 	if (method.toLowerCase() == "get") {
-		apiGet(api, url, onSuccess, onError);
+		apiGet(api, url, onSuccess, onError, setConfimLoading);
 	} else if (method.toLowerCase() == "post") {
-		apiPost(api, url, data, onSuccess, onError);
+		apiPost(api, url, data, onSuccess, onError, setConfimLoading);
 	}
 };
 
@@ -26,8 +27,10 @@ const apiPost = async (
 	url: string,
 	data: any,
 	onSuccess?: any,
-	onError?: any
+	onError?: any,
+	setConfimLoading?: any
 ) => {
+	if (setConfimLoading) setConfimLoading(true);
 	await api
 		.post(url, data)
 		.then(({ data }) => {
@@ -40,6 +43,9 @@ const apiPost = async (
 		})
 		.catch((reason) => {
 			onError(reason.message);
+		})
+		.finally(() => {
+			if (setConfimLoading) setConfimLoading(false);
 		});
 };
 
@@ -47,8 +53,10 @@ const apiGet = async (
 	api: AxiosInstance,
 	url: string,
 	onSuccess?: any,
-	onError?: any
+	onError?: any,
+	setConfimLoading?: any
 ) => {
+	if (setConfimLoading) setConfimLoading(true);
 	await api
 		.get(url)
 		.then(({ data }) => {
@@ -61,6 +69,9 @@ const apiGet = async (
 		})
 		.catch((reason) => {
 			onError(reason.message);
+		})
+		.finally(() => {
+			if (setConfimLoading) setConfimLoading(false);
 		});
 };
 

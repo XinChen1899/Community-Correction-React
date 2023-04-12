@@ -470,6 +470,7 @@ export default function IE() {
 				tableOnRow={(record: any) => {
 					setSelectTask(record);
 				}}
+				tableRowKey={(rec: DataType) => rec.wtbh}
 			/>
 		</>
 	);

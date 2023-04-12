@@ -199,6 +199,7 @@ export default function Announcement() {
 				]}
 				tableOnRow={(rec: any) => setSelectRecord(rec)}
 				tableData={tableData}
+				tableRowKey={(rec: CrpAnnouncement) => rec.dxbh}
 			/>
 		</>
 	);

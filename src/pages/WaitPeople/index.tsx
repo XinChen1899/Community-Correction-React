@@ -2,7 +2,6 @@ import {
 	Button,
 	Dropdown,
 	MenuProps,
-	message,
 	Popconfirm,
 	Space,
 	Tag,
@@ -14,7 +13,6 @@ import {
 	DeleteOutlined,
 	DownOutlined,
 	EditOutlined,
-	PlusCircleFilled,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
@@ -22,42 +20,26 @@ import { Spin } from "antd/lib";
 import { useEffect, useState } from "react";
 import TemplateHome from "@/template/OperatorAndTable";
 import RegisterModal from "./Modal/RegisterModal";
-import { GMessage } from "@/utils/msg/GMsg";
+import { useMessage } from "@/utils/msg/GMsg";
 import CrpInfoModal from "./Modal/CrpInfoModal";
 import CrpModifyModal from "./Modal/CrpModifyModal";
 import CrpRecModal from "./Modal/CrpRecModal";
 import { getAllCrp } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 
-export interface DataType {
-	id: number;
-	dxbh: string; // 对象编号
-	name: string; // 矫正对象姓名
-	sex: string; //性别
-	sfdcpg: boolean; // 是否调查评估
-	status: string; // 状态
-}
-
-const defaultDataType: DataType = {
-	id: 0,
-	dxbh: "",
-	name: "",
-	sex: "",
-	sfdcpg: false,
-	status: "",
-};
+export type DataType = CorrectionPeople;
 
 const columns: ColumnsType<DataType> = [
 	{
 		title: "对象编号",
-		dataIndex: "dxbh",
-		key: "dxbh",
+		dataIndex: "sqjzdxbh",
+		key: "sqjzdxbh",
 		width: 150,
 	},
 	{
 		title: "姓名",
-		dataIndex: "name",
-		key: "name",
+		dataIndex: "xm",
+		key: "xm",
 	},
 	{
 		title: "性别",
@@ -109,62 +91,29 @@ const columns: ColumnsType<DataType> = [
 ];
 
 export default function WaitPeople() {
-	const [messageApi, contextHolder] = message.useMessage();
+	const [gMsg, contextHolder] = useMessage();
 
-	const [registerModalOpen, setRegisterOpen] = useState(false);
-	const [crpInfoModalOpen, setCrpInfoModalOpen] = useState(false);
-	const [crpModifyModalOpen, setCrpModifyModalOpen] =
-		useState(false);
-	const [crpRecModalOpen, setCrpRecModalOpen] = useState(false);
+	const [openRegister, setOpenRegister] = useState(false);
+	const [openInfo, setOpenInfo] = useState(false);
+	const [openModify, setOpenModift] = useState(false);
+	const [openRecv, setOpenRecv] = useState(false);
 
-	const [selectRecord, setSelectRecord] =
-		useState<DataType>(defaultDataType);
+	const [selectRecord, setSelectRecord] = useState<DataType>(
+		{} as DataType
+	);
 
 	const [tableData, setTableData] = useState<DataType[]>();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
-	const [infoUpdate, setInfoUpdate] = useState(false);
 
 	useEffect(() => {
-		const crp2DataType = (crpList: CorrectionPeople[]) => {
-			return crpList.map((crp, idx: number) => {
-				return {
-					id: idx,
-					dxbh: crp.sqjzdxbh,
-					name: crp.xm,
-					sex: crp.xb,
-					sfdcpg: crp.sfdcpg,
-					status: idx % 2 == 0 ? "在矫" : "等待入矫",
-				} as DataType;
-			});
-		};
 		getAllCrp(
 			(crpList: CorrectionPeople[]) => {
-				const td = crp2DataType(crpList);
-				setTableData(td);
+				setTableData(crpList);
 			},
 			() => gMsg.onError("请求不到矫正人员的信息！")
 		);
 	}, [tableUpdate]);
-
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
-
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
-
-	const gMsg: GMessage = {
-		onSuccess: successMsg,
-		onError: errorMsg,
-	};
 	const items: MenuProps["items"] = [
 		{
 			label: (
@@ -172,7 +121,7 @@ export default function WaitPeople() {
 					block
 					type="text"
 					icon={<EditOutlined />}
-					onClick={() => setCrpModifyModalOpen(true)}>
+					onClick={() => setOpenModift(true)}>
 					修改信息
 				</Button>
 			),
@@ -184,7 +133,7 @@ export default function WaitPeople() {
 					block
 					type="text"
 					icon={<CheckCircleFilled />}
-					onClick={() => setCrpRecModalOpen(true)}>
+					onClick={() => setOpenRecv(true)}>
 					接收入矫
 				</Button>
 			),
@@ -221,9 +170,7 @@ export default function WaitPeople() {
 						<Space size="middle" direction="horizontal">
 							<Button
 								type={"dashed"}
-								onClick={() =>
-									setCrpInfoModalOpen(true)
-								}>
+								onClick={() => setOpenInfo(true)}>
 								矫正对象信息表
 							</Button>
 							<Dropdown
@@ -249,35 +196,29 @@ export default function WaitPeople() {
 	return (
 		<div>
 			<CrpInfoModal
-				open={crpInfoModalOpen}
-				setOpen={setCrpInfoModalOpen}
+				open={openInfo}
+				setOpen={setOpenInfo}
 				selectRecord={selectRecord}
-				gMsg={gMsg}
-				infoUpdate={infoUpdate}
 			/>
 
 			<RegisterModal
-				open={registerModalOpen}
-				setOpen={setRegisterOpen}
+				open={openRegister}
+				setOpen={setOpenRegister}
 				gMsg={gMsg}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
-				infoUpdate={infoUpdate}
-				setInfoUpdate={setInfoUpdate}
 			/>
 			<CrpModifyModal
-				open={crpModifyModalOpen}
-				setOpen={setCrpModifyModalOpen}
+				open={openModify}
+				setOpen={setOpenModift}
 				selectRecord={selectRecord}
 				gMsg={gMsg}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
-				infoUpdate={infoUpdate}
-				setInfoUpdate={setInfoUpdate}
 			/>
 			<CrpRecModal
-				open={crpRecModalOpen}
-				setOpen={setCrpRecModalOpen}
+				open={openRecv}
+				setOpen={setOpenRecv}
 				selectRecord={selectRecord}
 				gMsg={gMsg}
 			/>
@@ -289,7 +230,7 @@ export default function WaitPeople() {
 						<Space direction={"horizontal"}>
 							<Button
 								onClick={() => {
-									setRegisterOpen(true);
+									setOpenRegister(true);
 								}}
 								type={"primary"}
 								icon={<PlusOutlined />}>
@@ -306,8 +247,8 @@ export default function WaitPeople() {
 				tableData={tableData ? tableData : []}
 				tableOnRow={(record: any) => {
 					setSelectRecord(record);
-					console.log(record);
 				}}
+				tableRowKey={(rec: DataType) => rec.sqjzdxbh}
 			/>
 		</div>
 	);

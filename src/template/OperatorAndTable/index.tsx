@@ -9,6 +9,7 @@ export default function TemplateOperatorAndTable(props: {
 	statisticList?: any;
 	tableOnRow: any;
 	tableData: any;
+	tableRowKey: any;
 }) {
 	const {
 		columns,
@@ -17,6 +18,7 @@ export default function TemplateOperatorAndTable(props: {
 		statisticList,
 		tableOnRow,
 		tableData,
+		tableRowKey,
 	} = props;
 
 	return (
@@ -46,7 +48,7 @@ export default function TemplateOperatorAndTable(props: {
 				<Table
 					columns={columns}
 					dataSource={tableData}
-					rowKey={(record) => record.id}
+					rowKey={tableRowKey}
 					onRow={(record) => {
 						return {
 							onClick: () => {

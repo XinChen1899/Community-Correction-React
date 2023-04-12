@@ -1,11 +1,4 @@
-import {
-	Button,
-	Dropdown,
-	MenuProps,
-	message,
-	Popconfirm,
-	Space,
-} from "antd";
+import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
 import {
 	DeleteOutlined,
 	DownOutlined,
@@ -13,22 +6,18 @@ import {
 	PlusOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AddTeamModal from "./Modal/AddTeamModal";
 import TemplateHome from "@/template/OperatorAndTable";
 import TeamInfoModal from "./Modal/TeamInfoModal";
 import TeamModifyModal from "./Modal/TeamModifyModal";
-import { GMessage } from "@/utils/msg/GMsg";
-import { getAllCrt, getAllWorkers } from "@/api/ic";
+import { useMessage } from "@/utils/msg/GMsg";
+import { getAllWorkers } from "@/api/ic";
 import { Worker } from "@/entity/IC/Worker";
+import { CrTeam } from "@/entity/IC/CrTeam";
+import { getAllCrt } from "@/api/ic/crteam";
 
-export interface DataType {
-	id: string; // 小组编号
-	teamName: string; // 小组名
-	monitor: string; // 组长姓名
-	teamNumber: number; // 小组人数
-	workers?: string[];
-}
+export type DataType = CrTeam;
 
 const defaultDataType: DataType = {
 	id: "",
@@ -67,35 +56,22 @@ const columns: ColumnsType<DataType> = [
 ];
 
 export default function CorrectionTeam() {
-	const [messageApi, contextHolder] = message.useMessage();
+	const [gMsg, contextHolder] = useMessage();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
 
-	const [addModalOpen, setAddModalOpen] = useState(false);
-	const [teamInfoModalOpen, setTeamInfoModalOpen] = useState(false);
-	const [teamModifyModalOpen, setTeamModifyModalOpen] =
-		useState(false);
+	const [openAdd, setOpenAdd] = useState(false);
+	const [openInfo, setOpenInfo] = useState(false);
+	const [openModify, setOpenModify] = useState(false);
 
 	const [tableData, setTableData] = useState<DataType[]>();
+
 	const [worker, setWorker] = useState<Worker[]>();
-	const [workerMap, setWorkerMap] = useState<any>();
+
 
 	const [selectRecord, setSelectRecord] =
 		useState<DataType>(defaultDataType);
 
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
-
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
 	const items: MenuProps["items"] = [
 		{
 			label: (
@@ -103,7 +79,7 @@ export default function CorrectionTeam() {
 					block
 					type="text"
 					icon={<EditOutlined />}
-					onClick={() => setTeamModifyModalOpen(true)}>
+					onClick={() => setOpenModify(true)}>
 					修改小组信息
 				</Button>
 			),
@@ -125,7 +101,7 @@ export default function CorrectionTeam() {
 					</Button>
 				</Popconfirm>
 			),
-			key: "0",
+			key: "1",
 		},
 	];
 	// 绑定操作栏的操作
@@ -136,9 +112,7 @@ export default function CorrectionTeam() {
 					<Space size="middle">
 						<Button
 							type={"dashed"}
-							onClick={() =>
-								setTeamInfoModalOpen(true)
-							}>
+							onClick={() => setOpenInfo(true)}>
 							小组信息
 						</Button>
 						<Dropdown
@@ -154,58 +128,65 @@ export default function CorrectionTeam() {
 					</Space>
 				);
 			};
+		} else if (column.key == "monitor") {
+			column.render = (_, rec) => {
+				return <a>{workerMap[rec.monitor]}</a>;
+			};
 		}
 	});
-
-	const gMsg: GMessage = {
-		onSuccess: successMsg,
-		onError: errorMsg,
-	};
 
 	useEffect(() => {
 		getAllWorkers(
 			(data: any) => {
 				setWorker(data);
-				const temp: any = {};
-				data.forEach((element: Worker) => {
-					temp[element.rybm] = element.xm;
-				});
-				setWorkerMap(temp);
 			},
 			() => {}
 		);
-	}, []);
+	}, [tableUpdate]);
 
 	useEffect(() => {
 		getAllCrt(
 			(data: any) => {
 				setTableData(data);
 			},
-			() => {}
+			(msg: string) => {
+				gMsg.onError("获取矫正小组失败！" + msg);
+			}
 		);
 	}, [tableUpdate]);
+
+	const workerMap = useMemo(() => {
+		const temp: any = {};
+		worker?.forEach((element: Worker) => {
+			temp[element.rybm] = element.xm;
+		});
+		return temp;
+	}, [worker]);
 
 	return (
 		<>
 			<AddTeamModal
-				open={addModalOpen}
-				setOpen={setAddModalOpen}
+				open={openAdd}
+				setOpen={setOpenAdd}
 				gMsg={gMsg}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 				worker={worker}
 			/>
 			<TeamInfoModal
-				open={teamInfoModalOpen}
-				setOpen={setTeamInfoModalOpen}
+				open={openInfo}
+				setOpen={setOpenInfo}
 				selectRecord={selectRecord}
 				workerMap={workerMap}
 			/>
 			<TeamModifyModal
-				open={teamModifyModalOpen}
-				setOpen={setTeamModifyModalOpen}
-				selectRecord={selectRecord}
+				open={openModify}
+				setOpen={setOpenModify}
+				info={selectRecord}
+				worker={worker ? worker : []}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
 			/>
 			{contextHolder}
 			<TemplateHome
@@ -215,7 +196,7 @@ export default function CorrectionTeam() {
 						<Space direction={"horizontal"}>
 							<Button
 								onClick={() => {
-									setAddModalOpen(true);
+									setOpenAdd(true);
 								}}
 								type={"primary"}
 								icon={<PlusOutlined />}>
@@ -230,6 +211,7 @@ export default function CorrectionTeam() {
 				]}
 				tableData={tableData}
 				tableOnRow={(record: any) => setSelectRecord(record)}
+				tableRowKey={(rec: DataType) => rec.id}
 			/>
 		</>
 	);

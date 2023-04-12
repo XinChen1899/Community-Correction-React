@@ -141,6 +141,7 @@ export default function CategoryManagement() {
 				]}
 				tableOnRow={(record: DataType) => setRecord(record)}
 				tableData={tableData}
+				tableRowKey={(rec: DataType) => rec.id}
 			/>
 		</>
 	);

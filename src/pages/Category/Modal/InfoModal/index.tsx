@@ -1,57 +1,40 @@
 import { GMessage } from "@/utils/msg/GMsg";
-import { CategoryInfo } from "@/entity/Category/CategoryInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { useEffect, useState } from "react";
+import { CrpCategory } from "@/entity/Category/CategoryInfo";
+import { map2Value, nsyjzlbMap } from "@/utils";
 
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
-	dxbh: string;
+	info: any;
 	gMsg: GMessage;
 }) {
-	const { open, setOpen, dxbh, gMsg } = props;
-	const [infos, setInfos] = useState<any[]>([]);
+	const { open, setOpen, info, gMsg } = props;
 
-	const getInfos = (info: CategoryInfo) => {
+	const getInfos = (info: CrpCategory) => {
 		return [
 			{ label: "对象编号", value: info.dxbh },
 			{ label: "姓名", value: info.xm },
 			{
-				label: "矫正类别",
-				value: info.jzlb,
+				label: "管理类别",
+				value: map2Value(nsyjzlbMap, info.gllb),
 			},
 		];
 	};
-
-	useEffect(() => {
-		setInfos(getInfos({ dxbh, xm: "xxx", jzlb: "xxx" }));
-	}, []);
 
 	return (
 		<TemplateModal
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"矫正对象类别信息"}
-					info={infos}
+					info={getInfos(info)}
 				/>
 			}
 			open={open}
 			setOpen={setOpen}
-			getAPI={(id: string) => {
-				// getExitInfoByDXBH(
-				// 	id,
-				// 	(data: any) => {
-				// 		setInfos(getInfos(data));
-				// 		gMsg.onSuccess("获取出入境信息成功！");
-				// 	},
-				// 	(err: any) => {
-				// 		setInfos([]);
-				// 		gMsg.onError("获取出入境信息失败！" + err);
-				// 	}
-				// );
-			}}
-			recordId={dxbh}
+			getAPI={undefined}
+			recordId={undefined}
 		/>
 	);
 }

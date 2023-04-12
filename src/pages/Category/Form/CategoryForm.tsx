@@ -1,10 +1,10 @@
 import "react";
 import TemplateForm from "@/template/Form";
-import { DatePicker, Input } from "antd";
-import { crjzjzlMap, generateSelect, jzlbMap, xbMap } from "@/utils";
+import { Input } from "antd";
+import { generateSelect, nsyjzlbMap } from "@/utils";
 
 /**
- * 出入境报备信息 表单
+ * 分类管理 表单
  */
 export function CategoryForm(props: {
 	form: any;
@@ -13,9 +13,7 @@ export function CategoryForm(props: {
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;
-	// useEffect(() => {
-	// 	form.resetFields();
-	// }, []);
+
 	return (
 		<TemplateForm
 			disabled={disabled}
@@ -31,12 +29,12 @@ export function CategoryForm(props: {
 				{
 					name: "xm",
 					label: "姓名",
-					component: <Input />,
+					component: <Input disabled />,
 				},
 				{
-					name: "jzlb",
-					label: "矫正类别",
-					component: generateSelect(jzlbMap),
+					name: "gllb",
+					label: "管理类别",
+					component: generateSelect(nsyjzlbMap),
 				},
 			]}
 		/>

@@ -1,7 +1,19 @@
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import { useMessage } from "@/utils/msg/GMsg";
-import { DownOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { GMessage, useMessage } from "@/utils/msg/GMsg";
+import {
+	DownOutlined,
+	EditOutlined,
+	PlusOutlined,
+	SearchOutlined,
+} from "@ant-design/icons";
+import {
+	Button,
+	Dropdown,
+	MenuProps,
+	Space,
+	Tag,
+	message,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 
@@ -42,7 +54,7 @@ const staticTableData: DataType[] = [
 	{ id: 1, dxbh: "00000001", xm: "xxx", cf: "yyy" },
 ];
 
-export default function Uncorrected() {
+export default function Punishment() {
 	const [record, setRecord] = useState<DataType>({
 		dxbh: "",
 	} as DataType);
@@ -124,7 +136,7 @@ export default function Uncorrected() {
 						</Button>
 					</>
 				}
-				cardTitle={"解除矫正"}
+				cardTitle={"处罚查询"}
 				statisticList={undefined}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={staticTableData}

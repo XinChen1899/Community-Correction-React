@@ -1,7 +1,19 @@
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import { useMessage } from "@/utils/msg/GMsg";
-import { DownOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { GMessage, useMessage } from "@/utils/msg/GMsg";
+import {
+	DownOutlined,
+	EditOutlined,
+	PlusOutlined,
+	SearchOutlined,
+} from "@ant-design/icons";
+import {
+	Button,
+	Dropdown,
+	MenuProps,
+	Space,
+	Tag,
+	message,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 
@@ -9,7 +21,7 @@ export interface DataType {
 	id: number;
 	dxbh: string; // 矫正对象编号
 	xm: string; // 矫正对象姓名
-	cf: string; // 处罚类型
+	jl: string; // 奖励类型
 }
 
 const columns: ColumnsType<DataType> = [
@@ -27,10 +39,10 @@ const columns: ColumnsType<DataType> = [
 		key: "xm",
 	},
 	{
-		title: "处罚",
-		dataIndex: "cf",
+		title: "奖励",
+		dataIndex: "jl",
 		align: "center",
-		render: (_, record) => <Tag>{record.cf}</Tag>,
+		render: (_, record) => <Tag>{record.jl}</Tag>,
 	},
 	{
 		title: "操作",
@@ -39,10 +51,10 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const staticTableData: DataType[] = [
-	{ id: 1, dxbh: "00000001", xm: "xxx", cf: "yyy" },
+	{ id: 1, dxbh: "00000001", xm: "xxx", jl: "yyy" },
 ];
 
-export default function Uncorrected() {
+export default function Reward() {
 	const [record, setRecord] = useState<DataType>({
 		dxbh: "",
 	} as DataType);
@@ -88,7 +100,7 @@ export default function Uncorrected() {
 						<Button
 							type={"dashed"}
 							onClick={() => setInfoModal(true)}>
-							查看处罚信息
+							查看奖励信息
 						</Button>
 
 						<Dropdown
@@ -120,11 +132,11 @@ export default function Uncorrected() {
 							onClick={() => {
 								gMsg.onSuccess("lll");
 							}}>
-							新增处罚
+							新增奖励
 						</Button>
 					</>
 				}
-				cardTitle={"解除矫正"}
+				cardTitle={"奖励查询"}
 				statisticList={undefined}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={staticTableData}

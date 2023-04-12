@@ -10,12 +10,16 @@ import CategoryManagement from "./Category";
 import IndividualCorrection from "./IndividualCorrection";
 import DailyManagment from "./DailyManagement";
 import BusinessApproval from "./BusinessApproval";
-import Assessment from "./Assessment";
 import TerminationCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected";
 import PlanRepository from "./PlanRepository";
 import Announcement from "./Announcement";
+
+import { Reward, Punishment } from "./Assessment";
+
 export {
+	Reward,
+	Punishment,
 	Home,
 	IE,
 	WaitPeople,
@@ -27,7 +31,6 @@ export {
 	IndividualCorrection,
 	DailyManagment,
 	BusinessApproval,
-	Assessment,
 	TerminationCorrection,
 	UnCorrected,
 	PlanRepository,

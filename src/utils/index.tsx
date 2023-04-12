@@ -48,10 +48,10 @@ export const pjjgMap = [
 ];
 // 对社矫对象的管理类别
 export const nsyjzlbMap = [
-	{ code: "01", value: "基础" },
-	{ code: "02", value: "宽松" },
-	{ code: "03", value: "普通" },
-	{ code: "04", value: "严格" },
+	{ code: "01", value: "基础级" },
+	{ code: "02", value: "宽松级" },
+	{ code: "03", value: "普通级" },
+	{ code: "04", value: "严格级" },
 ];
 // 法院、侦查机关、检察院、公安、监狱局、监狱
 export const wtdwMap = [
@@ -130,10 +130,31 @@ export const crjzjzlMap = [
 	{ code: "06", value: "中华人民共和国边境地区出入境通行证" },
 ];
 
-export const generateSelect = (selectList: any) => {
+export const zzjzlxMap = [
+	{ code: "01", value: "撤销缓刑" },
+	{ code: "02", value: "撤销假释" },
+	{ code: "03", value: "被决定收监执行" },
+	{ code: "04", value: "死亡" },
+	{ code: "99", value: "其他" },
+];
+
+export const sjMap = [
+	{ code: "01", value: "否" },
+	{ code: "02", value: "是" },
+];
+
+export const sjzxlxMap = [
+	{ code: "01", value: "撤销缓刑" },
+	{ code: "02", value: "撤销假释" },
+	{ code: "99", value: "其他" },
+	{ code: "03", value: "对暂予监外执行社区矫正对象决定收监执行" },
+];
+
+export const generateSelect = (selectList: any, width?: number) => {
 	if (!selectList) return;
+	if (!width) width = 290;
 	return (
-		<Select style={{ width: 290 }}>
+		<Select style={{ width }}>
 			{selectList.map((obj: any) => {
 				return (
 					<Select.Option value={obj.code} key={obj.value}>

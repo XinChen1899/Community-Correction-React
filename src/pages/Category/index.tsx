@@ -1,24 +1,19 @@
-import { GMessage } from "@/utils/msg/GMsg";
+import { useMessage } from "@/utils/msg/GMsg";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import { DownOutlined, EditOutlined } from "@ant-design/icons";
-import {
-	Button,
-	Dropdown,
-	MenuProps,
-	Space,
-	Tag,
-	message,
-} from "antd";
+import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InfoModal from "./Modal/InfoModal";
 import ModifyModal from "./Modal/ModifyModal";
+import { getAllCate } from "@/api/cate";
+import { map2Value, nsyjzlbMap } from "@/utils";
 
 export interface DataType {
 	id: number;
 	dxbh: string; // 矫正对象编号
 	xm: string; // 矫正对象姓名
-	jzlb: string; // 矫正类别
+	gllb: string; // 管理类别
 }
 
 const columns: ColumnsType<DataType> = [
@@ -36,10 +31,12 @@ const columns: ColumnsType<DataType> = [
 		key: "xm",
 	},
 	{
-		title: "矫正类别",
-		dataIndex: "jzlb",
+		title: "管理类别",
+		dataIndex: "gllb",
 		align: "center",
-		render: (_, record) => <Tag>{record.jzlb}</Tag>,
+		render: (_, record) => (
+			<Tag>{map2Value(nsyjzlbMap, record.gllb)}</Tag>
+		),
 	},
 	{
 		title: "操作",
@@ -48,7 +45,7 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const staticTableData: DataType[] = [
-	{ id: 1, dxbh: "00000001", xm: "xxx", jzlb: "yyy" },
+	{ id: 1, dxbh: "00000001", xm: "xxx", gllb: "yyy" },
 ];
 
 export default function CategoryManagement() {
@@ -59,29 +56,11 @@ export default function CategoryManagement() {
 	const [tableData, setTableData] =
 		useState<DataType[]>(staticTableData);
 	const [tableUpdate, setTableUpdate] = useState(false);
+
 	const [infoModal, setInfoModal] = useState(false);
 	const [modifyModal, setModifyModal] = useState(false);
+	const [gMsg, contextHolder] = useMessage();
 
-	const [messageApi, contextHolder] = message.useMessage();
-
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
-
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
-
-	const gMsg: GMessage = {
-		onSuccess: successMsg,
-		onError: errorMsg,
-	};
 	const items: MenuProps["items"] = [
 		{
 			label: (
@@ -123,21 +102,31 @@ export default function CategoryManagement() {
 		}
 	});
 
+	useEffect(() => {
+		getAllCate(
+			(infoList: any) => {
+				setTableData(infoList);
+			},
+			(msg: string) =>
+				gMsg.onError("请求不到调查评估的所有信息！" + msg)
+		);
+	}, [tableUpdate]);
+
 	return (
 		<>
 			<InfoModal
 				open={infoModal}
 				setOpen={setInfoModal}
-				dxbh={record.dxbh}
+				info={record}
 				gMsg={gMsg}
 			/>
 			<ModifyModal
 				open={modifyModal}
 				setOpen={setModifyModal}
-				dxbh={record.dxbh}
+				info={record}
 				gMsg={gMsg}
-				infoUpdate={false}
-				setInfoUpdate={undefined}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
 			/>
 			{contextHolder}
 			<TemplateOperatorAndTable
@@ -151,7 +140,7 @@ export default function CategoryManagement() {
 					{ title: "严格级人员总数", value: 999 },
 				]}
 				tableOnRow={(record: DataType) => setRecord(record)}
-				tableData={staticTableData}
+				tableData={tableData}
 			/>
 		</>
 	);

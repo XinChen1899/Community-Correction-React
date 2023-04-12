@@ -1,5 +1,5 @@
-export interface CategoryInfo {
+export interface CrpCategory {
 	dxbh: string;
 	xm: string;
-	jzlb: string;
+	gllb: string;
 }

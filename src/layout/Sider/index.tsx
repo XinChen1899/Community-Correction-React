@@ -1,9 +1,9 @@
+import { routeTable } from "@/router/routerTable";
 import { Menu, MenuProps } from "antd";
 import Sider, { SiderTheme } from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { routeTable } from "@/router";
 
 interface ISiderProps {
 	appTheme: SiderTheme;

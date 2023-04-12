@@ -4,6 +4,7 @@ export const ServerTable = {
 	ie: "http://localhost:9006",
 	ic: "http://localhost:9007",
 	noexit: "http://localhost:9008",
+	cate: "http://localhost:9009",
 };
 
 export const useAPI = (

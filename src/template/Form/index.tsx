@@ -11,7 +11,8 @@ export default function TemplateForm(props: {
 	const { form, onFinish, initialValues, formTable, disabled } =
 		props;
 	// const formTable = [
-	// 	{ name: "xxx", label: "xxx", component: <></> },
+	// 	{ name: "xxx", label: "xxx", component: <></>
+	// ,children: [{{ name: "xxx", label: "xxx", component: <></>}],condition },
 	// ];
 
 	useEffect(() => {
@@ -25,7 +26,8 @@ export default function TemplateForm(props: {
 			onFinish={onFinish}
 			initialValues={initialValues}>
 			{formTable.map((item, idx) => {
-				return (
+				const formList = [];
+				formList.push(
 					<Form.Item
 						name={item.name}
 						label={item.label}
@@ -33,6 +35,36 @@ export default function TemplateForm(props: {
 						{item.component}
 					</Form.Item>
 				);
+				if (item.children) {
+					formList.push(
+						item.children.map((i: any) => {
+							return (
+								<Form.Item
+									noStyle
+									shouldUpdate={(
+										prevValues,
+										currentValues
+									) =>
+										prevValues[item.name] !==
+										currentValues[item.name]
+									}>
+									{({ getFieldValue }) =>
+										item.condition(
+											getFieldValue(item.name)
+										) ? (
+											<Form.Item
+												name={i.name}
+												label={i.label}>
+												{i.component}
+											</Form.Item>
+										) : null
+									}
+								</Form.Item>
+							);
+						})
+					);
+				}
+				return formList;
 			})}
 		</Form>
 	);

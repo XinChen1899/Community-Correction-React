@@ -7,6 +7,7 @@ import { DataType } from "../..";
 import RegisterForm from "../../Form/RegisterForm";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import { updateAnnounce } from "@/api/ic/announce";
+import dayjs from "dayjs";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -26,6 +27,7 @@ export default function ModifyModal(props: ITaskInfoModal) {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
+		info.xgrq = dayjs(info.xgrq);
 		form.resetFields();
 		form.setFieldsValue(info);
 	});
@@ -38,19 +40,18 @@ export default function ModifyModal(props: ITaskInfoModal) {
 			info,
 			() => {
 				setTableUpdate(!tableUpdate);
+				setOpen(false);
 				gMsg.onSuccess("修改成功！");
 			},
 			(msg: string) => {
 				gMsg.onError("修改失败！" + msg);
-			}
+			},
+			setConfirmLoading
 		);
-		setConfirmLoading(false);
-		setOpen(false);
 	};
 
 	const handleOk = () => {
 		form.submit();
-		setConfirmLoading(true);
 	};
 
 	return (

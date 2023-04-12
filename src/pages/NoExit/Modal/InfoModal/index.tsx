@@ -1,4 +1,4 @@
-import { getExitInfoByDXBH } from "@/api/NoExit";
+import { getExitInfoByDXBH } from "@/api/noexit";
 import { GMessage } from "@/utils/msg/GMsg";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateDescriptions from "@/template/Descriptions";

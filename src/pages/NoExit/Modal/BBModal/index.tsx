@@ -2,7 +2,7 @@ import TemplateModal from "@/template/Modal";
 import { BBForm } from "../../Form/BBForm";
 import { Button, Card, Form, Steps } from "antd";
 import { BBInfo } from "@/entity/NoExit/BBInfo";
-import { getBBForm, updateBBForm } from "@/api/NoExit";
+import { getBBForm, updateBBForm } from "@/api/noexit";
 import { useState } from "react";
 import { GMessage } from "@/utils/msg/GMsg";
 import dayjs from "dayjs";

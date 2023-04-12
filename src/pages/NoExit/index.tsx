@@ -18,7 +18,7 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import InfoModal from "./Modal/InfoModal";
 import BBModal from "./Modal/BBModal";
-import { getAllInfos } from "@/api/NoExit";
+import { getAllInfos } from "@/api/noexit";
 import { Exit } from "@/entity/NoExit/Exit";
 
 export type DataType = Exit;

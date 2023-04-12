@@ -15,7 +15,7 @@ const generateRoute = (routeTable: any[]) => {
 		} else {
 			routes.push(<Route key={route.url} path={route.url} />);
 		}
-		if (route.children.length) {
+		if (route.children && route.children.length) {
 			routes.push(...generateRoute(route.children));
 		}
 	});

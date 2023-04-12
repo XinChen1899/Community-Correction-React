@@ -53,7 +53,7 @@ export default function TemplateOperatorAndTable(props: {
 						return {
 							onClick: () => {
 								if (tableOnRow) tableOnRow(record);
-							}, // 点击行
+							},
 						};
 					}}
 				/>

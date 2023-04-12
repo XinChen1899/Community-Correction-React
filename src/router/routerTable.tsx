@@ -10,7 +10,6 @@ import {
 	EyeOutlined,
 	UsergroupDeleteOutlined,
 } from "@ant-design/icons";
-import React from "react";
 import { LazyExoticComponent, lazy } from "react";
 
 // id -> 中文名
@@ -184,11 +183,7 @@ export const routeTable = [
 	},
 	{
 		url: "assessment",
-		page: getPageItem(
-			"assessment",
-			routeNameMap.assesment,
-			lazy(() => import("@/pages/Assessment"))
-		),
+		page: getPageItem("assessment", routeNameMap.assesment),
 		children: [
 			{
 				url: "assessment/reward",

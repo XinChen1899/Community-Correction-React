@@ -9,19 +9,31 @@ const api = axios.create({
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
-export const getAllCate = (onSuccess?: any, onError?: any) => {
-	useAPI(api, { url: "/all", method: "get" }, onSuccess, onError);
+export const getAllCate = (
+	onSuccess?: any,
+	onError?: any,
+	setConfirmLoading?: any
+) => {
+	useAPI(
+		api,
+		{ url: "/all", method: "get" },
+		onSuccess,
+		onError,
+		setConfirmLoading
+	);
 };
 
 export const updateCate = (
 	data: CrpCategory,
 	onSuccess?: any,
-	onError?: any
+	onError?: any,
+	setConfirmLoading?: any
 ) => {
 	useAPI(
 		api,
 		{ url: "/update", method: "post", data: data },
 		onSuccess,
-		onError
+		onError,
+		setConfirmLoading
 	);
 };

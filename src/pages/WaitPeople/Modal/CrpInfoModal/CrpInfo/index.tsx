@@ -24,7 +24,7 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 				{info.sqjzdxbh}
 			</Descriptions.Item>
 			<Descriptions.Item label="是否调查评估">
-				{info.sfdcpg}
+				{info.sfdcpg ? "是" : "否"}
 			</Descriptions.Item>
 			<Descriptions.Item label="矫正小组">
 				{info.team}
@@ -51,7 +51,7 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 				{info.sfzhm}
 			</Descriptions.Item>
 			<Descriptions.Item label="出生日期">
-				{info.csrq.toString()}
+				{info.csrq ? info.csrq.toString() : null}
 			</Descriptions.Item>
 			<Descriptions.Item label="文化程度">
 				{map2Value(whcdMap, info.whcd)}

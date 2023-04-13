@@ -83,7 +83,6 @@ export default function IE() {
 	useEffect(() => {
 		getAllIEInfos(
 			(infoList: IEInfo[]) => {
-				console.log(infoList);
 				setTableData(infoList);
 			},
 			(msg: string) =>

@@ -26,9 +26,7 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 			InfoDescriptions={<TaskInfo info={info} />}
 			open={open}
 			setOpen={setOpen}
-			recordId={undefined}
-			infoUpdate={taskUpdate}
-			getAPI={() => {}}>
+			infoUpdate={taskUpdate}>
 			<Card>
 				<Steps
 					current={current}

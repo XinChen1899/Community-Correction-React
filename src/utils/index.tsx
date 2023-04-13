@@ -150,11 +150,27 @@ export const sjzxlxMap = [
 	{ code: "03", value: "对暂予监外执行社区矫正对象决定收监执行" },
 ];
 
-export const generateSelect = (selectList: any, width?: number) => {
+export const generateSelect = (
+	selectList: any,
+	config?: { width?: number; disabled?: boolean }
+) => {
 	if (!selectList) return;
-	if (!width) width = 290;
 	return (
-		<Select style={{ width }}>
+		<Select
+			style={{
+				width: config
+					? config.width
+						? config.width
+						: 290
+					: 290,
+			}}
+			disabled={
+				config
+					? config.disabled
+						? config.disabled
+						: false
+					: false
+			}>
 			{selectList.map((obj: any) => {
 				return (
 					<Select.Option value={obj.code} key={obj.value}>

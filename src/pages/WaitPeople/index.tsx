@@ -42,16 +42,6 @@ const columns: ColumnsType<DataType> = [
 		key: "xm",
 	},
 	{
-		title: "性别",
-		dataIndex: "sex",
-		key: "sex",
-		render: (value) => {
-			let v = "男";
-			if (value == "female") v = "女";
-			return <Tag>{v}</Tag>;
-		},
-	},
-	{
 		title: "是否调查评估",
 		dataIndex: "sfdcpg",
 		key: "sfdcpg",
@@ -82,6 +72,14 @@ const columns: ColumnsType<DataType> = [
 					break;
 			}
 			return <Tag color={color}>{value}</Tag>;
+		},
+	},
+	{
+		title: "矫正小组",
+		dataIndex: "team",
+		key: "team",
+		render: (value) => {
+			return <Tag>小组: {value}</Tag>;
 		},
 	},
 	{
@@ -221,6 +219,8 @@ export default function WaitPeople() {
 				setOpen={setOpenRecv}
 				selectRecord={selectRecord}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
 			/>
 			{contextHolder}
 			<TemplateHome

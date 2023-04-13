@@ -1,6 +1,7 @@
 import CrpInfo from "./CrpInfo";
 import { DataType } from "../..";
 import TemplateModal from "@/template/Modal";
+import dayjs from "dayjs";
 
 export default function CrpInfoModal(props: {
 	open: boolean;

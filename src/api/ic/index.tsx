@@ -37,6 +37,21 @@ export const updateCrp = (
 	);
 };
 
+export const recvCrp = (
+	crp: CorrectionPeople,
+	onSuccess?: any,
+	onError?: any,
+	setConfirmLoading?: any
+) => {
+	useAPI(
+		api,
+		{ url: "/crp/recv", method: "post", data: crp },
+		onSuccess,
+		onError,
+		setConfirmLoading
+	);
+};
+
 export const getCrpById = (
 	id: string,
 	onSuccess?: any,

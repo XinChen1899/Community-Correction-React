@@ -12,6 +12,7 @@ export interface CorrectionPeople {
 	hjlx: string;
 	sfzhm: string;
 	csrq: string | Dayjs;
+	xgrq: string | Dayjs;
 	whcd: string;
 	hyzk: string;
 	jyjxqk: string;
@@ -22,5 +23,5 @@ export interface CorrectionPeople {
 	ywjtcyjzyshgx: string;
 	zp: string;
 	team: string;
-	status:string;
+	status: string;
 }

@@ -4,35 +4,11 @@ import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
 import { RegisterForm } from "../../Form/RegisterForm";
 import { CorrectionPeople } from "@/entity/IC/Crp";
-import { getCrpById, updateCrp } from "@/api/ic";
+import { updateCrp } from "@/api/ic";
 import dayjs from "dayjs";
 import { getDate } from "@/utils/ie";
 import { mzMap } from "@/utils";
 import TemplateModal from "@/template/Modal";
-
-const defaultCrp: CorrectionPeople = {
-	sqjzdxbh: "",
-	sfdcpg: false,
-	jzlb: "",
-	xm: "null",
-	xb: "",
-	mz: "",
-	gj: "",
-	hjlx: "",
-	sfzhm: "",
-	csrq: "",
-	whcd: "",
-	hyzk: "",
-	jyjxqk: "",
-	xzzmm: "",
-	xgzdw: "",
-	dwlxdh: "",
-	grlxdh: "",
-	ywjtcyjzyshgx: "",
-	zp: "",
-	team: "",
-	status: "",
-};
 
 export default function CrpModifyModal(props: {
 	open: boolean;
@@ -55,20 +31,15 @@ export default function CrpModifyModal(props: {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		form.resetFields();
 		selectRecord.csrq = dayjs(selectRecord.csrq);
+		selectRecord.xgrq = dayjs(selectRecord.xgrq);
+		form.resetFields();
 		form.setFieldsValue(selectRecord);
 	});
 
 	const onFinish = async (values: any) => {
 		const crp = values as CorrectionPeople;
 		crp.csrq = getDate(crp.csrq);
-		mzMap.forEach((obj) => {
-			if (obj.code == crp.mz) {
-				crp.mz = obj.value;
-				return;
-			}
-		});
 		updateCrp(
 			crp,
 			() => {
@@ -80,6 +51,7 @@ export default function CrpModifyModal(props: {
 			},
 			setConfirmLoading
 		);
+		setOpen(false);
 	};
 
 	const handleOk = () => {

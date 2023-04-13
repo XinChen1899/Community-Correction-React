@@ -1,20 +1,9 @@
 import TemplateModal from "@/template/Modal";
-import {
-	DownOutlined,
-	QuestionCircleOutlined,
-} from "@ant-design/icons";
-import {
-	Button,
-	Dropdown,
-	Input,
-	Popconfirm,
-	Space,
-	Table,
-} from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import { Button, Input, Popconfirm, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import TaskAddModal from "../TaskAddModal";
 import { GMessage } from "@/utils/msg/GMsg";
 import TaskInfoModal from "../TaskInfoModal";
 
@@ -204,8 +193,6 @@ export default function TaskRecvModal(props: {
 				}
 				open={open}
 				setOpen={setOpen}
-				getAPI={undefined}
-				recordId={undefined}
 			/>
 		</>
 	);

@@ -5,7 +5,6 @@ import { List } from "antd";
 import { useEffect, useState } from "react";
 import { getCheckDetails } from "@/api/daily/check";
 import { GMessage } from "@/utils/msg/GMsg";
-
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
@@ -30,14 +29,13 @@ export default function InfoModal(props: {
 						dxbh: info.dxbh,
 						checkList: list,
 					} as CheckDetail);
-					// console.log(getInfos(checkDetail));
 				},
 				(msg: string) => {
 					gMsg.onError(msg);
 				}
 			);
 		}
-	}, []);
+	}, [info.dxbh]);
 
 	const getInfos = (info: CheckDetail) => {
 		return [

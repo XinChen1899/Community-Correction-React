@@ -11,7 +11,6 @@ interface IContenterProps {
 function AppContent(props: IContenterProps) {
 	const { children } = props;
 	const { pathname } = useLocation();
-	const pathList = pathname.split("/").slice(2);
 
 	return <Content style={{ margin: "0 16px" }}>{children}</Content>;
 }

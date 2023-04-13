@@ -5,10 +5,6 @@ import MenuItem from "antd/es/menu/MenuItem";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-interface ISiderProps {
-	appTheme: SiderTheme;
-}
-
 type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
@@ -67,30 +63,19 @@ const findDefaultMenuItem = (pathname: string) => {
 	}
 };
 
-export default function AppSider(props: ISiderProps) {
+export default function AppSider() {
 	const [collapsed, setCollapsed] = useState(false);
-	const { appTheme } = props;
 
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 	const { pathname } = useLocation();
-	const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-	const [openKeys, setOpenKeys] = useState<string[]>([]);
 
 	const defaultMenuItem = findDefaultMenuItem(pathname);
-
-	useEffect(() => {
-		const menus = findDefaultMenuItem(pathname);
-		// setOpenKeys(menus[0]);
-		// setSelectedKeys(menus[1]);
-		// console.log(selectedKeys);
-	}, [pathname]);
-
 	return (
 		<Sider
+			theme="dark"
 			collapsible
 			collapsed={collapsed}
 			onCollapse={(value) => setCollapsed(value)}
-			theme={appTheme}
 			style={{
 				overflow: "auto",
 				height: "100vh",
@@ -103,18 +88,18 @@ export default function AppSider(props: ISiderProps) {
 				style={{
 					height: 32,
 					margin: "20px auto",
-					color: "black",
+					color: "white",
 					textAlign: "center",
 				}}>
 				<h1>社区矫正监督管理子系统</h1>
 			</div>
 
 			<Menu
-				theme={appTheme}
 				defaultOpenKeys={defaultMenuItem[0]}
-				defaultSelectedKeys={defaultMenuItem[1]}
+				selectedKeys={defaultMenuItem[1]}
 				mode="inline"
 				items={menuItems}
+				theme="dark"
 				onClick={(d) => {
 					navigate(d.key);
 				}}

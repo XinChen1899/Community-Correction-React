@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { useEffect } from "react";
 
 export const ServerTable = {
 	ie: "http://localhost:9006",
@@ -7,6 +8,7 @@ export const ServerTable = {
 	cate: "http://localhost:9009",
 	daily: "http://localhost:9010",
 };
+
 
 export const useAPI = (
 	api: AxiosInstance,

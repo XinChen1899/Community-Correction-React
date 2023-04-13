@@ -39,20 +39,18 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 			info,
 			() => {
 				setTableUpdate(!tableUpdate);
-
-				setConfirmLoading(false);
 				gMsg.onSuccess("修改成功！");
 			},
 			(msg: string) => {
 				gMsg.onError("修改失败！" + msg);
-			}
+			},
+			setConfirmLoading
 		);
 		setOpen(false);
 	};
 
 	const handleOk = () => {
 		form.submit();
-		setConfirmLoading(true);
 	};
 
 	return (
@@ -67,8 +65,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 				}
 				open={open}
 				setOpen={setOpen}
-				recordId={""}
-				getAPI={() => {}}
 				onOk={handleOk}
 				confirmLoading={confirmLoading}
 			/>

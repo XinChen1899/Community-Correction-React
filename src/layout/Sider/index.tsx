@@ -2,7 +2,7 @@ import { routeTable } from "@/router/routerTable";
 import { Menu, MenuProps } from "antd";
 import Sider, { SiderTheme } from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface ISiderProps {
@@ -49,7 +49,7 @@ const generateMenu = (routeTable: any[]) => {
 	return menus;
 };
 
-const menuItemsTemp = generateMenu(routeTable);
+export const menuItems = generateMenu(routeTable);
 
 // 设置菜单默认的选择
 const findDefaultMenuItem = (pathname: string) => {
@@ -73,8 +73,17 @@ export default function AppSider(props: ISiderProps) {
 
 	let navigate = useNavigate();
 	const { pathname } = useLocation();
+	const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+	const [openKeys, setOpenKeys] = useState<string[]>([]);
 
 	const defaultMenuItem = findDefaultMenuItem(pathname);
+
+	useEffect(() => {
+		const menus = findDefaultMenuItem(pathname);
+		// setOpenKeys(menus[0]);
+		// setSelectedKeys(menus[1]);
+		// console.log(selectedKeys);
+	}, [pathname]);
 
 	return (
 		<Sider
@@ -105,7 +114,7 @@ export default function AppSider(props: ISiderProps) {
 				defaultOpenKeys={defaultMenuItem[0]}
 				defaultSelectedKeys={defaultMenuItem[1]}
 				mode="inline"
-				items={menuItemsTemp}
+				items={menuItems}
 				onClick={(d) => {
 					navigate(d.key);
 				}}

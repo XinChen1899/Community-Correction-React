@@ -1,11 +1,11 @@
 import TemplateModal from "@/template/Modal";
-import RegisterForm from "../../Form/RegisterForm";
+import AddForm from "../../Form/AddForm";
 import { GMessage } from "@/utils/msg/GMsg";
 import { Form } from "antd";
 import { useState } from "react";
-import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import dayjs from "dayjs";
 import { getDate } from "@/utils/ie";
-import { saveAnnounce } from "@/api/ic/announce";
+import { saveCheck } from "@/api/daily/check";
 
 export default function RegisterModal(props: {
 	open: boolean;
@@ -26,16 +26,16 @@ export default function RegisterModal(props: {
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
-		const crp = values as CrpAnnouncement;
-		crp.xgrq = getDate(crp.xgrq);
-		saveAnnounce(
-			crp,
+		const detail = values;
+		detail.date = getDate(detail.date);
+		saveCheck(
+			detail,
 			() => {
 				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("登记成功！");
+				gMsg.onSuccess("报到成功！");
 			},
 			(msg: string) => {
-				gMsg.onError("登记失败！" + msg);
+				gMsg.onError("报到失败！" + msg);
 			},
 			setConfirmLoading
 		);
@@ -46,10 +46,10 @@ export default function RegisterModal(props: {
 		<>
 			<TemplateModal
 				InfoDescriptions={
-					<RegisterForm
+					<AddForm
 						form={form}
 						onFinish={onFinish}
-						initialValues={{}}
+						initialValues={{ date: dayjs() }}
 					/>
 				}
 				open={open}

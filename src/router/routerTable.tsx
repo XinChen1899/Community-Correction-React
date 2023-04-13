@@ -26,7 +26,11 @@ export const routeNameMap = {
 	noexit: "不准出境",
 	category: "分类管理",
 	individual: "个别化矫正",
+
 	daily: "日常管理",
+	check: "定期报到",
+	daily_function: "功能列表",
+
 	business: "业务审批 ",
 
 	assesment: "考核奖惩",
@@ -163,12 +167,35 @@ export const routeTable = [
 	},
 	{
 		url: "daily",
-		page: getPageItem(
-			"daily",
-			routeNameMap.daily,
-			lazy(() => import("@/pages/DailyManagement"))
-		),
-		children: [],
+		page: getPageItem("daily", routeNameMap.daily),
+		children: [
+			{
+				url: "daily/daily_function",
+				page: getPageItem(
+					"daily_function",
+					routeNameMap.daily_function,
+					lazy(
+						() =>
+							import(
+								"@/pages/DailyManagement/FunctionPane"
+							)
+					)
+				),
+				children: [],
+			},
+			{
+				url: "daily/check",
+				page: getPageItem(
+					"check",
+					routeNameMap.check,
+					lazy(
+						() =>
+							import("@/pages/DailyManagement/CheckIn")
+					)
+				),
+				children: [],
+			},
+		],
 		icon: <ApartmentOutlined />,
 	},
 	{

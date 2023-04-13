@@ -17,6 +17,8 @@ import Announcement from "./Announcement";
 
 import { Reward, Punishment } from "./Assessment";
 
+import { CheckIn } from "./DailyManagement";
+
 export {
 	Reward,
 	Punishment,
@@ -35,4 +37,5 @@ export {
 	UnCorrected,
 	PlanRepository,
 	Announcement,
+	CheckIn,
 };

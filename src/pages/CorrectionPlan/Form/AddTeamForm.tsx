@@ -1,16 +1,6 @@
 import "react";
-import { DatePicker, Form, Input, Select, message } from "antd";
-import React, { useState } from "react";
-import {
-	generateSelect,
-	gjMap,
-	hjlxMap,
-	hyzkMap,
-	jyjxqkMap,
-	jzlbMap,
-	mzMap,
-	whcdMap,
-} from "@/utils";
+import { Form, Input, message } from "antd";
+import { useState } from "react";
 import Upload, {
 	RcFile,
 	UploadChangeParam,
@@ -78,75 +68,13 @@ export function AddTeamForm(props: {
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
-			<Form.Item name={"sqjzdxbh"} label={"社区矫正对象编号"}>
+			<Form.Item name={"dxbh"} label={"社区矫正对象编号"}>
 				<Input placeholder={"请输入社区矫正对象编号"} />
-			</Form.Item>
-			<Form.Item name={"sfdcpg"} label="是否调查评估">
-				<Select style={{ width: 120 }}>
-					<Select.Option value="0">否</Select.Option>
-					<Select.Option value="1">是</Select.Option>
-				</Select>
-			</Form.Item>
-			<Form.Item name={"jzlb"} label="矫正类别">
-				{generateSelect(jzlbMap)}
 			</Form.Item>
 			<Form.Item name={"xm"} label="姓名">
 				<Input placeholder={"请输入姓名"} />
 			</Form.Item>
-			<Form.Item name={"xb"} label="性别">
-				<Select style={{ width: 120 }}>
-					<Select.Option value="male">男</Select.Option>
-					<Select.Option value="female">女</Select.Option>
-				</Select>
-			</Form.Item>
-			<Form.Item name={"mz"} label="民族">
-				{generateSelect(mzMap)}
-			</Form.Item>
-			<Form.Item name={"gj"} label="国籍">
-				{generateSelect(gjMap)}
-			</Form.Item>
-			<Form.Item name={"hjlx"} label="户籍类型">
-				{generateSelect(hjlxMap)}
-			</Form.Item>
-			<Form.Item name={"sfzhm"} label="身份证号码">
-				<Input
-					placeholder={"请输入身份证号码"}
-					maxLength={18}
-				/>
-			</Form.Item>
-			<Form.Item name={"csrq"} label="出生日期">
-				<DatePicker />
-			</Form.Item>
-			<Form.Item name={"whcd"} label="文化程度">
-				{generateSelect(whcdMap)}
-			</Form.Item>
-			<Form.Item name={"hyzk"} label="婚姻状况">
-				{generateSelect(hyzkMap)}
-			</Form.Item>
-			<Form.Item name={"jyjxqk"} label="就业就学情况">
-				{generateSelect(jyjxqkMap)}
-			</Form.Item>
-			<Form.Item name={"xzzmm"} label="原现政治面貌">
-				<Input placeholder="请输入政治面貌" />
-			</Form.Item>
-			<Form.Item name={"xgzdw"} label="现工作单位">
-				<Input placeholder="请输入现工作单位" />
-			</Form.Item>
-			<Form.Item name={"dwlxdh"} label="单位联系电话">
-				<Input placeholder="请输入单位联系电话" />
-			</Form.Item>
-			<Form.Item name={"grlxdh"} label="个人联系电话">
-				<Input placeholder="请输入个人联系电话" />
-			</Form.Item>
-			<Form.Item
-				name={"ywjtcyjzyshgx"}
-				label="有无家庭成员及主要社会关系">
-				<Select style={{ width: 120 }}>
-					<Select.Option value="0">否</Select.Option>
-					<Select.Option value="1">是</Select.Option>
-				</Select>
-			</Form.Item>
-			<Form.Item name={"zp"} label="照片">
+			<Form.Item name={"plan"} label="矫正方案上传">
 				<Form.Item>
 					<Upload
 						name="avatar"

@@ -137,7 +137,7 @@ export default function NoExit() {
 					证照代管
 				</Button>
 			),
-			key: "01",
+			key: "1",
 		},
 		{
 			type: "divider",
@@ -154,7 +154,7 @@ export default function NoExit() {
 					边控
 				</Button>
 			),
-			key: "23",
+			key: "2",
 		},
 	];
 	// 绑定操作栏的操作

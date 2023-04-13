@@ -59,23 +59,6 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-const staticTableData: DataType[] = [
-	{
-		dxbh: "12",
-		xm: "2112",
-		xgrq: "21121",
-		finish: false,
-		audio: "",
-	},
-	{
-		dxbh: "122",
-		xm: "21212",
-		xgrq: "211221",
-		finish: false,
-		audio: "",
-	},
-];
-
 // 入矫宣告
 export default function Announcement() {
 	const [gMsg, contextHolder] = useMessage();
@@ -114,7 +97,7 @@ export default function Announcement() {
 					</Button>
 				</Popconfirm>
 			),
-			key: "0",
+			key: "1",
 		},
 	];
 	// 绑定操作栏的操作

@@ -1,7 +1,6 @@
-import { GMessage } from "@/utils/msg/GMsg";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import { CrpPlan } from "@/entity/IC/CrpPlan";
 
 export default function InfoModal(props: {
 	open: boolean;
@@ -10,15 +9,12 @@ export default function InfoModal(props: {
 }) {
 	const { open, setOpen, info } = props;
 
-	const getInfos = (info: CrpAnnouncement) => {
+	const getInfos = (info: CrpPlan) => {
 		return [
+			{ label: "方案编号", value: info.id },
 			{ label: "对象编号", value: info.dxbh },
 			{ label: "姓名", value: info.xm },
-			{
-				label: "宣告日期",
-				value: info.xgrq,
-			},
-			{ label: "宣告音频", value: info.audio },
+			{ label: "方案附件", value: info.plan },
 		];
 	};
 
@@ -26,7 +22,7 @@ export default function InfoModal(props: {
 		<TemplateModal
 			InfoDescriptions={
 				<TemplateDescriptions
-					title={"入矫宣告信息表"}
+					title={"矫正方案"}
 					info={info ? getInfos(info) : []}
 				/>
 			}

@@ -1,65 +1,67 @@
 import { useState } from "react";
-import { Card, Form, Modal } from "antd";
+import { Card, Form } from "antd";
 
 import "@/entity/IE/IEInfo";
 import { GMessage } from "@/utils/msg/GMsg";
 import { AddTeamForm } from "../../Form/AddTeamForm";
+import TemplateModal from "@/template/Modal";
+import { CrpPlan } from "@/entity/IC/CrpPlan";
+import { savePlan } from "@/api/ic/crplan";
 
 const AddModal = (props: {
 	open: boolean;
 	setOpen: any;
 	gMsg: GMessage;
+	tableUpdate: boolean;
+	setTableUpdate: any;
 }) => {
-	const { setOpen, open, gMsg } = props;
+	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
+		props;
 
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
-	const handleCancel = () => {
-		setOpen(false);
-	};
-
 	const handleOk = () => {
-		setConfirmLoading(true);
 		form.submit();
-		setTimeout(() => {
-			setOpen(false);
-			setConfirmLoading(false);
-		}, 1000);
 	};
 
 	// 提交表单时操作
-	const onFinish = async (values: any) => {
-		gMsg.onSuccess("新增待入矫人员!");
+	const onFinish = (values: any) => {
+		const info = values as CrpPlan;
+		savePlan(
+			info,
+			() => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("新增矫正方案!");
+			},
+			(msg: string) => {
+				gMsg.onError("矫正方案保存失败!" + msg);
+			},
+			setConfirmLoading
+		);
+		setOpen(false);
 	};
 
 	return (
-		<Modal
-			width={1000}
-			open={open}
-			onCancel={handleCancel}
-			confirmLoading={confirmLoading}
-			onOk={handleOk}>
-			<Card title={"新增待矫正人员信息表"}>
-				<AddTeamForm
-					form={form}
-					onFinish={onFinish}
-					initialValues={{
-						sqjzdxbh: "00000001",
-						sfdcpg: "否",
-						jzlb: "管制",
-						xb: "男",
-						mz: "汉族",
-						gj: "中国籍",
-						hjlx: "乡村人口",
-						whcd: "其他",
-						hyzk: "其他",
-						jyjxqk: "就业",
-						ywjtcyjzyshgx: "是",
-					}}
-				/>
-			</Card>
-		</Modal>
+		<>
+			<TemplateModal
+				InfoDescriptions={
+					<Card title={"新增矫正方案"}>
+						<AddTeamForm
+							form={form}
+							onFinish={onFinish}
+							initialValues={{
+								dxbh: "00000001",
+							}}
+						/>
+					</Card>
+				}
+				open={open}
+				setOpen={setOpen}
+				confirmLoading={confirmLoading}
+				onOk={handleOk}
+			/>
+		</>
 	);
 };
 

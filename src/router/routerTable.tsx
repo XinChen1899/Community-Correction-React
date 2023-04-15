@@ -37,6 +37,7 @@ export const routeNameMap = {
 	business: "业务审批 ",
 
 	assesment: "考核奖惩",
+	score: "计分考核",
 	reward: "奖励",
 	punish: "惩罚",
 
@@ -72,7 +73,6 @@ export const routeTable = [
 			routeNameMap.home,
 			lazy(() => import("@/pages/Home"))
 		),
-		children: [],
 		icon: <HomeOutlined />,
 	},
 	{
@@ -82,7 +82,6 @@ export const routeTable = [
 			routeNameMap.ie,
 			lazy(() => import("@/pages/InvestigatorsEvaluated"))
 		),
-		children: [],
 		icon: <SearchOutlined />,
 	},
 	{
@@ -97,7 +96,6 @@ export const routeTable = [
 					routeNameMap.wait,
 					lazy(() => import("@/pages/WaitPeople"))
 				),
-				children: [],
 			},
 			{
 				url: "ic/crteam",
@@ -106,7 +104,6 @@ export const routeTable = [
 					routeNameMap.crteam,
 					lazy(() => import("@/pages/CorrectionTeam"))
 				),
-				children: [],
 			},
 			{
 				url: "ic/announcement",
@@ -115,7 +112,6 @@ export const routeTable = [
 					routeNameMap.announcement,
 					lazy(() => import("@/pages/Announcement"))
 				),
-				children: [],
 			},
 			{
 				url: "ic/nocheckin",
@@ -124,7 +120,6 @@ export const routeTable = [
 					routeNameMap.nocheckin,
 					lazy(() => import("@/pages/NoCheckIn"))
 				),
-				children: [],
 			},
 		],
 	},
@@ -135,7 +130,6 @@ export const routeTable = [
 			routeNameMap.noexit,
 			lazy(() => import("@/pages/NoExit"))
 		),
-		children: [],
 		icon: <DeleteRowOutlined />,
 	},
 	{
@@ -145,7 +139,6 @@ export const routeTable = [
 			routeNameMap.category,
 			lazy(() => import("@/pages/Category"))
 		),
-		children: [],
 		icon: <DeploymentUnitOutlined />,
 	},
 	{
@@ -163,7 +156,6 @@ export const routeTable = [
 					routeNameMap.crplan,
 					lazy(() => import("@/pages/CorrectionPlan"))
 				),
-				children: [],
 			},
 			{
 				url: "individual/planrepo",
@@ -172,7 +164,6 @@ export const routeTable = [
 					routeNameMap.planrepo,
 					lazy(() => import("@/pages/PlanRepository"))
 				),
-				children: [],
 			},
 		],
 		icon: <SolutionOutlined />,
@@ -193,7 +184,6 @@ export const routeTable = [
 							)
 					)
 				),
-				children: [],
 			},
 			{
 				url: "daily/check",
@@ -205,7 +195,6 @@ export const routeTable = [
 							import("@/pages/DailyManagement/CheckIn")
 					)
 				),
-				children: [],
 			},
 		],
 		icon: <ApartmentOutlined />,
@@ -225,13 +214,20 @@ export const routeTable = [
 		page: getPageItem("assessment", routeNameMap.assesment),
 		children: [
 			{
+				url: "assessment/score",
+				page: getPageItem(
+					"score",
+					routeNameMap.score,
+					lazy(() => import("@/pages/Assessment/Score"))
+				),
+			},
+			{
 				url: "assessment/reward",
 				page: getPageItem(
 					"reward",
 					routeNameMap.reward,
 					lazy(() => import("@/pages/Assessment/Reward"))
 				),
-				children: [],
 			},
 			{
 				url: "assessment/punish",
@@ -242,7 +238,6 @@ export const routeTable = [
 						() => import("@/pages/Assessment/Punishment")
 					)
 				),
-				children: [],
 			},
 		],
 		icon: <EyeOutlined />,
@@ -278,7 +273,6 @@ export const routeTable = [
 					routeNameMap.worker,
 					lazy(() => import("@/pages/Woker"))
 				),
-				children: [],
 			},
 		],
 		icon: <SearchOutlined />,

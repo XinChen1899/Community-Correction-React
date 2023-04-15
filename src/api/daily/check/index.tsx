@@ -12,6 +12,8 @@ export const getAllChecks = (onSuccess: any, onError: any) => {
 		onError
 	);
 };
+
+
 export const getCheckDetails = (
 	dxbh: string,
 	onSuccess: any,

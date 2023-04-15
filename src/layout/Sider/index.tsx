@@ -26,7 +26,7 @@ const generateMenu = (routeTable: any[]) => {
 	const menus: MenuItem[] = [];
 	routeTable.forEach((route: any) => {
 		const menuChildren: MenuItem[] = [];
-		if (route.children.length) {
+		if (route.children && route.children.length) {
 			menuChildren.push(...generateMenu(route.children));
 			menus.push(
 				getItem(

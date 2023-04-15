@@ -6,8 +6,9 @@ export const ServerTable = {
 	noexit: "http://localhost:9008",
 	cate: "http://localhost:9009",
 	daily: "http://localhost:9010",
+	assessment: "http://localhost:9011",
+	business: "http://localhost:9012",
 };
-
 
 export const useAPI = (
 	api: AxiosInstance,

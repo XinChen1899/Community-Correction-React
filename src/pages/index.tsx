@@ -8,21 +8,21 @@ import Worker from "./Woker";
 import NoExit from "./NoExit";
 import CategoryManagement from "./Category";
 import IndividualCorrection from "./IndividualCorrection";
-import DailyManagment from "./DailyManagement";
 import BusinessApproval from "./BusinessApproval";
 import TerminationCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected";
 import PlanRepository from "./PlanRepository";
 import Announcement from "./Announcement";
-
+import NoCheckIn from "./NoCheckIn";
 import { Reward, Punishment } from "./Assessment";
 
-import { CheckIn } from "./DailyManagement";
+import { CheckIn, FunctionPane } from "./DailyManagement";
 
 export {
 	Reward,
 	Punishment,
 	Home,
+	NoCheckIn,
 	IE,
 	WaitPeople,
 	CorrectionTeam,
@@ -31,7 +31,7 @@ export {
 	NoExit,
 	CategoryManagement,
 	IndividualCorrection,
-	DailyManagment,
+	FunctionPane,
 	BusinessApproval,
 	TerminationCorrection,
 	UnCorrected,

@@ -29,7 +29,7 @@ export default function RegisterForm(props: {
 				},
 				{
 					name: "xgrq",
-					label: "宣告日期",
+					label: "报备日期",
 					component: <DatePicker />,
 				},
 				{

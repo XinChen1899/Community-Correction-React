@@ -17,9 +17,12 @@ export const routeNameMap = {
 	home: "首页",
 	ie: "调查评估",
 	ic: "接收入矫",
+
 	wait: "待入矫人员",
 	crplan: "矫正方案",
 	crteam: "矫正小组",
+	nocheckin: "逾期报到/未报到",
+
 	noExit: "不准出境",
 	security: "权限",
 	worker: "工作人员",
@@ -111,6 +114,15 @@ export const routeTable = [
 					"announcement",
 					routeNameMap.announcement,
 					lazy(() => import("@/pages/Announcement"))
+				),
+				children: [],
+			},
+			{
+				url: "ic/nocheckin",
+				page: getPageItem(
+					"nocheckin",
+					routeNameMap.nocheckin,
+					lazy(() => import("@/pages/NoCheckIn"))
 				),
 				children: [],
 			},

@@ -1,5 +1,4 @@
 import { AxiosInstance } from "axios";
-import { useEffect } from "react";
 
 export const ServerTable = {
 	ie: "http://localhost:9006",

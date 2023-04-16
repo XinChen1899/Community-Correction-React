@@ -1,11 +1,11 @@
 import useAPI from "@/api";
 import { api } from "..";
 
-export const getAllChecks = (onSuccess: any, onError: any) => {
+export const getAllReports = (onSuccess: any, onError: any) => {
 	useAPI(
 		api,
 		{
-			url: "/check/all",
+			url: "/report/all",
 			method: "get",
 		},
 		onSuccess,
@@ -13,21 +13,21 @@ export const getAllChecks = (onSuccess: any, onError: any) => {
 	);
 };
 
-export const getCheckDetails = (
+export const getReportDetails = (
 	dxbh: string,
 	onSuccess: any,
 	onError: any
 ) => {
 	useAPI(
 		api,
-		{ url: `/check/detail/${dxbh}`, method: "get" },
+		{ url: `/report/detail/${dxbh}`, method: "get" },
 		onSuccess,
 		onError
 	);
 };
 
-export const saveCheck = (
-	data: { dxbh: string; date: string },
+export const saveReport = (
+	data: { dxbh: string; bg: string; date: string },
 	onSuccess: any,
 	onError: any,
 	setConfirmLoading: any
@@ -35,7 +35,7 @@ export const saveCheck = (
 	useAPI(
 		api,
 		{
-			url: "/check/detail",
+			url: "/report/detail",
 			method: "post",
 			data,
 		},

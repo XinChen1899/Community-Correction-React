@@ -32,6 +32,7 @@ export const routeNameMap = {
 
 	daily: "日常管理",
 	check: "定期报到",
+	report: "日常报告",
 	daily_function: "功能列表",
 
 	business: "业务审批 ",
@@ -193,6 +194,19 @@ export const routeTable = [
 					lazy(
 						() =>
 							import("@/pages/DailyManagement/CheckIn")
+					)
+				),
+			},
+			{
+				url: "daily/report",
+				page: getPageItem(
+					"report",
+					routeNameMap.report,
+					lazy(
+						() =>
+							import(
+								"@/pages/DailyManagement/DailyReport"
+							)
 					)
 				),
 			},

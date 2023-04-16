@@ -1,10 +1,12 @@
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import { CheckDetail } from "@/entity/Daily/check/CheckDetail";
-import { List } from "antd";
+import { Button, List } from "antd";
 import { useEffect, useState } from "react";
 import { getCheckDetails } from "@/api/daily/check";
 import { GMessage } from "@/utils/msg/GMsg";
+import { ReportDetail } from "@/entity/Daily/report/ReportDetail";
+import { getReportDetails } from "@/api/daily/report";
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
@@ -12,42 +14,48 @@ export default function InfoModal(props: {
 	gMsg: GMessage;
 }) {
 	const { open, setOpen, info, gMsg } = props;
-	const [checkDetail, setCheckDetail] = useState<CheckDetail>(
-		{} as CheckDetail
+	const [reportDetail, setReportDetail] = useState<ReportDetail>(
+		{} as ReportDetail
 	);
-	// todo 获取到所有的打卡信息
 	useEffect(() => {
 		if (info && info.dxbh) {
-			getCheckDetails(
+			getReportDetails(
 				info.dxbh,
 				(detail: any[]) => {
-					const list: string[] = detail.map((d) => {
-						return d.date;
+					const list: any[] = detail.map((d) => {
+						return {
+							bg: d.bg,
+							date: d.date,
+						};
 					});
-
-					setCheckDetail({
+					setReportDetail({
 						dxbh: info.dxbh,
-						checkList: list,
-					} as CheckDetail);
+						reportList: list,
+					} as ReportDetail);
 				},
-				(msg: string) => {
-					gMsg.onError(msg);
+				(err: any) => {
+					gMsg.onError(err);
 				}
 			);
 		}
 	}, [info.dxbh]);
 
-	const getInfos = (info: CheckDetail) => {
+	const getInfos = (info: ReportDetail) => {
 		return [
 			{ label: "对象编号", value: info.dxbh },
 			{
-				label: "打卡日期",
+				label: "报告列表",
 				value: (
 					<List
 						bordered
-						dataSource={info.checkList}
+						dataSource={info.reportList}
 						renderItem={(item) => {
-							return <List.Item>{item}</List.Item>;
+							return (
+								<List.Item>
+									{item.bg}--{item.date}
+									<Button type="link">下载</Button>
+								</List.Item>
+							);
 						}}
 					/>
 				),
@@ -59,8 +67,8 @@ export default function InfoModal(props: {
 		<TemplateModal
 			InfoDescriptions={
 				<TemplateDescriptions
-					title={"报到信息"}
-					info={checkDetail ? getInfos(checkDetail) : []}
+					title={"报告信息"}
+					info={reportDetail ? getInfos(reportDetail) : []}
 				/>
 			}
 			open={open}

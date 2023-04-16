@@ -14,9 +14,13 @@ import UnCorrected from "./UnCorrected";
 import PlanRepository from "./PlanRepository";
 import Announcement from "./Announcement";
 import NoCheckIn from "./NoCheckIn";
-import { Reward, Punishment, Score } from "./Assessment";
+import { Reward, Punishment, AssessmentScore } from "./Assessment";
 
-import { CheckIn, FunctionPane } from "./DailyManagement";
+import {
+	CheckIn,
+	FunctionPane,
+	DailyReport,
+} from "./DailyManagement";
 
 export {
 	Reward,
@@ -38,5 +42,6 @@ export {
 	PlanRepository,
 	Announcement,
 	CheckIn,
-	Score,
+	AssessmentScore,
+	DailyReport,
 };

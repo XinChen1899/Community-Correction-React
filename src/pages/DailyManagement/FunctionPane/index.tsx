@@ -22,8 +22,14 @@ function FunctionPane() {
 						<Card
 							title="日常报告"
 							bordered={false}
+							onClick={() => {
+								navigate("/daily/report");
+							}}
 							hoverable>
-							Card content
+							书面报告次数由管理等级关联生成，可提交
+							纸质格式表格扫描上传或由矫正对象在矫通
+							扫描上传（纸质版同时提交）。报告完成情
+							况关联计分考核、矫正方案落实记录。
 						</Card>
 					</Col>
 					<Col span={8}>

@@ -8,13 +8,13 @@ import {
 import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
+import { map2Value, nsyjzlbMap } from "@/utils";
+import { ReportInfo } from "@/entity/Daily/report/ReportInfo";
 import AddModal from "./Modal/AddModal";
 import InfoModal from "./Modal/InfoModal";
-import { getAllChecks } from "@/api/daily/check";
-import { map2Value, nsyjzlbMap } from "@/utils";
-import { CheckInfo } from "@/entity/Daily/check/CheckInfo";
+import { getAllReports } from "@/api/daily/report";
 
-export type DataType = CheckInfo;
+export type DataType = ReportInfo;
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -36,9 +36,9 @@ const columns: ColumnsType<DataType> = [
 		),
 	},
 	{
-		title: "需报到次数",
-		dataIndex: "check_count",
-		key: "check_count",
+		title: "需提交报告数",
+		dataIndex: "report_count",
+		key: "report_count",
 	},
 	{
 		title: "操作",
@@ -46,8 +46,7 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-// 入矫宣告
-export default function CheckIn() {
+export default function DailyReport() {
 	const [gMsg, contextHolder] = useMessage();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
@@ -64,7 +63,7 @@ export default function CheckIn() {
 					type="text"
 					icon={<EditOutlined />}
 					onClick={() => setOpenInfo(true)}>
-					查看报到记录
+					查看报告记录
 				</Button>
 			),
 			key: "0",
@@ -92,12 +91,12 @@ export default function CheckIn() {
 	const [openInfo, setOpenInfo] = useState(false);
 
 	useEffect(() => {
-		getAllChecks(
-			(list: CheckInfo[]) => {
+		getAllReports(
+			(list: ReportInfo[]) => {
 				setTableData(list);
 			},
 			(msg: string) => {
-				gMsg.onError("请求不到报到的所有信息！" + msg);
+				gMsg.onError("请求不到报告的所有信息！" + msg);
 			}
 		);
 	}, [tableUpdate]);
@@ -126,15 +125,17 @@ export default function CheckIn() {
 							type="primary"
 							icon={<PlusOutlined />}
 							onClick={() => setOpenAdd(true)}>
-							添加打卡信息
+							添加报告
 						</Button>
 					</>
 				}
-				cardTitle={"定期报到"}
-				statisticList={[{ title: "今天报到数", value: 999 }]}
-				tableOnRow={(rec: any) => setSelectRecord(rec)}
+				cardTitle={"日常报告"}
+				statisticList={[
+					{ title: "今日提交报告数", value: 999 },
+				]}
+				tableOnRow={(rec: DataType) => setSelectRecord(rec)}
 				tableData={tableData}
-				tableRowKey={(rec: CheckInfo) => rec.dxbh}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>
 	);

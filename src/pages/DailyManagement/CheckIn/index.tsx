@@ -93,7 +93,7 @@ export default function CheckIn() {
 
 	useEffect(() => {
 		getAllChecks(
-			(list: CheckInfo[]) => {
+			(list: DataType[]) => {
 				setTableData(list);
 			},
 			(msg: string) => {
@@ -132,9 +132,9 @@ export default function CheckIn() {
 				}
 				cardTitle={"定期报到"}
 				statisticList={[{ title: "今天报到数", value: 999 }]}
-				tableOnRow={(rec: any) => setSelectRecord(rec)}
+				tableOnRow={(rec: DataType) => setSelectRecord(rec)}
 				tableData={tableData}
-				tableRowKey={(rec: CheckInfo) => rec.dxbh}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>
 	);

@@ -88,11 +88,8 @@ export default function AppSider() {
 				style={{
 					height: 32,
 					margin: "20px auto",
-					color: "white",
-					textAlign: "center",
-				}}>
-				<h1>社区矫正监督管理子系统</h1>
-			</div>
+				}}
+			/>
 
 			<Menu
 				defaultOpenKeys={defaultMenuItem[0]}

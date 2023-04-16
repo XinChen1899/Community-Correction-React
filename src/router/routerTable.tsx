@@ -35,7 +35,8 @@ export const routeNameMap = {
 	report: "日常报告",
 	daily_function: "功能列表",
 
-	business: "业务审批 ",
+	business: "业务审批",
+	ban: "禁止令",
 
 	assesment: "考核奖惩",
 	score: "计分考核",
@@ -215,12 +216,35 @@ export const routeTable = [
 	},
 	{
 		url: "business",
-		page: getPageItem(
-			"business",
-			routeNameMap.business,
-			lazy(() => import("@/pages/BusinessApproval"))
-		),
-		children: [],
+		page: getPageItem("business", routeNameMap.business),
+		children: [
+			{
+				url: "business/bus_function",
+				page: getPageItem(
+					"daily_function",
+					routeNameMap.daily_function,
+					lazy(
+						() =>
+							import(
+								"@/pages/BusinessApproval/FunctionPane"
+							)
+					)
+				),
+			},
+			{
+				url: "business/ban",
+				page: getPageItem(
+					"ban",
+					routeNameMap.ban,
+					lazy(
+						() =>
+							import(
+								"@/pages/BusinessApproval/BanOrder"
+							)
+					)
+				),
+			},
+		],
 		icon: <ScheduleOutlined />,
 	},
 	{

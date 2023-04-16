@@ -8,7 +8,7 @@ import Worker from "./Woker";
 import NoExit from "./NoExit";
 import CategoryManagement from "./Category";
 import IndividualCorrection from "./IndividualCorrection";
-import BusinessApproval from "./BusinessApproval";
+import BusinessApproval from "./BusinessApproval/FunctionPane";
 import TerminationCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected";
 import PlanRepository from "./PlanRepository";
@@ -18,9 +18,14 @@ import { Reward, Punishment, AssessmentScore } from "./Assessment";
 
 import {
 	CheckIn,
-	FunctionPane,
+	FunctionPane as DailyFunctionPane,
 	DailyReport,
 } from "./DailyManagement";
+
+import {
+	BanOrder,
+	FunctionPane as BusFunctionPane,
+} from "./BusinessApproval";
 
 export {
 	Reward,
@@ -35,7 +40,7 @@ export {
 	NoExit,
 	CategoryManagement,
 	IndividualCorrection,
-	FunctionPane,
+	DailyFunctionPane,
 	BusinessApproval,
 	TerminationCorrection,
 	UnCorrected,
@@ -44,4 +49,6 @@ export {
 	CheckIn,
 	AssessmentScore,
 	DailyReport,
+	BanOrder,
+	BusFunctionPane,
 };

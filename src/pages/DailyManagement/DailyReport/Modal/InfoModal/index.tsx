@@ -1,44 +1,43 @@
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { CheckDetail } from "@/entity/Daily/check/CheckDetail";
 import { Button, List } from "antd";
-import { useEffect, useState } from "react";
-import { getCheckDetails } from "@/api/daily/check";
+import { useState } from "react";
 import { GMessage } from "@/utils/msg/GMsg";
 import { ReportDetail } from "@/entity/Daily/report/ReportDetail";
 import { getReportDetails } from "@/api/daily/report";
+import { useRequest } from "ahooks";
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
 	info: any;
 	gMsg: GMessage;
+	tableUpdate: boolean;
 }) {
-	const { open, setOpen, info, gMsg } = props;
+	const { open, setOpen, info, gMsg, tableUpdate } = props;
 	const [reportDetail, setReportDetail] = useState<ReportDetail>(
 		{} as ReportDetail
 	);
-	useEffect(() => {
-		if (info && info.dxbh) {
-			getReportDetails(
-				info.dxbh,
-				(detail: any[]) => {
-					const list: any[] = detail.map((d) => {
-						return {
-							bg: d.bg,
-							date: d.date,
-						};
-					});
-					setReportDetail({
-						dxbh: info.dxbh,
-						reportList: list,
-					} as ReportDetail);
-				},
-				(err: any) => {
-					gMsg.onError(err);
-				}
-			);
-		}
-	}, [info.dxbh]);
+
+	useRequest(() => getReportDetails(info.dxbh), {
+		onSuccess: (response: any) => {
+			const { data } = response;
+			const list: any[] = data.data.map((d: any) => {
+				return {
+					bg: d.bg,
+					date: d.date,
+				};
+			});
+			setReportDetail({
+				dxbh: info.dxbh,
+				reportList: list,
+			} as ReportDetail);
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [info.dxbh, tableUpdate],
+		ready: info && info.dxbh != undefined,
+	});
 
 	const getInfos = (info: ReportDetail) => {
 		return [

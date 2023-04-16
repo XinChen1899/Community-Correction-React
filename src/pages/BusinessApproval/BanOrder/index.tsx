@@ -12,6 +12,8 @@ import AddModal from "./Modal/AddModal";
 import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import ProcessModal from "./Modal/ProcessModal";
 import { getAllBans } from "@/api/business/ban";
+import { useRequest } from "ahooks";
+import axios from "axios";
 
 export type DataType = BanInfo;
 

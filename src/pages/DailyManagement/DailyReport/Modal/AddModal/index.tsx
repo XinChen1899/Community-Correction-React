@@ -5,8 +5,8 @@ import { Form } from "antd";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { getDate } from "@/utils/ie";
-import { saveCheck } from "@/api/daily/check";
 import { saveReport } from "@/api/daily/report";
+import { useRequest } from "ahooks";
 
 export default function RegisterModal(props: {
 	open: boolean;
@@ -18,31 +18,38 @@ export default function RegisterModal(props: {
 	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
 		props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
 		form.submit();
 	};
 
-	// 提交表单时操作
+	const { loading, run } = useRequest(
+		(detail: any) => saveReport(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("添加报告成功!");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
 	const onFinish = (values: any) => {
 		const detail = values;
-		detail.date = getDate(detail.date);
-		// detail:
-		//   dxbh    bg  date
-		saveReport(
-			detail,
-			() => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("提交成功");
-			},
-			(msg: string) => {
-				gMsg.onError("提交报告失败" + msg);
-			},
-			setConfirmLoading
-		);
-		setOpen(false);
+		if (detail.dxbh && detail.bg) {
+			detail.date = getDate(detail.date);
+			run(detail);
+		} else {
+			gMsg.onError("请输入报告信息");
+		}
 	};
 
 	return (
@@ -58,7 +65,7 @@ export default function RegisterModal(props: {
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

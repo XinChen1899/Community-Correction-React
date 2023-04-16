@@ -13,6 +13,9 @@ import { ReportInfo } from "@/entity/Daily/report/ReportInfo";
 import AddModal from "./Modal/AddModal";
 import InfoModal from "./Modal/InfoModal";
 import { getAllReports } from "@/api/daily/report";
+import { useRequest } from "ahooks";
+import axios from "axios";
+import { api } from "@/api/daily";
 
 export type DataType = ReportInfo;
 
@@ -90,16 +93,15 @@ export default function DailyReport() {
 	const [openAdd, setOpenAdd] = useState(false);
 	const [openInfo, setOpenInfo] = useState(false);
 
-	useEffect(() => {
-		getAllReports(
-			(list: ReportInfo[]) => {
-				setTableData(list);
-			},
-			(msg: string) => {
-				gMsg.onError("请求不到报告的所有信息！" + msg);
-			}
-		);
-	}, [tableUpdate]);
+	useRequest(getAllReports, {
+		onSuccess: ({ data }) => {
+			setTableData(data.data);
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<>
@@ -108,6 +110,7 @@ export default function DailyReport() {
 				setOpen={setOpenInfo}
 				info={selectRecord}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
 			/>
 			<AddModal
 				open={openAdd}

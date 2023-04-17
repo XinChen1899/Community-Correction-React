@@ -23,11 +23,6 @@ export default function AddForm(props: {
 					component: <Input />,
 				},
 				{
-					name: "xm",
-					label: "社区矫正对象姓名",
-					component: <Input />,
-				},
-				{
 					name: "sqjrcs",
 					label: "申请进入场所",
 					component: <Input />,
@@ -85,11 +80,6 @@ export default function AddForm(props: {
 				{
 					name: "xjsqjzjgspyj",
 					label: "县级社区矫正机构审批意见",
-					component: <Input disabled />,
-				},
-				{
-					name: "xjsqjzjgsjg",
-					label: "级社区矫正机构审批结果",
 					component: <Input disabled />,
 				},
 			]}

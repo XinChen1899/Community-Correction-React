@@ -5,37 +5,37 @@ import { List } from "antd";
 import { useEffect, useState } from "react";
 import { getCheckDetails } from "@/api/daily/check";
 import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
 	info: any;
 	gMsg: GMessage;
+	tableUpdate: boolean;
 }) {
-	const { open, setOpen, info, gMsg } = props;
+	const { open, setOpen, info, gMsg, tableUpdate } = props;
 	const [checkDetail, setCheckDetail] = useState<CheckDetail>(
 		{} as CheckDetail
 	);
 	// todo 获取到所有的打卡信息
-	useEffect(() => {
-		if (info && info.dxbh) {
-			getCheckDetails(
-				info.dxbh,
-				(detail: any[]) => {
-					const list: string[] = detail.map((d) => {
-						return d.date;
-					});
+	useRequest(() => getCheckDetails(info.dxbh), {
+		onSuccess: (response: any) => {
+			const { data } = response;
+			const list: string[] = data.data.map((d: any) => {
+				return d.date;
+			});
 
-					setCheckDetail({
-						dxbh: info.dxbh,
-						checkList: list,
-					} as CheckDetail);
-				},
-				(msg: string) => {
-					gMsg.onError(msg);
-				}
-			);
-		}
-	}, [info.dxbh]);
+			setCheckDetail({
+				dxbh: info.dxbh,
+				checkList: list,
+			} as CheckDetail);
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [info.dxbh, tableUpdate],
+		ready: info && info.dxbh != undefined,
+	});
 
 	const getInfos = (info: CheckDetail) => {
 		return [

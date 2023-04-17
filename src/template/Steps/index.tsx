@@ -35,7 +35,13 @@ const TemplateSteps = (props: { steps: any[]; step?: number }) => {
 			<div style={contentStyle}>{steps[current].content}</div>
 			<div style={{ marginTop: 24 }}>
 				{current < steps.length - 1 && (
-					<Button type="primary" onClick={() => next()}>
+					<Button
+						type="primary"
+						disabled={!steps[current].check(current)}
+						onClick={() => {
+							steps[current].nextAction(current);
+							next();
+						}}>
 						下一步
 					</Button>
 				)}

@@ -13,6 +13,7 @@ import InfoModal from "./Modal/InfoModal";
 import { getAllChecks } from "@/api/daily/check";
 import { map2Value, nsyjzlbMap } from "@/utils";
 import { CheckInfo } from "@/entity/Daily/check/CheckInfo";
+import { useRequest } from "ahooks";
 
 export type DataType = CheckInfo;
 
@@ -91,16 +92,15 @@ export default function CheckIn() {
 	const [openAdd, setOpenAdd] = useState(false);
 	const [openInfo, setOpenInfo] = useState(false);
 
-	useEffect(() => {
-		getAllChecks(
-			(list: DataType[]) => {
-				setTableData(list);
-			},
-			(msg: string) => {
-				gMsg.onError("请求不到报到的所有信息！" + msg);
-			}
-		);
-	}, [tableUpdate]);
+	useRequest(getAllChecks, {
+		onSuccess: ({ data }) => {
+			setTableData(data.data);
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<>
@@ -109,6 +109,7 @@ export default function CheckIn() {
 				setOpen={setOpenInfo}
 				info={selectRecord}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
 			/>
 			<AddModal
 				open={openAdd}

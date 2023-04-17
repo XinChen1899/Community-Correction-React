@@ -2,12 +2,12 @@ import TemplateModal from "@/template/Modal";
 import AddForm from "../../Form/AddForm";
 import { GMessage } from "@/utils/msg/GMsg";
 import { Form } from "antd";
-import { useState } from "react";
 import { DataType } from "../..";
 import { saveBanInfo } from "@/api/business/ban";
-import { BBInfo } from "@/entity/NoExit/BBInfo";
 import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import { getDate } from "@/utils/ie";
+import { useRequest } from "ahooks";
+import dayjs from "dayjs";
 
 export default function AddModal(props: {
 	open: boolean;
@@ -20,35 +20,48 @@ export default function AddModal(props: {
 	const { setOpen, open, gMsg, tableUpdate, setTableUpdate, info } =
 		props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
 		form.submit();
 	};
 
+	const { loading, run } = useRequest(
+		(detail: any) => saveBanInfo(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("操作成功!");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const detail = values as BanInfo;
-		detail.step = info ? info.step : 0;
-		detail.sqrq = getDate(detail.sqrq);
-		detail.sqjrsj = getDate(detail.sqjrsj);
-		detail.sqjssj = getDate(detail.sqjssj);
-
-		saveBanInfo(
-			detail,
-			() => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("新增成功");
-			},
-			(msg: string) => {
-				gMsg.onError("新增失败！" + msg);
-			},
-			setConfirmLoading
-		);
-		setOpen(false);
+		if (detail.dxbh != "") {
+			detail.step =
+				info == undefined ? 0 : info.step ? info.step : 0;
+			run(detail);
+		}
 	};
 
+	if (info != undefined) {
+		if (info.sqrq) info.sqrq = dayjs(info.sqrq);
+		if (info.sqjrsj) info.sqjrsj = dayjs(info.sqjrsj);
+		if (info.sqjssj) info.sqjssj = dayjs(info.sqjssj);
+		if (info.sfsshsj) info.sfsshsj = dayjs(info.sfsshsj);
+		if (info.xjsqjzjgspsj)
+			info.xjsqjzjgspsj = dayjs(info.xjsqjzjgspsj);
+	}
 	return (
 		<>
 			<TemplateModal
@@ -63,7 +76,7 @@ export default function AddModal(props: {
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

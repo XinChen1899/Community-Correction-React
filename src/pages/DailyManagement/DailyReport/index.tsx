@@ -7,15 +7,13 @@ import {
 } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { map2Value, nsyjzlbMap } from "@/utils";
 import { ReportInfo } from "@/entity/Daily/report/ReportInfo";
 import AddModal from "./Modal/AddModal";
 import InfoModal from "./Modal/InfoModal";
 import { getAllReports } from "@/api/daily/report";
 import { useRequest } from "ahooks";
-import axios from "axios";
-import { api } from "@/api/daily";
 
 export type DataType = ReportInfo;
 

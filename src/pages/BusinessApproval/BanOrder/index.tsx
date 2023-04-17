@@ -7,13 +7,12 @@ import {
 } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddModal from "./Modal/AddModal";
 import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import ProcessModal from "./Modal/ProcessModal";
 import { getAllBans } from "@/api/business/ban";
 import { useRequest } from "ahooks";
-import axios from "axios";
 
 export type DataType = BanInfo;
 
@@ -36,34 +35,15 @@ const columns: ColumnsType<DataType> = [
 	},
 	{
 		title: "审批结果",
-		dataIndex: "xjsqjzjgsjg",
-		key: "xjsqjzjgsjg",
-		render: (_, rec) => <Tag>{rec.xjsqjzjgsjg}</Tag>,
+		dataIndex: "xjsqjzjgspyj",
+		key: "xjsqjzjgspyj",
+		render: (_, rec) => <Tag>{rec.xjsqjzjgspyj}</Tag>,
 	},
 	{
 		title: "操作",
 		key: "action",
 	},
 ];
-const defultDataType: DataType = {
-	dxbh: "111",
-	xm: "111",
-	sqjrcs: "222",
-	sqrq: "",
-	sqjrsj: "",
-	sqjssj: "",
-	sqly: "",
-	sfsshr: "",
-	sfsshsj: "",
-	sfsshyj: "",
-	xjsqjzjgspr: "",
-	xjsqjzjgspsj: "",
-	xjsqjzjgspyj: "",
-	xjsqjzjgsjg: "",
-	step: 1,
-};
-const staticTableData: DataType[] = [defultDataType];
-
 export default function BanOrder() {
 	const [gMsg, contextHolder] = useMessage();
 
@@ -122,16 +102,15 @@ export default function BanOrder() {
 	const [openAdd, setOpenAdd] = useState(false);
 	const [openProcess, setOpenProcess] = useState(false);
 
-	useEffect(() => {
-		getAllBans(
-			(list: DataType[]) => {
-				setTableData(list);
-			},
-			(msg: string) => {
-				gMsg.onError("请求不到禁止令的所有信息！" + msg);
-			}
-		);
-	}, [tableUpdate]);
+	useRequest(getAllBans, {
+		onSuccess: ({ data }) => {
+			setTableData(data.data);
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<>
@@ -139,6 +118,9 @@ export default function BanOrder() {
 				open={openProcess}
 				setOpen={setOpenProcess}
 				info={selectRecord}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				gMsg={gMsg}
 			/>
 			<AddModal
 				open={openAdd}
@@ -167,7 +149,7 @@ export default function BanOrder() {
 				cardTitle={"进入特定场所审批"}
 				statisticList={[{ title: "今日审批数", value: 999 }]}
 				tableOnRow={(rec: DataType) => setSelectRecord(rec)}
-				tableData={staticTableData}
+				tableData={tableData}
 				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>

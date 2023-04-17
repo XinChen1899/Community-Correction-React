@@ -15,5 +15,6 @@ export interface BanInfo {
 	xjsqjzjgspr: string; // 县级社区矫正机构审批人
 	xjsqjzjgspsj: string | Dayjs; // 县级社区矫正机构审批时间
 	xjsqjzjgspyj: string; // 县级社区矫正机构审批意见
-	xjsqjzjgsjg: string; // 县级社区矫正机构审批结果
+
+	processId?: string;
 }

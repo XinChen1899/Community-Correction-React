@@ -16,6 +16,7 @@ import InfoModal from "./Modal/InfoModal";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import { getAllAnnounces } from "@/api/ic/announce";
 import ModifyModal from "./Modal/ModifyModal";
+import { getDate } from "@/utils/ie";
 
 export type DataType = CrpAnnouncement;
 
@@ -42,6 +43,7 @@ const columns: ColumnsType<DataType> = [
 		title: "宣告日期",
 		dataIndex: "xgrq",
 		key: "xgrq",
+		render: (_, record) => getDate(record.xgrq),
 	},
 	{
 		title: "是否宣告",

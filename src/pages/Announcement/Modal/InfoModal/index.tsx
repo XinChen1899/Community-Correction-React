@@ -2,6 +2,7 @@ import { GMessage } from "@/utils/msg/GMsg";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import { getDate } from "@/utils/ie";
 
 export default function InfoModal(props: {
 	open: boolean;
@@ -16,7 +17,7 @@ export default function InfoModal(props: {
 			{ label: "姓名", value: info.xm },
 			{
 				label: "宣告日期",
-				value: info.xgrq,
+				value: getDate(info.xgrq),
 			},
 			{ label: "宣告音频", value: info.audio },
 		];

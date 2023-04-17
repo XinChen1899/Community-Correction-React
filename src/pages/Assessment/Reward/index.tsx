@@ -1,28 +1,25 @@
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import { GMessage, useMessage } from "@/utils/msg/GMsg";
-import {
-	DownOutlined,
-	EditOutlined,
-	PlusOutlined,
-	SearchOutlined,
-} from "@ant-design/icons";
-import {
-	Button,
-	Dropdown,
-	MenuProps,
-	Space,
-	Tag,
-	message,
-} from "antd";
+import { useMessage } from "@/utils/msg/GMsg";
+import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
+import AddModal from "./Modal/AddModal";
+import InfoModal from "./Modal/InfoModal";
+import TaskRecvModal from "./Modal/RecvModal";
 
-export interface DataType {
+export interface RewardInfo {
 	id: number;
-	dxbh: string; // 矫正对象编号
-	xm: string; // 矫正对象姓名
-	jl: string; // 奖励类型
+	dxbh: string;
+	xm: string;
+	jllb: string; // 奖励类型
+	jlyy: string; // 奖励原因
+	date: string; // 奖励时间
+	jlr: string; // 记录人
+	step: number; // 当前审批步骤
 }
+
+export type DataType = RewardInfo;
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -40,9 +37,10 @@ const columns: ColumnsType<DataType> = [
 	},
 	{
 		title: "奖励",
-		dataIndex: "jl",
+		dataIndex: "jllb",
 		align: "center",
-		render: (_, record) => <Tag>{record.jl}</Tag>,
+		key: "jllb",
+		render: (_, record) => <Tag>{record.jllb}</Tag>,
 	},
 	{
 		title: "操作",
@@ -51,7 +49,16 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const staticTableData: DataType[] = [
-	{ id: 1, dxbh: "00000001", xm: "xxx", jl: "yyy" },
+	{
+		id: 1,
+		dxbh: "00000001",
+		xm: "xxx",
+		jllb: "yyy",
+		step: 0,
+		date: "xxx",
+		jlr: "Xxx",
+		jlyy: "yyy",
+	},
 ];
 
 export default function Reward() {
@@ -63,8 +70,9 @@ export default function Reward() {
 		useState<DataType[]>(staticTableData);
 	const [tableUpdate, setTableUpdate] = useState(false);
 
-	const [infoModal, setInfoModal] = useState(false);
-	const [modifyModal, setModifyModal] = useState(false);
+	const [openInfo, setOpenInfo] = useState(false);
+	const [openAdd, setOpenAdd] = useState(false);
+	const [openRecv, setOpenRecv] = useState(false);
 
 	const [gMsg, contextHolder] = useMessage();
 
@@ -74,22 +82,11 @@ export default function Reward() {
 				<Button
 					block
 					type="text"
-					onClick={() => setModifyModal(true)}>
-					立功审核
+					onClick={() => setOpenAdd(true)}>
+					立功审核占位
 				</Button>
 			),
 			key: "0",
-		},
-		{
-			label: (
-				<Button
-					block
-					type="text"
-					onClick={() => setModifyModal(true)}>
-					减刑审核
-				</Button>
-			),
-			key: "1",
 		},
 	];
 	columns.map((column) => {
@@ -99,8 +96,13 @@ export default function Reward() {
 					<Space size="middle">
 						<Button
 							type={"dashed"}
-							onClick={() => setInfoModal(true)}>
-							查看奖励信息
+							onClick={() => setOpenInfo(true)}>
+							查看奖励
+						</Button>
+						<Button
+							type={"primary"}
+							onClick={() => setOpenInfo(true)}>
+							审批
 						</Button>
 
 						<Dropdown
@@ -121,19 +123,49 @@ export default function Reward() {
 
 	return (
 		<>
+			<TaskRecvModal
+				open={openRecv}
+				setOpen={setOpenRecv}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				gMsg={gMsg}
+			/>
+			<InfoModal
+				open={openInfo}
+				setOpen={setOpenInfo}
+				info={record}
+				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+			/>
+			<AddModal
+				open={openAdd}
+				setOpen={setOpenAdd}
+				gMsg={gMsg}
+				info={undefined}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+			/>
 			{contextHolder}
 			<TemplateOperatorAndTable
 				columns={columns}
 				cardExtra={
 					<>
-						<Button
-							type="primary"
-							icon={<PlusOutlined />}
-							onClick={() => {
-								gMsg.onSuccess("lll");
-							}}>
-							新增奖励
-						</Button>
+						<Space>
+							<Button
+								onClick={() => setOpenRecv(true)}
+								type={"primary"}
+								icon={<PlusOutlined />}>
+								接收表扬审批表
+							</Button>
+							<Button
+								type="primary"
+								icon={<PlusOutlined />}
+								onClick={() => {
+									setOpenAdd(true);
+								}}>
+								新增奖励
+							</Button>
+						</Space>
 					</>
 				}
 				cardTitle={"奖励查询"}

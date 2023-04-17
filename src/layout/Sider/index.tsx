@@ -1,5 +1,5 @@
 import { routeTable } from "@/router/routerTable";
-import { Menu, MenuProps } from "antd";
+import { Image, Menu, MenuProps } from "antd";
 import Sider, { SiderTheme } from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
 import React, { useEffect, useState } from "react";
@@ -69,10 +69,12 @@ export default function AppSider() {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
+	const theme = "light";
+
 	const defaultMenuItem = findDefaultMenuItem(pathname);
 	return (
 		<Sider
-			theme="dark"
+			theme={theme}
 			collapsible
 			collapsed={collapsed}
 			onCollapse={(value) => setCollapsed(value)}
@@ -88,15 +90,20 @@ export default function AppSider() {
 				style={{
 					height: 32,
 					margin: "20px auto",
-				}}
-			/>
+					width: 50,
+				}}>
+				<Image
+					style={{ margin: "0px auto " }}
+					src="https://i04piccdn.sogoucdn.com/dd66b9cd5b6c7b86"
+				/>
+			</div>
 
 			<Menu
 				defaultOpenKeys={defaultMenuItem[0]}
 				selectedKeys={defaultMenuItem[1]}
 				mode="inline"
 				items={menuItems}
-				theme="dark"
+				theme={theme}
 				onClick={(d) => {
 					navigate(d.key);
 				}}

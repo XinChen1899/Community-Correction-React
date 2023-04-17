@@ -1,13 +1,13 @@
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
 import { Form } from "antd";
-import ModifyForm from "../../Form/ModifyForm";
+import AddForm from "../../Form/AddForm";
 import dayjs from "dayjs";
 import { ScoreModify } from "@/entity/Assessment/ScoreModify";
 import { saveScoreModify } from "@/api/assessment/score";
 import { useRequest } from "ahooks";
 
-export default function ModifyModal(props: {
+export default function AddModal(props: {
 	open: boolean;
 	setOpen: any;
 	gMsg: GMessage;
@@ -24,36 +24,36 @@ export default function ModifyModal(props: {
 		form.submit();
 	};
 
-	const { loading, run } = useRequest(
-		(detail: any) => saveScoreModify(detail),
-		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("计分成功!");
-			},
-			onError: (err) => {
-				gMsg.onError(err);
-			},
-			onFinally: () => {
-				setOpen(false);
-			},
-			manual: true,
-			debounceWait: 300,
-		}
-	);
+	// const { loading, run } = useRequest(
+	// 	(detail: any) => saveScoreModify(detail),
+	// 	{
+	// 		onSuccess: () => {
+	// 			setTableUpdate(!tableUpdate);
+	// 			gMsg.onSuccess("计分成功!");
+	// 		},
+	// 		onError: (err) => {
+	// 			gMsg.onError(err);
+	// 		},
+	// 		onFinally: () => {
+	// 			setOpen(false);
+	// 		},
+	// 		manual: true,
+	// 		debounceWait: 300,
+	// 	}
+	// );
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const detail = values as ScoreModify;
-		if (values.select == "02") detail.score = -detail.score;
-		run(detail);
+		// if (values.select == "02") detail.score = -detail.score;
+		// run(detail);
 	};
 
 	return (
 		<>
 			<TemplateModal
 				InfoDescriptions={
-					<ModifyForm
+					<AddForm
 						form={form}
 						onFinish={onFinish}
 						initialValues={{ date: dayjs(), ...info }}
@@ -62,7 +62,7 @@ export default function ModifyModal(props: {
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={loading}
+				confirmLoading={false}
 			/>
 		</>
 	);

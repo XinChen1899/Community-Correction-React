@@ -1,17 +1,5 @@
 import "react";
-import TemplateForm from "@/template/Form";
-import {
-	Button,
-	DatePicker,
-	Form,
-	Input,
-	InputNumber,
-	Select,
-	Space,
-	Upload,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import TextArea from "antd/es/input/TextArea";
+import { DatePicker, Form, Input, InputNumber, Select } from "antd";
 
 export default function ModifyForm(props: {
 	form: any;

@@ -1,47 +1,50 @@
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { List, Space } from "antd";
-import { useEffect, useState } from "react";
+import { List, Space, Tag } from "antd";
+import { useState } from "react";
 import { GMessage } from "@/utils/msg/GMsg";
 import { ScoreDetail } from "@/entity/Assessment/ScoreDetail";
 import { DataType } from "../..";
 import { getScoreDetail } from "@/api/assessment/score";
+import { useRequest } from "ahooks";
+import { getDate } from "@/utils/ie";
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
 	info: DataType;
 	gMsg: GMessage;
+	tableUpdate: boolean;
 }) {
-	const { open, setOpen, info, gMsg } = props;
+	const { open, setOpen, info, gMsg, tableUpdate } = props;
 	const [scoreDetail, setScoreDetail] = useState<ScoreDetail>(
 		{} as ScoreDetail
 	);
 
-	useEffect(() => {
-		// todo 获取 dxbh的详细计分情况
-		if (info && info.dxbh) {
-			getScoreDetail(
-				info.dxbh,
-				(detail: any[]) => {
-					const lists = detail.map((item) => {
-						return {
-							reason: item.reason,
-							score: item.score,
-							date: item.date,
-						};
-					});
-					setScoreDetail({
-						dxbh: detail[0].dxbh,
-						detail: lists,
-					});
-				},
-				(msg: string) => {
-					gMsg.onError(msg);
-				}
-			);
-		}
-		console.log(scoreDetail);
-	}, [info]);
+	useRequest(() => getScoreDetail(info.dxbh), {
+		onSuccess: ({ data }) => {
+			const detail = data.data;
+			const lists = detail.map((item: any) => {
+				return {
+					reason: item.reason,
+					score: item.score,
+					date: item.date,
+				};
+			});
+			setScoreDetail({
+				dxbh: detail[0].dxbh,
+				detail: lists,
+			});
+		},
+		onError: (err) => {
+			gMsg.onError(err);
+		},
+		onFinally: () => {
+			setOpen(false);
+		},
+		debounceWait: 300,
+		refreshDeps: [info.dxbh, tableUpdate],
+		ready: info && info.dxbh != "",
+	});
 
 	const getInfos = (info: ScoreDetail) => {
 		return [
@@ -56,8 +59,11 @@ export default function InfoModal(props: {
 							return (
 								<List.Item>
 									<Space>
-										{item.score}分-{item.reason}-
-										{item.date}
+										<Tag>{item.score}分</Tag>-
+										<Tag>{item.reason}</Tag>-
+										<Tag>
+											{getDate(item.date)}
+										</Tag>
 									</Space>
 								</List.Item>
 							);

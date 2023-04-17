@@ -150,6 +150,11 @@ export const sjzxlxMap = [
 	{ code: "03", value: "对暂予监外执行社区矫正对象决定收监执行" },
 ];
 
+export const jllbMap = [
+	{ code: "01", value: "表扬" },
+	{ code: "02", value: "减刑" },
+];
+
 export const generateSelect = (
 	selectList: any,
 	config?: { width?: number; disabled?: boolean }

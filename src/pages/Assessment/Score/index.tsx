@@ -1,25 +1,14 @@
 import { Score } from "@/entity/Assessment/Score";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import { GMessage, useMessage } from "@/utils/msg/GMsg";
-import {
-	DownOutlined,
-	EditOutlined,
-	PlusOutlined,
-	SearchOutlined,
-} from "@ant-design/icons";
-import {
-	Button,
-	Dropdown,
-	MenuProps,
-	Space,
-	Tag,
-	message,
-} from "antd";
+import { useMessage } from "@/utils/msg/GMsg";
+import { DownOutlined } from "@ant-design/icons";
+import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import InfoModal from "./Modal/InfoModal";
 import ModifyModal from "./Modal/Modify";
 import { getAllScores } from "@/api/assessment/score";
+import { useRequest } from "ahooks";
 
 export type DataType = Score;
 
@@ -108,16 +97,15 @@ export default function AssessmentScore() {
 		}
 	});
 
-	useEffect(() => {
-		getAllScores(
-			(scores: DataType[]) => {
-				setTableData(scores);
-			},
-			(msg: string) => {
-				gMsg.onError("获取分数失败！" + msg);
-			}
-		);
-	}, [tableUpdate]);
+	useRequest(getAllScores, {
+		onSuccess: ({ data }) => {
+			setTableData(data.data);
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<>
@@ -134,6 +122,7 @@ export default function AssessmentScore() {
 				setOpen={setOpenInfo}
 				info={record}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
 			/>
 			{contextHolder}
 			<TemplateOperatorAndTable

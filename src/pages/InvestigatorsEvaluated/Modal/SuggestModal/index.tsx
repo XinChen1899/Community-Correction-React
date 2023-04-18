@@ -39,7 +39,6 @@ export default function SuggestModal(props: {
 		props;
 
 	const [form] = Form.useForm();
-	// const [loading, setLoading] = useState(false);
 
 	const [suggest, setSuggest] = useState<SuggestInfo>(
 		{} as SuggestInfo
@@ -88,7 +87,8 @@ export default function SuggestModal(props: {
 				InfoDescriptions={
 					<SuggestForm
 						form={form}
-						onFinish={() => {
+						onFinish={(v: any) => {
+							suggest.dcyjshr = v.dcyjshr;
 							run(suggest);
 						}}
 						initialValues={suggest}

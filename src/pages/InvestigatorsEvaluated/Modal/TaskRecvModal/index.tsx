@@ -6,6 +6,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { GMessage } from "@/utils/msg/GMsg";
 import TaskInfoModal from "../TaskInfoModal";
+import {
+	implBack,
+	implRecv,
+	implSend2JZJG,
+	implWTF,
+} from "@/api/ie/impl";
 
 interface DataType {
 	id: number;
@@ -51,7 +57,6 @@ export default function TaskRecvModal(props: {
 	open: boolean;
 	setOpen: any;
 	tableUpdate: boolean;
-	taskUpdate: boolean;
 	setTableUpdate: any;
 	gMsg: GMessage;
 }) {
@@ -61,7 +66,6 @@ export default function TaskRecvModal(props: {
 		tableUpdate,
 		setTableUpdate,
 		gMsg,
-		taskUpdate,
 	} = props;
 	const [tableData, setTableData] =
 		useState<DataType[]>(defaultTableData);
@@ -80,30 +84,28 @@ export default function TaskRecvModal(props: {
 		const fetchData = async () => {
 			const result = await axios
 				.get(
-					"http://localhost:9006/task/tasks?assignee=decision"
+					"http://localhost:9006/ie/task/tasks?assignee=jzjg"
 				)
 				.then(({ data }) => data.data);
-			console.log(result);
 			setTableData(result);
 		};
+
 		fetchData();
 	}, [recvUpdate]);
 
-	const back = async () => {
-		await axios.post(
-			`http://localhost:9006/task/apply?tid=1&wtbh=${record.wtbh}&processId=${record.processId}&checkResult=驳回`
-		);
-		setRecvUpdate(!recvUpdate);
-		gMsg.onSuccess("已退回调查评估!");
+	const back = () => {
+		implBack(record.processId, () => {
+			setRecvUpdate(!recvUpdate);
+			gMsg.onSuccess("已退回调查评估!");
+		});
 	};
 
-	const agree = async () => {
-		await axios.post(
-			`http://localhost:9006/task/apply?tid=1&wtbh=${record.wtbh}&processId=${record.processId}&checkResult=同意`
-		);
-		setTableUpdate(!tableUpdate);
-		setRecvUpdate(!recvUpdate);
-		gMsg.onSuccess("已接收!");
+	const agree = () => {
+		implRecv(record.processId, () => {
+			setTableUpdate(!tableUpdate);
+			setRecvUpdate(!recvUpdate);
+			gMsg.onSuccess("已接收!");
+		});
 	};
 
 	// 绑定操作栏的操作
@@ -160,7 +162,6 @@ export default function TaskRecvModal(props: {
 				open={addModalOpen}
 				setOpen={setAddModalOpen}
 				info={record}
-				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 				recv={true}
 			/>
@@ -172,6 +173,28 @@ export default function TaskRecvModal(props: {
 						<Button
 							type="link"
 							onClick={() => {
+								implWTF();
+								gMsg.onSuccess(
+									"开启一个调查评估流程!"
+								);
+							}}>
+							模拟委托方开启调查评估流程
+						</Button>
+						<Button
+							type="link"
+							onClick={() => {
+								implSend2JZJG(() => {
+									setRecvUpdate(!recvUpdate);
+									gMsg.onSuccess(
+										"提交委托函，流程进入矫正机构!"
+									);
+								});
+							}}>
+							模拟委托方提交调查评估委托函
+						</Button>
+						<Button
+							type="link"
+							onClick={() => {
 								setRecvUpdate(!recvUpdate);
 								gMsg.onSuccess("刷新成功!");
 							}}>
@@ -180,12 +203,12 @@ export default function TaskRecvModal(props: {
 						<Table
 							columns={columns}
 							dataSource={tableData}
-							rowKey={(record) => record.id}
+							rowKey={(record) => record.processId}
 							onRow={(record) => {
 								return {
 									onClick: () => {
 										setRecord(record);
-									}, // 点击行
+									},
 								};
 							}}
 						/>

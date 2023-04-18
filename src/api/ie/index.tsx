@@ -3,7 +3,7 @@ import axios from "axios";
 import { ServerTable, useAPI } from "..";
 import { SuggestInfo } from "@/entity/IE/SuggestInfo";
 
-const api = axios.create({
+export const api = axios.create({
 	baseURL: `${ServerTable.ie}/ie`,
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
@@ -31,17 +31,16 @@ export const getAllIEInfos = () => {
 	return api.get("/all");
 };
 
-export const getCount = (
+export const finishIE = (
+	data: IEInfo,
 	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
+	onError?: any
 ) => {
 	useAPI(
 		api,
-		{ url: "/count", method: "get" },
+		{ url: "/finish", method: "post", data },
 		onSuccess,
-		onError,
-		setConfirmLoading
+		onError
 	);
 };
 

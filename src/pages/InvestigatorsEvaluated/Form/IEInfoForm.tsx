@@ -18,10 +18,12 @@ export function IEInfoForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
+	disabled: boolean;
 }) {
-	const { form, onFinish, initialValues } = props;
+	const { form, onFinish, initialValues, disabled } = props;
 	return (
 		<Form
+			disabled={disabled}
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
@@ -29,7 +31,7 @@ export function IEInfoForm(props: {
 				<Input disabled />
 			</Form.Item>
 			<Form.Item name={"wtdw"} label="委托单位">
-				{generateSelect(wtdwMap)}
+				{generateSelect(wtdwMap, { disabled })}
 			</Form.Item>
 			<Form.Item name={"wtdch"} label="委托调查函">
 				<TextArea placeholder={"请输入委托调查函"} />
@@ -37,13 +39,13 @@ export function IEInfoForm(props: {
 			<Form.Item
 				name={"bdcpgrdlx"}
 				label="被调查评估对象的类型">
-				{generateSelect(bdcpgrdlxMap)}
+				{generateSelect(bdcpgrdlxMap, { disabled })}
 			</Form.Item>
 			<Form.Item name={"bgrxm"} label="被调查评估对象姓名">
 				<Input placeholder={"请输入姓名"} />
 			</Form.Item>
 			<Form.Item name={"bgrxb"} label="被调查评估对象性别">
-				{generateSelect(xbMap)}
+				{generateSelect(xbMap, { disabled })}
 			</Form.Item>
 			<Form.Item
 				name={"bgrsfzh"}
@@ -66,7 +68,7 @@ export function IEInfoForm(props: {
 				<Input placeholder={"请输入工作单位"} />
 			</Form.Item>
 			<Form.Item name={"zm"} label="罪名">
-				{generateSelect(zmMap)}
+				{generateSelect(zmMap, { disabled })}
 			</Form.Item>
 			<Form.Item name={"ypxq"} label="原判刑期">
 				<Input placeholder={"请输入原判刑期"} />
@@ -78,19 +80,19 @@ export function IEInfoForm(props: {
 				<DatePicker />
 			</Form.Item>
 			<Form.Item name={"ypxf"} label="原判刑罚">
-				{generateSelect(ypxfMap)}
+				{generateSelect(ypxfMap, { disabled })}
 			</Form.Item>
 			<Form.Item name={"fjx"} label="附加刑">
-				{generateSelect(fjxMap)}
+				{generateSelect(fjxMap, { disabled })}
 			</Form.Item>
 			<Form.Item name={"pjjg"} label="判决机关">
-				{generateSelect(pjjgMap)}
+				{generateSelect(pjjgMap, { disabled })}
 			</Form.Item>
 			<Form.Item name={"pjrq"} label="判决日期">
 				<DatePicker />
 			</Form.Item>
 			<Form.Item name={"nsyjzlb"} label="拟适用矫正类别">
-				{generateSelect(nsyjzlbMap)}
+				{generateSelect(nsyjzlbMap, { disabled })}
 			</Form.Item>
 			<Form.Item
 				name={"dcdwxqj"}

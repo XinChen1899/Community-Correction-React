@@ -65,6 +65,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 						form={form}
 						onFinish={onFinish}
 						initialValues={info}
+						disabled={info.finish == 0}
 					/>
 				}
 				open={open}

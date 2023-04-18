@@ -38,14 +38,14 @@ const apiPost = async (
 		.post(url, data)
 		.then(({ data }) => {
 			console.log(`post url: ${url}: response `, data);
-			if (data.status == "200") {
-				onSuccess(data.data);
+			if (data.status == "200" || data != false || data) {
+				if (onSuccess) onSuccess(data.data);
 			} else {
-				onError(data.message);
+				if (onError) onError(data.message);
 			}
 		})
 		.catch((reason) => {
-			onError(reason.message);
+			if (onError) onError(reason.message);
 		})
 		.finally(() => {
 			if (setConfimLoading) setConfimLoading(false);

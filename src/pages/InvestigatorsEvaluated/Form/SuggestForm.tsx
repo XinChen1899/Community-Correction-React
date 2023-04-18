@@ -40,7 +40,7 @@ export function SuggestForm(props: {
 					{
 						name: "dcyjshr",
 						label: "调查评估意见审核人",
-						component: <Input />,
+						component: <Input disabled={disabled} />,
 					},
 					{
 						label: "调查评估意见书",

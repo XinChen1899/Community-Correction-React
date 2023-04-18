@@ -13,7 +13,11 @@ import {
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 import { useMessage } from "@/utils/msg/GMsg";
-import { getAllIEInfos, updateIEInfoTimeData } from "@/api/ie";
+import {
+	finishIE,
+	getAllIEInfos,
+	updateIEInfoTimeData,
+} from "@/api/ie";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import TaskInfoModal from "./Modal/TaskInfoModal";
 import TaskModifyModal from "./Modal/TaskModifyModal";
@@ -32,7 +36,6 @@ import { useRequest } from "ahooks";
  * 3.查看流程节点记录。
  */
 
-// 调查评估表 元组的数据类型
 export type DataType = IEInfo;
 const columns: ColumnsType<DataType> = [
 	{
@@ -100,8 +103,6 @@ export default function IE() {
 
 	const [gMsg, contextHolder] = useMessage();
 
-	const [taskUpdate, setTaskUpdate] = useState(false);
-
 	useRequest(getAllIEInfos, {
 		onSuccess: ({ data }) => {
 			setTableData(data.data);
@@ -158,36 +159,16 @@ export default function IE() {
 					block
 					type={"text"}
 					onClick={() => {
-						gMsg.onSuccess("给委托方发送调查评估意见书");
-						gMsg.onSuccess("给检察方抄送调查评估意见书");
-						const info: IEInfo = {
-							wtbh: selectRecord.wtbh,
-							finish: 0,
-							wtdw: "",
-							wtdch: "",
-							bdcpgrdlx: "",
-							bgrxm: "",
-							bgrsfzh: "",
-							bgrxb: "",
-							bgrcsrq: "",
-							bgrjzddz: "",
-							bgrgzdw: "",
-							zm: "",
-							ypxq: "",
-							ypxqksrq: "",
-							ypxqjsrq: "",
-							ypxf: "",
-							fjx: "",
-							pjjg: "",
-							pjrq: "",
-							nsyjzlb: "",
-							dcdwxqj: "",
-						};
-						updateIEInfoTimeData(
-							info,
+						finishIE(
+							selectRecord,
 							() => {
 								setTableUpdate(!tableUpdate);
-								setTaskUpdate(!taskUpdate);
+								gMsg.onSuccess(
+									"给委托方发送调查评估意见书"
+								);
+								gMsg.onSuccess(
+									"给检察方抄送调查评估意见书"
+								);
 							},
 							() => {
 								gMsg.onError("完成失败!");
@@ -250,7 +231,6 @@ export default function IE() {
 				open={openRecv}
 				setOpen={setOpenRecv}
 				tableUpdate={tableUpdate}
-				taskUpdate={taskUpdate}
 				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
 			/>
@@ -268,7 +248,6 @@ export default function IE() {
 				open={openInfo}
 				setOpen={setOpenInfo}
 				info={selectRecord}
-				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 			/>
 			<TaskModifyModal

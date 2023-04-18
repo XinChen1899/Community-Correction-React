@@ -17,7 +17,7 @@ import {
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TemplateHome from "@/template/OperatorAndTable";
 import RegisterModal from "./Modal/RegisterModal";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -51,7 +51,7 @@ const columns: ColumnsType<DataType> = [
 		align: "center",
 		render: (value) => {
 			let loading;
-			if (value == "否")
+			if (value == "0")
 				loading = (
 					<Spin indicator={<CheckCircleOutlined />} />
 				);

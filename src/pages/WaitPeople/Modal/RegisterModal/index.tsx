@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { Form } from "antd";
-
 import { GMessage } from "@/utils/msg/GMsg";
 import { RegisterForm } from "../../Form/RegisterForm";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import { getDate } from "@/utils/ie";
 import { registerCrp } from "@/api/ic";
 import TemplateModal from "@/template/Modal";
+import { useRequest } from "ahooks";
 
 const RegisterModal = (props: {
 	open: boolean;
@@ -18,30 +17,36 @@ const RegisterModal = (props: {
 	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
 		props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
 		form.submit();
 	};
 
+	const { loading, run } = useRequest(
+		(detail: CorrectionPeople) => registerCrp(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("登记成功！");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const crp = values as CorrectionPeople;
 		crp.csrq = getDate(crp.csrq);
 
-		registerCrp(
-			crp,
-			() => {
-				setTableUpdate(!tableUpdate);
-				setOpen(false);
-				gMsg.onSuccess("登记成功！");
-			},
-			(msg: string) => {
-				gMsg.onError("登记失败！" + msg);
-			},
-			setConfirmLoading
-		);
+		run(crp);
 	};
 
 	return (
@@ -52,12 +57,13 @@ const RegisterModal = (props: {
 						form={form}
 						onFinish={onFinish}
 						initialValues={{}}
+						gMsg={gMsg}
 					/>
 				}
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

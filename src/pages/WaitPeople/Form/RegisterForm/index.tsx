@@ -21,6 +21,8 @@ import Upload, {
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { CrTeam } from "@/entity/IC/CrTeam";
 import { getAllCrt } from "@/api/ic/crteam";
+import { useRequest } from "ahooks";
+import { GMessage } from "@/utils/msg/GMsg";
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
 	const reader = new FileReader();
@@ -47,8 +49,9 @@ export function RegisterForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
+	gMsg: GMessage;
 }) {
-	const { form, onFinish, initialValues } = props;
+	const { form, onFinish, initialValues, gMsg } = props;
 	const [loading, setLoading] = useState(false);
 	const [imageUrl, setImageUrl] = useState<string>();
 	const [team, setTeam] = useState<any[]>();
@@ -74,24 +77,24 @@ export function RegisterForm(props: {
 			<div style={{ marginTop: 8 }}>Upload</div>
 		</div>
 	);
-
-	useEffect(() => {
-		getAllCrt(
-			(teamList: any[]) => {
-				if (teamList != undefined) {
-					const temp = teamList.map((team: CrTeam) => {
-						return {
-							code: team.id,
-							value: team.teamName,
-						};
-					});
-
-					setTeam(temp);
-				}
-			},
-			() => {}
-		);
-	}, [form]);
+	useRequest(getAllCrt, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				const teamList = data.data;
+				const temp = teamList.map((team: CrTeam) => {
+					return {
+						code: team.id,
+						value: team.teamName,
+					};
+				});
+				setTeam(temp);
+			}
+		},
+		onError: (error: any) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [form],
+	});
 
 	return (
 		<Form

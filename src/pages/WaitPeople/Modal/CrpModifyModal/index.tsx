@@ -7,8 +7,8 @@ import { CorrectionPeople } from "@/entity/IC/Crp";
 import { updateCrp } from "@/api/ic";
 import dayjs from "dayjs";
 import { getDate } from "@/utils/ie";
-import { mzMap } from "@/utils";
 import TemplateModal from "@/template/Modal";
+import { useRequest } from "ahooks";
 
 export default function CrpModifyModal(props: {
 	open: boolean;
@@ -27,31 +27,36 @@ export default function CrpModifyModal(props: {
 		setTableUpdate,
 	} = props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	useEffect(() => {
 		selectRecord.csrq = dayjs(selectRecord.csrq);
-		selectRecord.xgrq = dayjs(selectRecord.xgrq);
 		form.resetFields();
 		form.setFieldsValue(selectRecord);
 	});
 
-	const onFinish = async (values: any) => {
+	const { loading, run } = useRequest(
+		(detail: CorrectionPeople) => updateCrp(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("修改成功！");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
+	const onFinish = (values: any) => {
 		const crp = values as CorrectionPeople;
 		crp.csrq = getDate(crp.csrq);
-		updateCrp(
-			crp,
-			() => {
-				gMsg.onSuccess("修改成功！");
-				setTableUpdate(!tableUpdate);
-			},
-			(msg: string) => {
-				gMsg.onError("修改失败！" + msg);
-			},
-			setConfirmLoading
-		);
-		setOpen(false);
+		run(crp);
 	};
 
 	const handleOk = () => {
@@ -66,12 +71,13 @@ export default function CrpModifyModal(props: {
 						form={form}
 						onFinish={onFinish}
 						initialValues={selectRecord}
+						gMsg={gMsg}
 					/>
 				}
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

@@ -1,5 +1,5 @@
 import { Card, Form } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
 import { CorrectionPeople } from "@/entity/IC/Crp";
@@ -8,6 +8,7 @@ import TemplateModal from "@/template/Modal";
 import { getDate } from "@/utils/ie";
 import { recvCrp } from "@/api/ic";
 import dayjs from "dayjs";
+import { useRequest } from "ahooks";
 
 export default function CrpRecModal(props: {
 	open: boolean;
@@ -26,35 +27,35 @@ export default function CrpRecModal(props: {
 		setTableUpdate,
 	} = props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
-
 	const [form] = Form.useForm();
 
 	useEffect(() => {
 		selectRecord.csrq = dayjs(selectRecord.csrq);
-		selectRecord.xgrq = dayjs(selectRecord.xgrq);
 		form.resetFields();
 		form.setFieldsValue(selectRecord);
 	});
-
+	const { loading, run } = useRequest(
+		(detail: CorrectionPeople) => recvCrp(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("接收入矫成功");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
 	const onFinish = (values: any) => {
 		const info = values as CorrectionPeople;
 		info.csrq = getDate(info.csrq);
-		info.xgrq = getDate(info.xgrq);
 		console.log(info);
-
-		recvCrp(
-			info,
-			() => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("接收入矫成功!");
-			},
-			(msg: string) => {
-				gMsg.onError("接收失败! " + msg);
-			},
-			setConfirmLoading
-		);
-		setOpen(false);
+		run(info);
 	};
 
 	const handleOk = () => {
@@ -78,7 +79,7 @@ export default function CrpRecModal(props: {
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

@@ -1,9 +1,10 @@
 import "react";
 import { DatePicker, Form, Input } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { generateSelect, jzlbMap, xbMap } from "@/utils";
 import { getAllCrt } from "@/api/ic/crteam";
 import { CrTeam } from "@/entity/IC/CrTeam";
+import { useRequest } from "ahooks";
 
 export function ReceiveForm(props: {
 	form: any;
@@ -12,24 +13,24 @@ export function ReceiveForm(props: {
 }) {
 	const { form, onFinish, initialValues } = props;
 
-	const [team, setTeam] = useState<any[]>();
-	useEffect(() => {
-		getAllCrt(
-			(teamList: any[]) => {
-				if (teamList != undefined) {
-					const temp = teamList.map((team: CrTeam) => {
-						return {
-							code: team.id,
-							value: team.teamName,
-						};
-					});
+	const [team, setTeam] = useState<CrTeam[]>();
 
-					setTeam(temp);
-				}
-			},
-			() => {}
-		);
-	}, [form]);
+	useRequest(getAllCrt, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				const teamList = data.data;
+				const temp = teamList.map((team: CrTeam) => {
+					return {
+						code: team.id,
+						value: team.teamName,
+					};
+				});
+
+				setTeam(temp);
+			}
+		},
+		refreshDeps: [form],
+	});
 
 	return (
 		<Form
@@ -65,10 +66,7 @@ export function ReceiveForm(props: {
 			<Form.Item name={"grlxdh"} label="个人联系电话">
 				<Input placeholder="请输入个人联系电话" disabled />
 			</Form.Item>
-			<Form.Item name={"xgrq"} label="宣告日期">
-				<DatePicker />
-			</Form.Item>
-			<Form.Item name={"jzxz"} label="矫正小组">
+			<Form.Item name={"jzxz"}>
 				<Form.Item name={"team"} label="确定矫正小组">
 					{generateSelect(team, { disabled: true })}
 				</Form.Item>

@@ -26,6 +26,7 @@ import CrpModifyModal from "./Modal/CrpModifyModal";
 import CrpRecModal from "./Modal/CrpRecModal";
 import { getAllCrp } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
+import { useRequest } from "ahooks";
 
 export type DataType = CorrectionPeople;
 
@@ -33,12 +34,14 @@ const columns: ColumnsType<DataType> = [
 	{
 		title: "对象编号",
 		dataIndex: "sqjzdxbh",
+		align: "center",
 		key: "sqjzdxbh",
 		width: 150,
 	},
 	{
 		title: "姓名",
 		dataIndex: "xm",
+		align: "center",
 		key: "xm",
 	},
 	{
@@ -59,6 +62,7 @@ const columns: ColumnsType<DataType> = [
 	},
 	{
 		title: "矫正状态",
+		align: "center",
 		dataIndex: "status",
 		key: "status",
 		render: (value) => {
@@ -77,6 +81,7 @@ const columns: ColumnsType<DataType> = [
 	{
 		title: "矫正小组",
 		dataIndex: "team",
+		align: "center",
 		key: "team",
 		render: (value) => {
 			return <Tag>小组: {value}</Tag>;
@@ -88,6 +93,7 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
+//! 待入矫人员
 export default function WaitPeople() {
 	const [gMsg, contextHolder] = useMessage();
 
@@ -105,14 +111,18 @@ export default function WaitPeople() {
 
 	const [tableUpdate, setTableUpdate] = useState(false);
 
-	useEffect(() => {
-		getAllCrp(
-			(crpList: CorrectionPeople[]) => {
-				setTableData(crpList);
-			},
-			() => gMsg.onError("请求不到矫正人员的信息！")
-		);
-	}, [tableUpdate]);
+	useRequest(getAllCrp, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setTableData(data.data);
+			}
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
+
 	const items: MenuProps["items"] = [
 		{
 			label: (

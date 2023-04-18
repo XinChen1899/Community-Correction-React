@@ -2,46 +2,14 @@ import useAPI from "@/api";
 import { api } from "..";
 import { CrTeam } from "@/entity/IC/CrTeam";
 
-export const saveCrt = (
-	crp: CrTeam,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/crt/save", method: "post", data: crp },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const saveCrt = (crt: CrTeam) => {
+	return api.post("/crt/save", crt);
 };
 
-export const getAllCrt = (
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/crt/all", method: "get" },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const getAllCrt = () => {
+	return api.get("/crt/all");
 };
 
-export const updateCrt = (
-	crp: CrTeam,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/crt/update", method: "post", data: crp },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const updateCrt = (crt: CrTeam) => {
+	return api.post("/crt/update", crt);
 };

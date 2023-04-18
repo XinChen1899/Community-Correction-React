@@ -6,7 +6,7 @@ import {
 	PlusOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import AddTeamModal from "./Modal/AddTeamModal";
 import TemplateHome from "@/template/OperatorAndTable";
 import TeamInfoModal from "./Modal/TeamInfoModal";
@@ -16,6 +16,7 @@ import { getAllWorkers } from "@/api/ic";
 import { Worker } from "@/entity/IC/Worker";
 import { CrTeam } from "@/entity/IC/CrTeam";
 import { getAllCrt } from "@/api/ic/crteam";
+import { useRequest } from "ahooks";
 
 export type DataType = CrTeam;
 
@@ -32,21 +33,25 @@ const columns: ColumnsType<DataType> = [
 		title: "小组编号",
 		dataIndex: "id",
 		key: "id",
+		align: "center",
 		width: 150,
 	},
 	{
 		title: "小组名",
 		dataIndex: "teamName",
+		align: "center",
 		key: "teamName",
 	},
 	{
 		title: "组长姓名",
 		dataIndex: "monitor",
+		align: "center",
 		key: "monitor",
 	},
 	{
 		title: "小组人数",
 		dataIndex: "teamNumber",
+		align: "center",
 		key: "teamNumber",
 	},
 	{
@@ -55,6 +60,7 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
+//! 矫正小组
 export default function CorrectionTeam() {
 	const [gMsg, contextHolder] = useMessage();
 
@@ -64,10 +70,10 @@ export default function CorrectionTeam() {
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
 
-	const [tableData, setTableData] = useState<DataType[]>();
+	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
 
 	const [worker, setWorker] = useState<Worker[]>();
-
 
 	const [selectRecord, setSelectRecord] =
 		useState<DataType>(defaultDataType);
@@ -135,25 +141,29 @@ export default function CorrectionTeam() {
 		}
 	});
 
-	useEffect(() => {
-		getAllWorkers(
-			(data: any) => {
-				setWorker(data);
-			},
-			() => {}
-		);
-	}, [tableUpdate]);
-
-	useEffect(() => {
-		getAllCrt(
-			(data: any) => {
-				setTableData(data);
-			},
-			(msg: string) => {
-				gMsg.onError("获取矫正小组失败！" + msg);
+	useRequest(getAllWorkers, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setWorker(data.data);
 			}
-		);
-	}, [tableUpdate]);
+		},
+		onError: (error: any) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
+
+	useRequest(getAllCrt, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setTableData(data.data);
+			}
+		},
+		onError: (error: any) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	const workerMap = useMemo(() => {
 		const temp: any = {};
@@ -209,8 +219,45 @@ export default function CorrectionTeam() {
 				statisticList={[
 					{ title: "矫正小组总数", value: 999 },
 				]}
+				searchList={[
+					{
+						placeholder: "请输入小组编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.id.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入小组名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) =>
+									item.teamName.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+				]}
 				tableData={tableData}
-				tableOnRow={(record: any) => setSelectRecord(record)}
+				tableOnRow={(record: DataType) =>
+					setSelectRecord(record)
+				}
 				tableRowKey={(rec: DataType) => rec.id}
 			/>
 		</>

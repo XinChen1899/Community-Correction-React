@@ -67,30 +67,10 @@ export const getCrpById = (
 	);
 };
 
-export const getAllCrp = (
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/crp/all", method: "get" },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const getAllCrp = () => {
+	return api.get("/crp/all");
 };
 
-export const getAllWorkers = (
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/worker/all", method: "get" },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const getAllWorkers = () => {
+	return api.get("/worker/all");
 };

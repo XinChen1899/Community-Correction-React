@@ -7,6 +7,7 @@ import { AddTeamForm } from "../../Form/AddTeamForm";
 import TemplateModal from "@/template/Modal";
 import { Worker } from "@/entity/IC/Worker";
 import { updateCrt } from "@/api/ic/crteam";
+import { useRequest } from "ahooks";
 
 export default function TeamModifyModal(props: {
 	open: boolean;
@@ -27,8 +28,6 @@ export default function TeamModifyModal(props: {
 		setTableUpdate,
 	} = props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
-
 	const [form] = Form.useForm();
 
 	useEffect(() => {
@@ -36,23 +35,30 @@ export default function TeamModifyModal(props: {
 		form.setFieldsValue(info);
 	});
 
-	const onFinish = async (values: any) => {
+	const { loading, run } = useRequest(
+		(detail: CrTeam) => updateCrt(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("修改成功！");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
+	const onFinish = (values: any) => {
 		const cteam = values as CrTeam;
 		cteam.teamNumber = cteam.workers.length;
 		// console.log(values);
 		// console.log(cteam);
-		updateCrt(
-			cteam,
-			() => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("修改成功！");
-			},
-			(msg: string) => {
-				gMsg.onError("修改矫正小组失败!" + msg);
-			},
-			setConfirmLoading
-		);
-		setOpen(false);
+		run(cteam);
 	};
 
 	const handleOk = () => {
@@ -74,7 +80,7 @@ export default function TeamModifyModal(props: {
 				onOk={handleOk}
 				open={open}
 				setOpen={setOpen}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

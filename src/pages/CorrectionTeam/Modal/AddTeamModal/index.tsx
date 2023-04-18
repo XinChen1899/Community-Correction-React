@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Card, Form, Modal } from "antd";
+import { Card, Form } from "antd";
 
 import { GMessage } from "@/utils/msg/GMsg";
 import { AddTeamForm } from "../../Form/AddTeamForm";
 import TemplateModal from "@/template/Modal";
 import { CrTeam } from "@/entity/IC/CrTeam";
 import { saveCrt } from "@/api/ic/crteam";
+import { useRequest } from "ahooks";
 
 const AddTeamModal = (props: {
 	open: boolean;
@@ -24,12 +24,29 @@ const AddTeamModal = (props: {
 		worker,
 	} = props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
 		form.submit();
 	};
+
+	const { loading, run } = useRequest(
+		(detail: CrTeam) => saveCrt(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("新增小组！");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
@@ -37,18 +54,7 @@ const AddTeamModal = (props: {
 		cteam.teamNumber = cteam.workers.length + 1;
 		cteam.workers.push(cteam.monitor);
 
-		saveCrt(
-			cteam,
-			() => {
-				setOpen(false);
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("新增小组！");
-			},
-			(msg: string) => {
-				gMsg.onError("新增矫正小组!" + msg);
-			},
-			setConfirmLoading
-		);
+		run(cteam);
 	};
 
 	return (
@@ -67,7 +73,7 @@ const AddTeamModal = (props: {
 				onOk={handleOk}
 				open={open}
 				setOpen={setOpen}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

@@ -1,9 +1,8 @@
-import { getExitInfoByDXBH } from "@/api/noexit";
 import { GMessage } from "@/utils/msg/GMsg";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { useState } from "react";
+import { DataType } from "../..";
 
 /**
  * 查询所有社矫对象（可选择类别：在
@@ -12,12 +11,11 @@ import { useState } from "react";
 归还/收缴/吊销/作废、是否有出境
 风险、是否已办边控手续（初态为：
 未边控）。
- * @returns 
  */
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
-	info: any;
+	info: DataType;
 	gMsg: GMessage;
 }) {
 	const { open, setOpen, info, gMsg } = props;
@@ -43,13 +41,11 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"出入境情况表"}
-					info={getInfos(info)}
+					info={info ? getInfos(info) : []}
 				/>
 			}
 			open={open}
 			setOpen={setOpen}
-			getAPI={() => {}}
-			recordId={undefined}
 		/>
 	);
 }

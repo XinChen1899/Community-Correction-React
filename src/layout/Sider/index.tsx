@@ -2,6 +2,7 @@ import { routeTable } from "@/router/routerTable";
 import { Image, Menu, MenuProps } from "antd";
 import Sider, { SiderTheme } from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
+import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -69,7 +70,7 @@ export default function AppSider() {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
-	const theme = "light";
+	const theme = dayjs().hour() < 18 ? "light" : "dark";
 
 	const defaultMenuItem = findDefaultMenuItem(pathname);
 	return (

@@ -37,7 +37,7 @@ export function ReceiveForm(props: {
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
-			<Form.Item name={"sqjzdxbh"} label={"社区矫正对象编号"}>
+			<Form.Item name={"dxbh"} label={"社区矫正对象编号"}>
 				<Input
 					placeholder={"请输入社区矫正对象编号"}
 					disabled

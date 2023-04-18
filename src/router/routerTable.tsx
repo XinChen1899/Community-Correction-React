@@ -15,20 +15,26 @@ import { LazyExoticComponent, lazy } from "react";
 // id -> 中文名
 export const routeNameMap = {
 	home: "首页",
-	ie: "调查评估",
-	ic: "接收入矫",
 
+	ie: "调查评估",
+
+	ic: "接收入矫",
 	wait: "待入矫人员",
-	crplan: "矫正方案",
 	crteam: "矫正小组",
+	announcement: "入矫宣告",
 	nocheckin: "逾期报到/未报到",
 
 	noExit: "不准出境",
+
 	security: "权限",
 	worker: "工作人员",
+
 	noexit: "不准出境",
 	category: "分类管理",
+
 	individual: "个别化矫正",
+	crplan: "矫正方案",
+	planrepo: "方案库",
 
 	daily: "日常管理",
 	check: "定期报到",
@@ -48,9 +54,6 @@ export const routeNameMap = {
 	uncorrected: "解除矫正",
 	uchandle: "解除矫正办理",
 	ucannounce: "解除矫正宣告",
-
-	planrepo: "方案库",
-	announcement: "入矫宣告",
 };
 
 interface IPageItem {

@@ -1,12 +1,16 @@
 import TemplateModal from "@/template/Modal";
 import { BBForm } from "../../Form/BBForm";
-import { Button, Card, Form, Steps } from "antd";
+import { Button, Form, Progress, Spin, message } from "antd";
 import { BBInfo } from "@/entity/NoExit/BBInfo";
-import { getBBForm, updateBBForm } from "@/api/noexit";
+import { getBBForm, implAccept, updateBBForm } from "@/api/noexit";
 import { useState } from "react";
 import { GMessage } from "@/utils/msg/GMsg";
-import dayjs from "dayjs";
 import { getDate } from "@/utils/ie";
+import TemplateDescriptions from "@/template/Descriptions";
+import TemplateSteps from "@/template/Steps";
+import { useRequest } from "ahooks";
+import { getCrpByDxbh } from "@/api/ic";
+import dayjs from "dayjs";
 
 // todo 报备流程审批
 
@@ -15,126 +19,154 @@ export default function BBModal(props: {
 	setOpen: any;
 	dxbh: string;
 	gMsg: GMessage;
-	infoUpdate: boolean;
-	setInfoUpdate: any;
+	tableUpdate: boolean;
+	setTableUpdate: any;
 }) {
-	const { open, setOpen, dxbh, gMsg, infoUpdate, setInfoUpdate } =
+	const { open, setOpen, dxbh, gMsg, tableUpdate, setTableUpdate } =
 		props;
 	const [form] = Form.useForm();
-	const [bbForm, setBBForm] = useState<BBInfo>();
+	const [bbInfo, setBBInfo] = useState<BBInfo>();
 
-	const [isSubmit, setSubmit] = useState(false);
+	useRequest(() => getBBForm(dxbh), {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				const { data: bbForm } = data;
+				bbForm.bbrq = dayjs(bbForm.bbrq);
+				bbForm.bbksrq = dayjs(bbForm.bbksrq);
+				bbForm.bbjsrq = dayjs(bbForm.bbjsrq);
+				setBBInfo(bbForm);
+			}
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [dxbh, tableUpdate],
+		ready: dxbh != "",
+	});
 
-	const handleOk = () => {
-		form.submit();
-		setOpen(false);
-	};
+	const { run: runSubmitForm } = useRequest(
+		(detail: BBInfo) => updateBBForm(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("提交成功!");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
+	const { run: runImplAccept } = useRequest(
+		(detail: BBInfo) => implAccept(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("审核通过!");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
 
 	const onFinish = (values: any) => {
 		const bbInfo = values as BBInfo;
-		bbInfo.bbrq = getDate(bbInfo.bbrq);
-		bbInfo.bbjsrq = getDate(bbInfo.bbjsrq);
-		bbInfo.bbksrq = getDate(bbInfo.bbksrq);
-		if (isSubmit) bbInfo.step += 1;
-		updateBBForm(
-			bbInfo,
-			() => {
-				setInfoUpdate(!infoUpdate);
-				gMsg.onSuccess("更新成功!");
-			},
-			(msg: string) => {
-				gMsg.onError("更新失败！" + msg);
-			}
-		);
-		setOpen(false);
+		console.log(bbInfo);
+		runSubmitForm(bbInfo);
 	};
 
-	const bbInfo: BBInfo = {
-		dxbh: "00000000",
-		xm: "",
-		xb: "",
-		sfzh: "",
-		crjzjzl: "",
-		crjzjhm: "",
-		bbsldw: "",
-		bbdw: "",
-		bbrq: "",
-		bbksrq: "",
-		bbjsrq: "",
-		step: 3,
+	const getSteps = (info: BBInfo) => {
+		if (info == undefined) return [];
+
+		return [
+			{
+				title: "填写相应的信息表",
+				content: (
+					<TemplateDescriptions
+						title={"出入境信息表"}
+						info={[
+							{
+								value: (
+									<BBForm
+										disabled={
+											info
+												? info.step > 0
+												: false
+										}
+										form={form}
+										onFinish={onFinish}
+										initialValues={info}
+									/>
+								),
+							},
+						]}
+					/>
+				),
+				nextAction: () => {
+					if (info.step == 0) form.submit();
+				},
+				check: () => true,
+			},
+			{
+				title: "公安审批",
+				content:
+					info.step <= 1 ? (
+						<div className="content">
+							<Button
+								type="primary"
+								onClick={() => {
+									runImplAccept(info);
+								}}>
+								模拟公安审核(同意)
+							</Button>
+							<Spin tip="公安审核中...." size="large" />
+						</div>
+					) : (
+						<div className="content">
+							<Progress
+								type="circle"
+								percent={100}
+								format={() => "审核通过"}
+							/>
+						</div>
+					),
+				nextAction: () => {},
+				check: (current: number) => info.step > 1,
+			},
+			{
+				title: "审批结果",
+				content: (
+					<div className="content">
+						<Progress
+							type="circle"
+							percent={100}
+							format={() => "审批完成"}
+						/>
+					</div>
+				),
+				nextAction: () => {
+					message.info("审批完成！");
+				},
+			},
+		];
 	};
 
 	return (
 		<TemplateModal
 			title="出入境报备信息"
-			infoUpdate={infoUpdate}
 			InfoDescriptions={
-				<BBForm
-					disabled={bbForm ? bbForm.step > 0 : false}
-					form={form}
-					onFinish={onFinish}
-					initialValues={bbForm}
+				<TemplateSteps
+					steps={bbInfo ? getSteps(bbInfo) : []}
+					step={bbInfo ? bbInfo.step : 0}
 				/>
 			}
-			footer={[
-				<Button
-					key="submit"
-					type="primary"
-					onClick={() => {
-						setSubmit(true);
-						handleOk();
-					}}>
-					提交给公安审核
-				</Button>,
-				<Button key="back" onClick={() => setOpen(false)}>
-					返回
-				</Button>,
-				<Button key="save" type="primary" onClick={handleOk}>
-					保存
-				</Button>,
-			]}
-			onOk={handleOk}
 			open={open}
 			setOpen={setOpen}
-			getAPI={(id: string) => {
-				getBBForm(
-					id,
-					(data: BBInfo) => {
-						data.bbrq = dayjs(data.bbrq);
-						data.bbjsrq = dayjs(data.bbjsrq);
-						data.bbksrq = dayjs(data.bbksrq);
-						setBBForm(data);
-					},
-					(err: any) => {
-						setBBForm(bbInfo);
-						gMsg.onError("获取报备信息失败！" + err);
-					}
-				);
-			}}
-			recordId={dxbh}>
-			<Card>
-				<Steps
-					current={
-						bbForm
-							? bbForm.step == 2
-								? 3
-								: bbForm.step
-							: 0
-					}
-					// status="wait" // wait process finish error
-					items={[
-						{
-							title: "等待提交备案信息",
-						},
-						{
-							title: "公安系统审批",
-						},
-						{
-							title: "备案完成",
-						},
-					]}
-				/>
-			</Card>
-		</TemplateModal>
+		/>
 	);
 }

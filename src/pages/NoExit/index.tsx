@@ -18,8 +18,9 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import InfoModal from "./Modal/InfoModal";
 import BBModal from "./Modal/BBModal";
-import { getAllInfos } from "@/api/noexit";
+import { getAllExitInfos } from "@/api/noexit";
 import { Exit } from "@/entity/NoExit/Exit";
+import { useRequest } from "ahooks";
 
 export type DataType = Exit;
 
@@ -43,7 +44,7 @@ const columns: ColumnsType<DataType> = [
 		key: "bb",
 		align: "center",
 		render: (_, record) => (
-			<Tag>{record.bb ? "已备案" : "待备案"}</Tag>
+			<Tag>{record.bb != "0" ? "已备案" : "待备案"}</Tag>
 		),
 		width: 120,
 	},
@@ -61,7 +62,7 @@ const columns: ColumnsType<DataType> = [
 		key: "bk",
 		align: "center",
 		render: (_, record) => (
-			<Tag>{record.bk ? "已边控" : "未边控"}</Tag>
+			<Tag>{record.bk != "0" ? "已边控" : "未边控"}</Tag>
 		),
 		width: 120,
 	},
@@ -75,20 +76,21 @@ const staticTableData: DataType[] = [
 	{
 		dxbh: "00000001",
 		xm: "xxx",
-		bb: false,
+		bb: "0",
 		zj: "代管",
-		bk: true,
+		bk: "1",
 	},
 	{
 		dxbh: "00000002",
 		xm: "yyy",
-		bb: true,
+		bb: "0",
 		zj: "归还",
-		bk: false,
+		bk: "0",
 	},
 ];
 
 /**
+ * 不准出境
  * todoList
  * 1. 调查评估接收后，不准出境列表自动更新
  * 2. 可以报备、证照代管、边控
@@ -188,15 +190,17 @@ export default function NoExit() {
 		}
 	});
 
-	useEffect(() => {
-		getAllInfos(
-			(infoList: Exit[]) => {
-				setTableData(infoList);
-			},
-			(msg: string) =>
-				gMsg.onError("请求不到出入境的所有信息！" + msg)
-		);
-	}, [tableUpdate]);
+	useRequest(getAllExitInfos, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setTableData(data.data);
+			}
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<>
@@ -205,8 +209,8 @@ export default function NoExit() {
 				setOpen={setBBModal}
 				dxbh={record.dxbh}
 				gMsg={gMsg}
-				infoUpdate={infoUpdate}
-				setInfoUpdate={setInfoUpdate}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
 			/>
 			<InfoModal
 				open={infoModal}

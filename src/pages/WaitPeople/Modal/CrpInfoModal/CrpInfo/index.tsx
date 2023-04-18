@@ -21,7 +21,7 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 			bordered
 			layout="vertical">
 			<Descriptions.Item label="社区矫正对象编号">
-				{info.sqjzdxbh}
+				{info.dxbh}
 			</Descriptions.Item>
 			<Descriptions.Item label="是否调查评估">
 				{info.sfdcpg ? "是" : "否"}

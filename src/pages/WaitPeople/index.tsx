@@ -33,9 +33,9 @@ export type DataType = CorrectionPeople;
 const columns: ColumnsType<DataType> = [
 	{
 		title: "对象编号",
-		dataIndex: "sqjzdxbh",
+		dataIndex: "dxbh",
 		align: "center",
-		key: "sqjzdxbh",
+		key: "dxbh",
 		width: 150,
 	},
 	{
@@ -264,8 +264,7 @@ export default function WaitPeople() {
 								return;
 							}
 							const filterData = tableData.filter(
-								(item) =>
-									item.sqjzdxbh.includes(value)
+								(item) => item.dxbh.includes(value)
 							);
 							setTableData((prev) => {
 								setHistory(prev);
@@ -294,7 +293,7 @@ export default function WaitPeople() {
 				tableOnRow={(record: any) => {
 					setSelectRecord(record);
 				}}
-				tableRowKey={(rec: DataType) => rec.sqjzdxbh}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</div>
 	);

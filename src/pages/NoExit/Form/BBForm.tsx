@@ -27,24 +27,11 @@ export function BBForm(props: {
 					component: <Input disabled />,
 				},
 				{
-					name: "xm",
-					label: "姓名",
-					component: <Input />,
-				},
-				{
-					name: "xb",
-					label: "性别",
-					component: generateSelect(xbMap),
-				},
-				{
-					name: "sfzh",
-					label: "身份证号",
-					component: <Input />,
-				},
-				{
 					name: "crjzjzl",
 					label: "出入境证件种类",
-					component: generateSelect(crjzjzlMap),
+					component: generateSelect(crjzjzlMap, {
+						disabled,
+					}),
 				},
 				{
 					name: "crjzjhm",

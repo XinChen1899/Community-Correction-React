@@ -23,11 +23,6 @@ export default function RegisterForm(props: {
 					component: <Input />,
 				},
 				{
-					name: "xm",
-					label: "姓名",
-					component: <Input />,
-				},
-				{
 					name: "xgrq",
 					label: "宣告日期",
 					component: <DatePicker />,

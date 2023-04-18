@@ -1,4 +1,3 @@
-import { GMessage } from "@/utils/msg/GMsg";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";

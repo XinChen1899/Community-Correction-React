@@ -1,47 +1,14 @@
-import useAPI from "@/api";
 import { api } from "..";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 
-export const saveAnnounce = (
-	crp: CrpAnnouncement,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/announce/save", method: "post", data: crp },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const saveAnnounce = (crp: CrpAnnouncement) => {
+	return api.post("/announce/save", crp);
 };
 
-export const getAllAnnounces = (
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/announce/all", method: "get" },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const getAllAnnounces = () => {
+	return api.get("/announce/all");
 };
 
-export const updateAnnounce = (
-	crp: CrpAnnouncement,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/announce/update", method: "post", data: crp },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const updateAnnounce = (crp: CrpAnnouncement) => {
+	return api.post("/announce/update", crp);
 };

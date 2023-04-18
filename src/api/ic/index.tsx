@@ -52,19 +52,8 @@ export const recvCrp = (
 	);
 };
 
-export const getCrpById = (
-	id: string,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: `/crp/${id}`, method: "get" },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const getCrpByDxbh = (id: string) => {
+	return api.get(`/crp/${id}`);
 };
 
 export const getAllCrp = () => {

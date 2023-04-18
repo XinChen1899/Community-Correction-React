@@ -10,13 +10,14 @@ import {
 } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import RegisterModal from "./Modal/RegisterModal";
 import InfoModal from "./Modal/InfoModal";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import { getAllAnnounces } from "@/api/ic/announce";
 import ModifyModal from "./Modal/ModifyModal";
 import { getDate } from "@/utils/ie";
+import { useRequest } from "ahooks";
 
 export type DataType = CrpAnnouncement;
 
@@ -32,22 +33,26 @@ const columns: ColumnsType<DataType> = [
 	{
 		title: "对象编号",
 		dataIndex: "dxbh",
+		align: "center",
 		key: "dxbh",
 	},
 	{
 		title: "对象姓名",
+		align: "center",
 		dataIndex: "xm",
 		key: "xm",
 	},
 	{
 		title: "宣告日期",
 		dataIndex: "xgrq",
+		align: "center",
 		key: "xgrq",
 		render: (_, record) => getDate(record.xgrq),
 	},
 	{
 		title: "是否宣告",
 		dataIndex: "finish",
+		align: "center",
 		key: "finish",
 		render: (_, record) => {
 			const { finish } = record;
@@ -61,12 +66,15 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-// 入矫宣告
+//! 入矫宣告
 export default function Announcement() {
 	const [gMsg, contextHolder] = useMessage();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
-	const [tableData, setTableData] = useState<DataType[]>();
+
+	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
+
 	const [selectRecord, setSelectRecord] =
 		useState<DataType>(defaultDataType);
 
@@ -133,15 +141,17 @@ export default function Announcement() {
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openModify, setOpenModify] = useState(false);
 
-	useEffect(() => {
-		getAllAnnounces(
-			(infoList: CrpAnnouncement[]) => {
-				setTableData(infoList);
-			},
-			(msg: string) =>
-				gMsg.onError("请求不到入矫宣告的所有信息！" + msg)
-		);
-	}, [tableUpdate]);
+	useRequest(getAllAnnounces, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setTableData(data.data);
+			}
+		},
+		onError: (error: any) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<>
@@ -182,9 +192,43 @@ export default function Announcement() {
 				statisticList={[
 					{ title: "入矫宣告总数", value: 999 },
 				]}
-				tableOnRow={(rec: any) => setSelectRecord(rec)}
+				searchList={[
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.dxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+				]}
+				tableOnRow={(rec: DataType) => setSelectRecord(rec)}
 				tableData={tableData}
-				tableRowKey={(rec: CrpAnnouncement) => rec.dxbh}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>
 	);

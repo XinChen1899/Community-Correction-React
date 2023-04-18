@@ -2,10 +2,10 @@ import TemplateModal from "@/template/Modal";
 import RegisterForm from "../../Form/RegisterForm";
 import { GMessage } from "@/utils/msg/GMsg";
 import { Form } from "antd";
-import { useState } from "react";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import { getDate } from "@/utils/ie";
 import { saveAnnounce } from "@/api/ic/announce";
+import { useRequest } from "ahooks";
 
 export default function RegisterModal(props: {
 	open: boolean;
@@ -17,29 +17,35 @@ export default function RegisterModal(props: {
 	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
 		props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
 		form.submit();
 	};
+	const { loading, run } = useRequest(
+		(detail: CrpAnnouncement) => saveAnnounce(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("登记成功！");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const crp = values as CrpAnnouncement;
 		crp.xgrq = getDate(crp.xgrq);
-		saveAnnounce(
-			crp,
-			() => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("登记成功！");
-			},
-			(msg: string) => {
-				gMsg.onError("登记失败！" + msg);
-			},
-			setConfirmLoading
-		);
-		setOpen(false);
+
+		run(crp);
 	};
 
 	return (
@@ -55,7 +61,7 @@ export default function RegisterModal(props: {
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import TemplateModal from "@/template/Modal";
@@ -8,6 +8,7 @@ import RegisterForm from "../../Form/RegisterForm";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import { updateAnnounce } from "@/api/ic/announce";
 import dayjs from "dayjs";
+import { useRequest } from "ahooks";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -22,8 +23,6 @@ export default function ModifyModal(props: ITaskInfoModal) {
 	const { open, setOpen, info, setTableUpdate, tableUpdate, gMsg } =
 		props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
-
 	const [form] = Form.useForm();
 
 	useEffect(() => {
@@ -32,22 +31,29 @@ export default function ModifyModal(props: ITaskInfoModal) {
 		form.setFieldsValue(info);
 	});
 
+	const { loading, run } = useRequest(
+		(detail: CrpAnnouncement) => updateAnnounce(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("修改成功！");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
 	const onFinish = (values: any) => {
 		const info = values as CrpAnnouncement;
 		info.xgrq = getDate(info.xgrq);
 
-		updateAnnounce(
-			info,
-			() => {
-				setTableUpdate(!tableUpdate);
-				setOpen(false);
-				gMsg.onSuccess("修改成功！");
-			},
-			(msg: string) => {
-				gMsg.onError("修改失败！" + msg);
-			},
-			setConfirmLoading
-		);
+		run(info);
 	};
 
 	const handleOk = () => {
@@ -67,7 +73,7 @@ export default function ModifyModal(props: ITaskInfoModal) {
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

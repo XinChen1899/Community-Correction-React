@@ -61,9 +61,6 @@ const TaskAddTimeModal = (props: {
 						pjrq: "",
 						nsyjzlb: "",
 						dcdwxqj: "",
-						dcpgyj: "",
-						dcyjshr: "",
-						dcpgyjs: "",
 					};
 					updateIEInfoTimeData(
 						info,

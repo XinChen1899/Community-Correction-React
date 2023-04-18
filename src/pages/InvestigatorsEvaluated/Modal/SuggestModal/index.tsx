@@ -4,6 +4,8 @@ import { SuggestForm } from "../../Form/SuggestForm";
 import { Form } from "antd";
 import { getSuggestInfoById, updateSuggestInfoData } from "@/api/ie";
 import { useState } from "react";
+import { SuggestInfo } from "@/entity/IE/SuggestInfo";
+import { useRequest } from "ahooks";
 const DefaultYJS = `
 <h1>调查评估意见书</h1>
 <br/>
@@ -30,17 +32,54 @@ export default function SuggestModal(props: {
 	taskUpdate: boolean;
 	wtbh: string;
 	gMsg: GMessage;
+	tableUpdate: boolean;
+	setTableUpdate: any;
 }) {
-	const { open, setOpen, wtbh, gMsg } = props;
+	const { open, setOpen, wtbh, gMsg, tableUpdate, setTableUpdate } =
+		props;
 
 	const [form] = Form.useForm();
-	const [value, setValue] = useState(DefaultYJS); //value就是调查评估意见书
-	const [loading, setLoading] = useState(false);
+	// const [loading, setLoading] = useState(false);
+
+	const [suggest, setSuggest] = useState<SuggestInfo>(
+		{} as SuggestInfo
+	);
 
 	const handleOk = () => {
 		form.submit();
-		setLoading(true);
 	};
+
+	const { loading, run } = useRequest(
+		(detail: any) => updateSuggestInfoData(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("更新成功!");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
+	useRequest(() => getSuggestInfoById(wtbh), {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				const sug = data.data;
+				if (!sug.yjs || sug.yjs == "") sug.yjs = DefaultYJS;
+				setSuggest(sug);
+			}
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [wtbh, tableUpdate],
+	});
 
 	return (
 		<>
@@ -49,46 +88,21 @@ export default function SuggestModal(props: {
 				InfoDescriptions={
 					<SuggestForm
 						form={form}
-						onFinish={(v: any) => {
-							updateSuggestInfoData(
-								{
-									wtbh,
-									yjs: value,
-								},
-								() => {
-									gMsg.onSuccess("更新成功");
-								},
-								() => {
-									gMsg.onError("更新失败");
-								}
-							);
-							setLoading(false);
-							setOpen(false);
+						onFinish={() => {
+							run(suggest);
 						}}
-						initialValues={{ wtbh }}
-						quillValue={value}
-						setQuillValue={setValue}
+						initialValues={suggest}
+						quillValue={suggest.yjs}
+						setQuillValue={(v: any) => {
+							const ns = suggest;
+							ns.yjs = v;
+							setSuggest(ns);
+						}}
 					/>
 				}
 				onOk={handleOk}
 				open={open}
 				setOpen={setOpen}
-				getAPI={(id: string) => {
-					getSuggestInfoById(
-						id,
-						(sug: any) => {
-							if (sug) {
-								setValue(sug.yjs);
-							} else {
-								setValue(DefaultYJS);
-							}
-						},
-						(msg: string) => {
-							gMsg.onError("出错啦!" + msg);
-						}
-					);
-				}}
-				recordId={wtbh}
 				confirmLoading={loading}
 			/>
 		</>

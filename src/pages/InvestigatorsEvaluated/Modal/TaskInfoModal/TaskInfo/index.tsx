@@ -11,6 +11,7 @@ import {
 	zmMap,
 } from "@/utils";
 import TemplateDescriptions from "@/template/Descriptions";
+import { getDate } from "@/utils/ie";
 
 const TaskInfo = (props: { info: IEInfo }) => {
 	const { info } = props;
@@ -40,9 +41,7 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				},
 				{
 					label: "被调查评估对象出生日期",
-					value: info.bgrcsrq
-						? info.bgrcsrq.toString()
-						: null,
+					value: getDate(info.bgrcsrq),
 				},
 				{
 					label: "被调查评估对象居住地地址",
@@ -62,15 +61,11 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				},
 				{
 					label: "原判刑期开始日期",
-					value: info.ypxqksrq
-						? info.ypxqksrq.toString()
-						: null,
+					value: getDate(info.ypxqksrq),
 				},
 				{
 					label: "原判刑期结束日期",
-					value: info.ypxqjsrq
-						? info.ypxqjsrq.toString()
-						: null,
+					value: getDate(info.ypxqjsrq),
 				},
 				{
 					label: "原判刑罚",
@@ -86,7 +81,7 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				},
 				{
 					label: "判决日期",
-					value: info.pjrq ? info.pjrq.toString() : null,
+					value: getDate(info.pjrq),
 				},
 				{
 					label: "拟使用矫正类别",
@@ -95,14 +90,6 @@ const TaskInfo = (props: { info: IEInfo }) => {
 				{
 					label: "接收委托的县级社区矫正机构",
 					value: info.dcdwxqj,
-				},
-				{
-					label: "调查评估意见审核人",
-					value: info.dcyjshr,
-				},
-				{
-					label: "调查评估意见",
-					value: info.dcpgyj,
 				},
 			]}
 		/>

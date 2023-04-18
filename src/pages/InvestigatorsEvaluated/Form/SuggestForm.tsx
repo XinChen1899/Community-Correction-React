@@ -1,7 +1,6 @@
 // 调查评估意见书
 import TemplateForm from "@/template/Form";
 import { Input } from "antd";
-import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 
@@ -37,6 +36,11 @@ export function SuggestForm(props: {
 						name: "wtbh",
 						label: "委托编号",
 						component: <Input disabled />,
+					},
+					{
+						name: "dcyjshr",
+						label: "调查评估意见审核人",
+						component: <Input />,
 					},
 					{
 						label: "调查评估意见书",

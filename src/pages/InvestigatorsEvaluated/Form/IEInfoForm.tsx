@@ -1,13 +1,5 @@
 import "react";
-import {
-	Button,
-	DatePicker,
-	Form,
-	Input,
-	Select,
-	Upload,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { DatePicker, Form, Input } from "antd";
 import {
 	bdcpgrdlxMap,
 	fjxMap,
@@ -100,7 +92,6 @@ export function IEInfoForm(props: {
 			<Form.Item name={"nsyjzlb"} label="拟适用矫正类别">
 				{generateSelect(nsyjzlbMap)}
 			</Form.Item>
-
 			<Form.Item
 				name={"dcdwxqj"}
 				label="接受委托的县级社区矫正机构">
@@ -108,30 +99,6 @@ export function IEInfoForm(props: {
 					style={{ width: 300 }}
 					placeholder={"请输入接受委托的县级矫正机构"}
 				/>
-			</Form.Item>
-
-			<Form.Item name={"dcpgyj"} label="调查评估意见">
-				<TextArea
-					style={{ width: 500 }}
-					placeholder={"请输入调查评估意见"}
-				/>
-			</Form.Item>
-
-			<Form.Item name={"dcyjshr"} label="调查评估意见审核人">
-				<Input placeholder={"请输入调查意见审核人"} />
-			</Form.Item>
-
-			<Form.Item name={"dcpgyjs"} label="调查评估意见书">
-				<Form.Item>
-					<Upload
-						name="yjs"
-						action="/upload.do"
-						listType="picture">
-						<Button icon={<UploadOutlined />}>
-							Click to upload
-						</Button>
-					</Upload>
-				</Form.Item>
 			</Form.Item>
 		</Form>
 	);

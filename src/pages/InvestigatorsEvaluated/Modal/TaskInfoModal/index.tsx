@@ -30,7 +30,6 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 			<Card>
 				<Steps
 					current={current}
-					// status="wait" // wait process finish error
 					items={[
 						{
 							title: "委托方发起调查评估委托",
@@ -38,9 +37,8 @@ export default function TaskInfoModal(props: ITaskInfoModal) {
 						{
 							title: "社区矫正系统接收",
 						},
-
 						{
-							title: "委托司法所进行调查评估",
+							title: "进行调查评估",
 						},
 						{
 							title: "调查评估完成",

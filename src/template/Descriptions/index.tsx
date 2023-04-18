@@ -8,10 +8,16 @@ export default function TemplateDescriptions(props: {
 	const { title, info, layout } = props;
 
 	return (
-		<Descriptions title={title} bordered layout={layout ? layout : "vertical"}>
+		<Descriptions
+			title={title}
+			bordered
+			layout={layout ? layout : "vertical"}>
 			{info.map((item, idx) => {
 				return (
-					<Descriptions.Item label={item.label} key={idx}>
+					<Descriptions.Item
+						label={item.label}
+						key={idx}
+						style={{ textAlign: "center" }}>
 						{item.value}
 					</Descriptions.Item>
 				);

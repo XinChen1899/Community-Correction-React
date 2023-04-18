@@ -52,7 +52,7 @@ export default function CheckIn() {
 	const [gMsg, contextHolder] = useMessage();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
-	const [tableData, setTableData] = useState<DataType[]>();
+	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [selectRecord, setSelectRecord] = useState<DataType>(
 		{} as DataType
 	);
@@ -93,8 +93,8 @@ export default function CheckIn() {
 	const [openInfo, setOpenInfo] = useState(false);
 
 	useRequest(getAllChecks, {
-		onSuccess: ({ data }) => {
-			setTableData(data.data);
+		onSuccess: (res: any) => {
+			setTableData(res.data.data);
 		},
 		onError: (error) => {
 			gMsg.onError(error);

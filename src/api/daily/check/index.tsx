@@ -1,7 +1,13 @@
 import { api } from "..";
 
-export const getAllChecks = () => {
-	return api.get("/check/all");
+export const getAllChecks = (): Promise<any> => {
+	try {
+		return api.get("/check/all");
+	} catch (err) {
+		return new Promise((_, reject) => {
+			reject("出错啦!");
+		});
+	}
 };
 
 export const getCheckDetails = (dxbh: string) => {

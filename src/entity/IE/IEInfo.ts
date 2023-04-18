@@ -22,7 +22,4 @@ export interface IEInfo {
 	pjrq: string | Dayjs; // 判决日期
 	nsyjzlb: string; // 拟适用矫正类别
 	dcdwxqj: string; // 接受委托的县级社区矫正机构
-	dcpgyj: string; // 调查评估意见
-	dcyjshr: string; // 调查评估意见审核人
-	dcpgyjs: string; // 调查评估意见书
 }

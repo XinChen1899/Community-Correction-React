@@ -44,7 +44,11 @@ export const routeNameMap = {
 	punish: "惩罚",
 
 	termination: "终止矫正",
+
 	uncorrected: "解除矫正",
+	uchandle: "解除矫正办理",
+	ucannounce: "解除矫正宣告",
+
 	planrepo: "方案库",
 	announcement: "入矫宣告",
 };
@@ -292,12 +296,28 @@ export const routeTable = [
 	},
 	{
 		url: "uncorrected",
-		page: getPageItem(
-			"uncorrected",
-			routeNameMap.uncorrected,
-			lazy(() => import("@/pages/UnCorrected"))
-		),
-		children: [],
+		page: getPageItem("uncorrected", routeNameMap.uncorrected),
+		children: [
+			{
+				url: "uc/handle",
+				page: getPageItem(
+					"uchandle",
+					routeNameMap.uchandle,
+					lazy(() => import("@/pages/UnCorrected/Handle"))
+				),
+			},
+			{
+				url: "uc/announce",
+				page: getPageItem(
+					"ucannounce",
+					routeNameMap.ucannounce,
+					lazy(
+						() =>
+							import("@/pages/UnCorrected/Announcement")
+					)
+				),
+			},
+		],
 		icon: <UsergroupDeleteOutlined />,
 	},
 	{

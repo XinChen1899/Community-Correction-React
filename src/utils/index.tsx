@@ -155,6 +155,19 @@ export const jllbMap = [
 	{ code: "02", value: "减刑" },
 ];
 
+export const jcjzlxMap = [
+	{ code: "01", value: "期满解除" },
+	{ code: "02", value: "特赦" },
+	{ code: "99", value: "其他" },
+];
+
+export const rztdMap = [
+	{ code: "01", value: "认罪服法" },
+	{ code: "02", value: "服管不认罪" },
+	{ code: "03", value: "认罪不服管" },
+	{ code: "04", value: "不认罪不服管" },
+];
+
 export const generateSelect = (
 	selectList: any,
 	config?: { width?: number; disabled?: boolean }

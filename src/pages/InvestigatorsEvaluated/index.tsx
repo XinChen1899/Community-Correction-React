@@ -1,38 +1,20 @@
-import {
-	Button,
-	Dropdown,
-	Input,
-	InputRef,
-	Space,
-	Spin,
-	Tag,
-} from "antd";
-// @ts-ignore
-import Highlighter from "react-highlight-words";
+import { Button, Dropdown, Space, Spin, Tag } from "antd";
 import "react";
-import { useEffect, useRef, useState } from "react";
-import { message } from "antd";
+import { useState } from "react";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import {
 	LoadingOutlined,
 	CheckCircleOutlined,
 	EditOutlined,
 	PlusOutlined,
-	SearchOutlined,
-	InfoCircleFilled,
 	DownOutlined,
 	AppstoreAddOutlined,
 	CheckCircleTwoTone,
 } from "@ant-design/icons";
-import { ColumnType, ColumnsType } from "antd/es/table";
-import { GMessage, useMessage } from "@/utils/msg/GMsg";
-import {
-	getAllIEInfos,
-	getCount,
-	updateIEInfoTimeData,
-} from "@/api/ie";
+import { ColumnsType } from "antd/es/table";
+import { useMessage } from "@/utils/msg/GMsg";
+import { getAllIEInfos, updateIEInfoTimeData } from "@/api/ie";
 import { IEInfo } from "@/entity/IE/IEInfo";
-import { FilterConfirmProps } from "antd/es/table/interface";
 import TaskInfoModal from "./Modal/TaskInfoModal";
 import TaskModifyModal from "./Modal/TaskModifyModal";
 import { MenuProps } from "antd/lib";
@@ -40,6 +22,7 @@ import TaskAddTimeModal from "./Modal/TaskAddTimeModal";
 import TaskRecvModal from "./Modal/TaskRecvModal";
 import { map2Value, wtdwMap } from "@/utils";
 import SuggestModal from "./Modal/SuggestModal";
+import { useRequest } from "ahooks";
 
 /**
  * 调查评估:
@@ -51,16 +34,56 @@ import SuggestModal from "./Modal/SuggestModal";
 
 // 调查评估表 元组的数据类型
 export type DataType = IEInfo;
-// export interface DataType {
-// 	id: number;
-// 	isFinished: number; // 是否结束
-// 	wtbh: string; // 委托编号
-// 	name: string; // 被调查人姓名
-// 	wtdw: string; // 委托单位
-// }
+const columns: ColumnsType<DataType> = [
+	{
+		title: "进度",
+		dataIndex: "isFinished",
+		key: "isFinished",
+		width: 100,
+		render: (_, record) => {
+			const { finish } = record;
+			let loading;
+			if (finish != 0)
+				loading = (
+					<Space>
+						<Spin indicator={<LoadingOutlined />} />
+						还需{finish}日
+					</Space>
+				);
+			else
+				loading = (
+					<Spin indicator={<CheckCircleOutlined />} />
+				);
+			return loading;
+		},
+	},
+	{
+		title: "委托编号",
+		dataIndex: "wtbh",
+		key: "wtbh",
+		width: 150,
+	},
+	{
+		title: "委托单位",
+		dataIndex: "wtdw",
+		key: "wtdw",
+		width: 150,
+	},
+	{
+		title: "姓名",
+		dataIndex: "bgrxm",
+		key: "bgrxm",
+		width: 150,
+	},
+	{
+		title: "操作",
+		key: "action",
+		width: 200,
+	},
+];
 
 export default function IE() {
-	const [selectTask, setSelectTask] = useState<DataType>(
+	const [selectRecord, setSelectRecord] = useState<DataType>(
 		{} as DataType
 	);
 	// 是否需要更新表格
@@ -73,205 +96,21 @@ export default function IE() {
 	const [openSuggest, setOpenSuggest] = useState(false);
 
 	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
 
 	const [gMsg, contextHolder] = useMessage();
 
-	const [infoCount, setInfoCount] = useState(0);
-
 	const [taskUpdate, setTaskUpdate] = useState(false);
 
-	useEffect(() => {
-		getAllIEInfos(
-			(infoList: IEInfo[]) => {
-				setTableData(infoList);
-			},
-			(msg: string) =>
-				gMsg.onError("请求不到调查评估的所有信息！" + msg)
-		);
-		getCount(setInfoCount);
-	}, [tableUpdate]);
-
-	type DataIndex = keyof DataType;
-	const [searchText, setSearchText] = useState("");
-	const [searchedColumn, setSearchedColumn] = useState("");
-	const searchInput = useRef<InputRef>(null);
-
-	const handleSearch = (
-		selectedKeys: string[],
-		confirm: (param?: FilterConfirmProps) => void,
-		dataIndex: DataIndex
-	) => {
-		confirm();
-		setSearchText(selectedKeys[0]);
-		setSearchedColumn(dataIndex);
-	};
-
-	const handleReset = (clearFilters: () => void) => {
-		clearFilters();
-		setSearchText("");
-	};
-
-	const getColumnSearchProps = (
-		dataIndex: DataIndex
-	): ColumnType<DataType> => ({
-		filterDropdown: ({
-			setSelectedKeys,
-			selectedKeys,
-			confirm,
-			clearFilters,
-			close,
-		}) => (
-			<div
-				style={{ padding: 8 }}
-				onKeyDown={(e) => e.stopPropagation()}>
-				<Input
-					ref={searchInput}
-					placeholder={`Search ${dataIndex}`}
-					value={selectedKeys[0]}
-					onChange={(e) =>
-						setSelectedKeys(
-							e.target.value ? [e.target.value] : []
-						)
-					}
-					onPressEnter={() =>
-						handleSearch(
-							selectedKeys as string[],
-							confirm,
-							dataIndex
-						)
-					}
-					style={{ marginBottom: 8, display: "block" }}
-				/>
-				<Space>
-					<Button
-						type="primary"
-						onClick={() =>
-							handleSearch(
-								selectedKeys as string[],
-								confirm,
-								dataIndex
-							)
-						}
-						icon={<SearchOutlined />}
-						size="small"
-						style={{ width: 90 }}>
-						Search
-					</Button>
-					<Button
-						onClick={() =>
-							clearFilters && handleReset(clearFilters)
-						}
-						size="small"
-						style={{ width: 90 }}>
-						Reset
-					</Button>
-					<Button
-						type="link"
-						size="small"
-						onClick={() => {
-							confirm({ closeDropdown: false });
-							setSearchText(
-								(selectedKeys as string[])[0]
-							);
-							setSearchedColumn(dataIndex);
-						}}>
-						Filter
-					</Button>
-					<Button
-						type="link"
-						size="small"
-						onClick={() => {
-							close();
-						}}>
-						close
-					</Button>
-				</Space>
-			</div>
-		),
-		filterIcon: (filtered: boolean) => (
-			<SearchOutlined
-				style={{ color: filtered ? "#1890ff" : undefined }}
-			/>
-		),
-		onFilter: (value, record) =>
-			record[dataIndex]
-				.toString()
-				.toLowerCase()
-				.includes((value as string).toLowerCase()),
-		onFilterDropdownOpenChange: (visible) => {
-			if (visible) {
-				setTimeout(() => searchInput.current?.select(), 100);
-			}
+	useRequest(getAllIEInfos, {
+		onSuccess: ({ data }) => {
+			setTableData(data.data);
 		},
-		render: (text) =>
-			searchedColumn === dataIndex ? (
-				<Highlighter
-					highlightStyle={{
-						backgroundColor: "#ffc069",
-						padding: 0,
-					}}
-					searchWords={[searchText]}
-					autoEscape
-					textToHighlight={text ? text.toString() : ""}
-				/>
-			) : (
-				text
-			),
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
 	});
-
-	const confirm = () => {
-		console.log("delete");
-	};
-	const columns: ColumnsType<DataType> = [
-		{
-			title: "进度",
-			dataIndex: "isFinished",
-			key: "isFinished",
-			width: 100,
-			render: (_, record) => {
-				const { finish } = record;
-				let loading;
-				if (finish != 0)
-					loading = (
-						<Space>
-							<Spin indicator={<LoadingOutlined />} />
-							还需{finish}日
-						</Space>
-					);
-				else
-					loading = (
-						<Spin indicator={<CheckCircleOutlined />} />
-					);
-				return loading;
-			},
-		},
-		{
-			title: "委托编号",
-			dataIndex: "wtbh",
-			key: "wtbh",
-			width: 150,
-			...getColumnSearchProps("wtbh"),
-		},
-		{
-			title: "委托单位",
-			dataIndex: "wtdw",
-			key: "wtdw",
-			width: 150,
-			...getColumnSearchProps("wtdw"),
-		},
-		{
-			title: "姓名",
-			dataIndex: "bgrxm",
-			key: "bgrxm",
-			width: 150,
-			...getColumnSearchProps("bgrxm"),
-		},
-		{
-			title: "操作",
-			key: "action",
-			width: 200,
-		},
-	];
 
 	const items: MenuProps["items"] = [
 		{
@@ -322,7 +161,7 @@ export default function IE() {
 						gMsg.onSuccess("给委托方发送调查评估意见书");
 						gMsg.onSuccess("给检察方抄送调查评估意见书");
 						const info: IEInfo = {
-							wtbh: selectTask.wtbh,
+							wtbh: selectRecord.wtbh,
 							finish: 0,
 							wtdw: "",
 							wtdch: "",
@@ -343,9 +182,6 @@ export default function IE() {
 							pjrq: "",
 							nsyjzlb: "",
 							dcdwxqj: "",
-							dcpgyj: "",
-							dcyjshr: "",
-							dcpgyjs: "",
 						};
 						updateIEInfoTimeData(
 							info,
@@ -405,8 +241,10 @@ export default function IE() {
 				open={openSuggest}
 				setOpen={setOpenSuggest}
 				taskUpdate={false}
-				wtbh={selectTask.wtbh}
+				wtbh={selectRecord.wtbh}
 				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
 			/>
 			<TaskRecvModal
 				open={openRecv}
@@ -419,9 +257,9 @@ export default function IE() {
 			<TaskAddTimeModal
 				open={openAddTime}
 				setOpen={setOpenAddTime}
-				time={selectTask.finish}
+				time={selectRecord.finish}
 				gMsg={gMsg}
-				wtbh={selectTask.wtbh}
+				wtbh={selectRecord.wtbh}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 			/>
@@ -429,14 +267,14 @@ export default function IE() {
 			<TaskInfoModal
 				open={openInfo}
 				setOpen={setOpenInfo}
-				info={selectTask}
+				info={selectRecord}
 				taskUpdate={taskUpdate}
 				gMsg={gMsg}
 			/>
 			<TaskModifyModal
 				open={openModify}
 				setOpen={setOpenModify}
-				info={selectTask}
+				info={selectRecord}
 				setTableUpdate={setTableUpdate}
 				tableUpdate={tableUpdate}
 				gMsg={gMsg}
@@ -457,7 +295,7 @@ export default function IE() {
 						</Space>
 					</>
 				}
-				cardTitle={"调查评估操作区"}
+				cardTitle={"调查评估"}
 				statisticList={[
 					{ title: "调查评估总数", value: 999 },
 					{ title: "今日新增调查评估数", value: 999 },
@@ -466,9 +304,59 @@ export default function IE() {
 						value: 999,
 					},
 				]}
-				tableOnRow={(record: any) => {
-					setSelectTask(record);
-				}}
+				searchList={[
+					{
+						placeholder: "请输入委托编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.wtbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.bgrxm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入委托单位",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.wtdw.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+				]}
+				tableOnRow={(record: DataType) =>
+					setSelectRecord(record)
+				}
 				tableRowKey={(rec: DataType) => rec.wtbh}
 			/>
 		</>

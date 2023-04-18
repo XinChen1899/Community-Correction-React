@@ -10,7 +10,7 @@ import CategoryManagement from "./Category";
 import IndividualCorrection from "./IndividualCorrection";
 import BusinessApproval from "./BusinessApproval/FunctionPane";
 import TerminationCorrection from "./TerminationCorrection";
-import UnCorrected from "./UnCorrected";
+import UnCorrected from "./UnCorrected/Handle";
 import PlanRepository from "./PlanRepository";
 import Announcement from "./Announcement";
 import NoCheckIn from "./NoCheckIn";

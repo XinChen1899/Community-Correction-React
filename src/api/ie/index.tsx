@@ -1,6 +1,7 @@
 import { IEInfo } from "@/entity/IE/IEInfo";
 import axios from "axios";
 import { ServerTable, useAPI } from "..";
+import { SuggestInfo } from "@/entity/IE/SuggestInfo";
 
 const api = axios.create({
 	baseURL: `${ServerTable.ie}/ie`,
@@ -22,33 +23,12 @@ export const saveIEInfoData = (
 	);
 };
 
-export const updateIEInfoData = (
-	data: IEInfo,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/update", method: "post", data: data },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const updateIEInfo = (data: IEInfo) => {
+	return api.post("/update", data);
 };
 
-export const getAllIEInfos = (
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/all", method: "get" },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const getAllIEInfos = () => {
+	return api.get("/all");
 };
 
 export const getCount = (
@@ -80,34 +60,12 @@ export const getIEInfoById = (
 	);
 };
 
-export const getSuggestInfoById = (
-	id: string,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: `suggest/${id}`, method: "get" },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const getSuggestInfoById = (id: string) => {
+	return api.get(`/suggest/${id}`);
 };
 
-export const updateSuggestInfoData = (
-	data: { wtbh: string; yjs: string },
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/suggest/update", method: "post", data: data },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const updateSuggestInfoData = (data: SuggestInfo) => {
+	return api.post("/suggest/update", data);
 };
 
 export const updateIEInfoTimeData = (

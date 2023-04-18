@@ -106,6 +106,7 @@ export default function NoExit() {
 
 	const [tableData, setTableData] =
 		useState<DataType[]>(staticTableData);
+	const [history, setHistory] = useState<DataType[]>([]);
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [gMsg, contextHolder] = useMessage();
@@ -221,6 +222,40 @@ export default function NoExit() {
 				statisticList={[
 					{ title: "矫正人员总数", value: 999 },
 					{ title: "今日新增待备案人数", value: 999 },
+				]}
+				searchList={[
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.dxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
 				]}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={tableData}

@@ -100,7 +100,8 @@ export default function WaitPeople() {
 		{} as DataType
 	);
 
-	const [tableData, setTableData] = useState<DataType[]>();
+	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
 
 	const [tableUpdate, setTableUpdate] = useState(false);
 
@@ -243,6 +244,41 @@ export default function WaitPeople() {
 				statisticList={[
 					{ title: "待矫正人员总数", value: 999 },
 					{ title: "今日新增待矫正人员", value: 999 },
+				]}
+				searchList={[
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) =>
+									item.sqjzdxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
 				]}
 				tableData={tableData ? tableData : []}
 				tableOnRow={(record: any) => {

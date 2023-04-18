@@ -1,12 +1,8 @@
 import "react";
 import TemplateForm from "@/template/Form";
 import { DatePicker, Input } from "antd";
-import { generateSelect, jcjzlxMap, rztdMap } from "@/utils";
 
-/**
- * 矫正解除（终止）信息 表单
- */
-export function UncorrectForm(props: {
+export default function AnnouncementForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
@@ -27,24 +23,14 @@ export function UncorrectForm(props: {
 					component: <Input />,
 				},
 				{
-					name: "jcjzlx",
-					label: "解除矫正类型",
-					component: generateSelect(jcjzlxMap),
-				},
-				{
-					name: "jjrq",
-					label: "解除矫正日期",
-					component: <DatePicker />,
-				},
-				{
-					name: "rztd",
-					label: "认罪态度",
-					component: generateSelect(rztdMap),
-				},
-				{
-					name: "bz",
-					label: "备注",
+					name: "xm",
+					label: "姓名",
 					component: <Input />,
+				},
+				{
+					name: "xgrq",
+					label: "宣告日期",
+					component: <DatePicker />,
 				},
 			]}
 		/>

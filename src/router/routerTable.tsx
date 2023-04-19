@@ -1,13 +1,13 @@
 import {
-	HomeOutlined,
-	SearchOutlined,
-	TeamOutlined,
+	ApartmentOutlined,
 	DeleteRowOutlined,
 	DeploymentUnitOutlined,
-	SolutionOutlined,
-	ApartmentOutlined,
-	ScheduleOutlined,
 	EyeOutlined,
+	HomeOutlined,
+	ScheduleOutlined,
+	SearchOutlined,
+	SolutionOutlined,
+	TeamOutlined,
 	UsergroupDeleteOutlined,
 } from "@ant-design/icons";
 import { LazyExoticComponent, lazy } from "react";
@@ -152,18 +152,19 @@ export const routeTable = [
 	},
 	{
 		url: "individual",
-		page: getPageItem(
-			"individual",
-			routeNameMap.individual,
-			lazy(() => import("@/pages/IndividualCorrection"))
-		),
+		page: getPageItem("individual", routeNameMap.individual),
 		children: [
 			{
 				url: "individual/crplan",
 				page: getPageItem(
 					"crplan",
 					routeNameMap.crplan,
-					lazy(() => import("@/pages/CorrectionPlan"))
+					lazy(
+						() =>
+							import(
+								"@/pages/IndividualCorrection/CorrectionPlan"
+							)
+					)
 				),
 			},
 			{

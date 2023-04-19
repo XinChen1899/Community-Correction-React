@@ -1,11 +1,12 @@
 import { getAllCate } from "@/api/cate";
 import { CrpCategory } from "@/entity/Category/CategoryInfo";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
 import { map2Value, nsyjzlbMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import { EditOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Button, Space, Tag } from "antd";
+import { Button, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import InfoModal from "./Modal/InfoModal";
@@ -32,7 +33,10 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "gllb",
 		align: "center",
 		render: (_, record) => (
-			<Tag>{map2Value(nsyjzlbMap, record.gllb)}</Tag>
+			<TemplateTag
+				value={map2Value(nsyjzlbMap, record.gllb)}
+				type={TagType.Info}
+			/>
 		),
 	},
 	{

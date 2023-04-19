@@ -220,8 +220,8 @@ export const generateSelect = (
 	);
 };
 
-export const map2Value = (map: any[], code: string) => {
-	let value;
+export const map2Value = (map: any[], code: string): string => {
+	let value = "";
 	map.forEach((item) => {
 		if (item.code == code) {
 			value = item.value;

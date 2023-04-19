@@ -1,18 +1,19 @@
+import { getAllBans } from "@/api/business/ban";
+import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
-	EditOutlined,
 	DownOutlined,
+	EditOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal";
-import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import ProcessModal from "./Modal/ProcessModal";
-import { getAllBans } from "@/api/business/ban";
-import { useRequest } from "ahooks";
 
 export type DataType = BanInfo;
 
@@ -31,13 +32,20 @@ const columns: ColumnsType<DataType> = [
 		title: "申请进入的场所",
 		dataIndex: "sqjrcs",
 		key: "sqjrcs",
-		render: (_, rec) => <Tag>{rec.sqjrcs}</Tag>,
+		render: (_, rec) => (
+			<TemplateTag value={rec.sqjrcs} type={TagType.Info} />
+		),
 	},
 	{
 		title: "审批结果",
 		dataIndex: "xjsqjzjgspyj",
 		key: "xjsqjzjgspyj",
-		render: (_, rec) => <Tag>{rec.xjsqjzjgspyj}</Tag>,
+		render: (_, rec) => (
+			<TemplateTag
+				value={rec.xjsqjzjgspyj}
+				type={TagType.Accept}
+			/>
+		),
 	},
 	{
 		title: "操作",

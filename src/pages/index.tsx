@@ -1,20 +1,19 @@
 import Home from "./Home";
 import IE from "./InvestigatorsEvaluated";
 
-import WaitPeople from "@/pages/WaitPeople";
 import CorrectionTeam from "@/pages/CorrectionTeam";
-import CorrectionPlan from "@/pages/CorrectionPlan";
-import Worker from "./Woker";
-import NoExit from "./NoExit";
-import CategoryManagement from "./Category";
-import IndividualCorrection from "./IndividualCorrection";
+import CorrectionPlan from "@/pages/IndividualCorrection/CorrectionPlan";
+import WaitPeople from "@/pages/WaitPeople";
+import Announcement from "./Announcement";
+import { AssessmentScore, Punishment, Reward } from "./Assessment";
 import BusinessApproval from "./BusinessApproval/FunctionPane";
+import CategoryManagement from "./Category";
+import NoCheckIn from "./NoCheckIn";
+import NoExit from "./NoExit";
+import PlanRepository from "./PlanRepository";
 import TerminationCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected/Handle";
-import PlanRepository from "./PlanRepository";
-import Announcement from "./Announcement";
-import NoCheckIn from "./NoCheckIn";
-import { Reward, Punishment, AssessmentScore } from "./Assessment";
+import Worker from "./Woker";
 
 import {
 	CheckIn,
@@ -39,7 +38,6 @@ export {
 	Worker,
 	NoExit,
 	CategoryManagement,
-	IndividualCorrection,
 	DailyFunctionPane,
 	BusinessApproval,
 	TerminationCorrection,

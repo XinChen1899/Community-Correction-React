@@ -1,6 +1,7 @@
 import { getAllPlan } from "@/api/ic/crplan";
 import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateHome from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
 import { jzlbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
@@ -10,7 +11,7 @@ import {
 	PlusOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal/AddTeam";
@@ -51,7 +52,10 @@ const columns: ColumnsType<DataType> = [
 		align: "center",
 		key: "jzlb",
 		render: (_, record) => (
-			<Tag>{map2Value(jzlbMap, record.jzlb)}</Tag>
+			<TemplateTag
+				value={map2Value(jzlbMap, record.jzlb)}
+				type={TagType.Info}
+			/>
 		),
 	},
 	{

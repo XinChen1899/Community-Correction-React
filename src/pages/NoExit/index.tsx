@@ -1,6 +1,7 @@
 import { getAllExitInfos } from "@/api/noexit";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	AppstoreAddOutlined,
@@ -37,7 +38,12 @@ const columns: ColumnsType<DataType> = [
 		key: "bb",
 		align: "center",
 		render: (_, record) => (
-			<Tag>{record.bb != "0" ? "已备案" : "待备案"}</Tag>
+			<TemplateTag
+				value={record.bb != "0" ? "已备案" : "待备案"}
+				type={
+					record.bb != "0" ? TagType.Info : TagType.Warning
+				}
+			/>
 		),
 		width: 120,
 	},
@@ -55,7 +61,12 @@ const columns: ColumnsType<DataType> = [
 		key: "bk",
 		align: "center",
 		render: (_, record) => (
-			<Tag>{record.bk != "0" ? "已边控" : "未边控"}</Tag>
+			<TemplateTag
+				value={record.bk != "0" ? "已边控" : "未边控"}
+				type={
+					record.bk != "0" ? TagType.Info : TagType.Warning
+				}
+			/>
 		),
 		width: 120,
 	},

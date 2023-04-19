@@ -1,16 +1,22 @@
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
 import { ConfigProvider, Spin } from "antd";
 import zhCN from "antd/locale/zh_CN";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import App from "./App";
+import "./index.css";
 
 ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement
 ).render(
 	<BrowserRouter>
-		<ConfigProvider locale={zhCN}>
+		<ConfigProvider
+			locale={zhCN}
+			theme={{
+				token: {
+					colorPrimary: "#5A54F9",
+				},
+			}}>
 			<Suspense
 				fallback={
 					<div className="spin">

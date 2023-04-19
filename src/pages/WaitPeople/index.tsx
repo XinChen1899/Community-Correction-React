@@ -1,11 +1,8 @@
-import {
-	Button,
-	Dropdown,
-	MenuProps,
-	Popconfirm,
-	Space,
-	Tag,
-} from "antd";
+import { getAllCrp } from "@/api/ic";
+import { CorrectionPeople } from "@/entity/IC/Crp";
+import TemplateHome from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
+import { useMessage } from "@/utils/msg/GMsg";
 import {
 	CheckCircleFilled,
 	CheckCircleOutlined,
@@ -15,18 +12,15 @@ import {
 	EditOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
 import { useState } from "react";
-import TemplateHome from "@/template/OperatorAndTable";
-import RegisterModal from "./Modal/RegisterModal";
-import { useMessage } from "@/utils/msg/GMsg";
 import CrpInfoModal from "./Modal/CrpInfoModal";
 import CrpModifyModal from "./Modal/CrpModifyModal";
 import CrpRecModal from "./Modal/CrpRecModal";
-import { getAllCrp } from "@/api/ic";
-import { CorrectionPeople } from "@/entity/IC/Crp";
-import { useRequest } from "ahooks";
+import RegisterModal from "./Modal/RegisterModal";
 
 export type DataType = CorrectionPeople;
 
@@ -65,27 +59,18 @@ const columns: ColumnsType<DataType> = [
 		align: "center",
 		dataIndex: "status",
 		key: "status",
-		render: (value) => {
-			let color = "blue";
-			switch (value) {
-				case "待入矫":
-					color = "magenta";
-					break;
-				case "在矫":
-					color = "#87d068";
-					break;
-			}
-			return <Tag color={color}>{value}</Tag>;
-		},
+		render: (value) => (
+			<TemplateTag value={value} type={TagType.Accept} />
+		),
 	},
 	{
 		title: "矫正小组",
 		dataIndex: "team",
 		align: "center",
 		key: "team",
-		render: (value) => {
-			return <Tag>小组: {value}</Tag>;
-		},
+		render: (value) => (
+			<TemplateTag value={`小组${value}`} type={TagType.Info} />
+		),
 	},
 	{
 		title: "操作",

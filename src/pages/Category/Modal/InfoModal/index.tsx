@@ -1,8 +1,8 @@
-import { GMessage } from "@/utils/msg/GMsg";
+import { CrpCategory } from "@/entity/Category/CategoryInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { CrpCategory } from "@/entity/Category/CategoryInfo";
 import { map2Value, nsyjzlbMap } from "@/utils";
+import { GMessage } from "@/utils/msg/GMsg";
 
 export default function InfoModal(props: {
 	open: boolean;
@@ -28,13 +28,11 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"矫正对象类别信息"}
-					info={getInfos(info)}
+					info={info ? getInfos(info) : []}
 				/>
 			}
 			open={open}
 			setOpen={setOpen}
-			getAPI={undefined}
-			recordId={undefined}
 		/>
 	);
 }

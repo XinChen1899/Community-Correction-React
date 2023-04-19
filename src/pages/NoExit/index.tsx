@@ -1,26 +1,19 @@
-import { GMessage, useMessage } from "@/utils/msg/GMsg";
-import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import {
-	EditOutlined,
-	DownOutlined,
-	AppstoreAddOutlined,
-	InfoCircleFilled,
-} from "@ant-design/icons";
-import {
-	Button,
-	Dropdown,
-	MenuProps,
-	Space,
-	Tag,
-	message,
-} from "antd";
-import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
-import InfoModal from "./Modal/InfoModal";
-import BBModal from "./Modal/BBModal";
 import { getAllExitInfos } from "@/api/noexit";
 import { Exit } from "@/entity/NoExit/Exit";
+import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { useMessage } from "@/utils/msg/GMsg";
+import {
+	AppstoreAddOutlined,
+	DownOutlined,
+	EditOutlined,
+	InfoCircleFilled,
+} from "@ant-design/icons";
 import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { useState } from "react";
+import BBModal from "./Modal/BBModal";
+import InfoModal from "./Modal/InfoModal";
 
 export type DataType = Exit;
 
@@ -104,7 +97,6 @@ export default function NoExit() {
 
 	const [infoModal, setInfoModal] = useState(false);
 	const [bbModal, setBBModal] = useState(false);
-	const [infoUpdate, setInfoUpdate] = useState(false);
 
 	const [tableData, setTableData] =
 		useState<DataType[]>(staticTableData);
@@ -123,7 +115,7 @@ export default function NoExit() {
 					onClick={() => {
 						setBBModal(true);
 					}}>
-					报备
+					报备审批
 				</Button>
 			),
 			key: "0",
@@ -137,7 +129,7 @@ export default function NoExit() {
 					onClick={() => {
 						gMsg.onSuccess("证照代管");
 					}}>
-					证照代管
+					证照代管审批
 				</Button>
 			),
 			key: "1",
@@ -154,7 +146,7 @@ export default function NoExit() {
 						gMsg.onSuccess("边控");
 					}}
 					icon={<InfoCircleFilled />}>
-					边控
+					边控审批
 				</Button>
 			),
 			key: "2",

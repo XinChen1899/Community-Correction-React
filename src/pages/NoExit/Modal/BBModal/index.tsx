@@ -1,18 +1,14 @@
-import TemplateModal from "@/template/Modal";
-import { BBForm } from "../../Form/BBForm";
-import { Button, Form, Progress, Spin, message } from "antd";
-import { BBInfo } from "@/entity/NoExit/BBInfo";
 import { getBBForm, implAccept, updateBBForm } from "@/api/noexit";
-import { useState } from "react";
-import { GMessage } from "@/utils/msg/GMsg";
-import { getDate } from "@/utils/ie";
+import { BBInfo } from "@/entity/NoExit/BBInfo";
 import TemplateDescriptions from "@/template/Descriptions";
+import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import { getCrpByDxbh } from "@/api/ic";
+import { Button, Form, Progress, Spin, message } from "antd";
 import dayjs from "dayjs";
-
-// todo 报备流程审批
+import { useState } from "react";
+import { BBForm } from "../../Form/BBForm";
 
 export default function BBModal(props: {
 	open: boolean;
@@ -31,6 +27,7 @@ export default function BBModal(props: {
 		onSuccess: ({ data }) => {
 			if (data.status == 200) {
 				const { data: bbForm } = data;
+				console.log(bbForm);
 				bbForm.bbrq = dayjs(bbForm.bbrq);
 				bbForm.bbksrq = dayjs(bbForm.bbksrq);
 				bbForm.bbjsrq = dayjs(bbForm.bbjsrq);

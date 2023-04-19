@@ -1,20 +1,17 @@
-import { useMessage } from "@/utils/msg/GMsg";
+import { getAllCate } from "@/api/cate";
+import { CrpCategory } from "@/entity/Category/CategoryInfo";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import { DownOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { map2Value, nsyjzlbMap } from "@/utils";
+import { useMessage } from "@/utils/msg/GMsg";
+import { EditOutlined } from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import { Button, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InfoModal from "./Modal/InfoModal";
 import ModifyModal from "./Modal/ModifyModal";
-import { getAllCate } from "@/api/cate";
-import { map2Value, nsyjzlbMap } from "@/utils";
 
-export interface DataType {
-	id: number;
-	dxbh: string; // 矫正对象编号
-	xm: string; // 矫正对象姓名
-	gllb: string; // 管理类别
-}
+export type DataType = CrpCategory;
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -45,7 +42,7 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const staticTableData: DataType[] = [
-	{ id: 1, dxbh: "00000001", xm: "xxx", gllb: "yyy" },
+	{ dxbh: "00000001", xm: "xxx", gllb: "yyy" },
 ];
 
 export default function CategoryManagement() {
@@ -61,20 +58,6 @@ export default function CategoryManagement() {
 	const [modifyModal, setModifyModal] = useState(false);
 	const [gMsg, contextHolder] = useMessage();
 
-	const items: MenuProps["items"] = [
-		{
-			label: (
-				<Button
-					block
-					type="text"
-					icon={<EditOutlined />}
-					onClick={() => setModifyModal(true)}>
-					修改矫正类别
-				</Button>
-			),
-			key: "0",
-		},
-	];
 	columns.map((column) => {
 		if (column.key == "action") {
 			column.render = (_, record) => {
@@ -83,34 +66,32 @@ export default function CategoryManagement() {
 						<Button
 							type={"dashed"}
 							onClick={() => setInfoModal(true)}>
-							查看信息
+							查看管理类别
 						</Button>
-
-						<Dropdown
-							menu={{ items }}
-							trigger={["click"]}>
-							<a onClick={(e) => e.preventDefault()}>
-								<Space>
-									操作
-									<DownOutlined />
-								</Space>
-							</a>
-						</Dropdown>
+						<Button
+							block
+							type="link"
+							icon={<EditOutlined />}
+							onClick={() => setModifyModal(true)}>
+							修改矫正类别审批
+						</Button>
 					</Space>
 				);
 			};
 		}
 	});
 
-	useEffect(() => {
-		getAllCate(
-			(infoList: any) => {
-				setTableData(infoList);
-			},
-			(msg: string) =>
-				gMsg.onError("请求不到调查评估的所有信息！" + msg)
-		);
-	}, [tableUpdate]);
+	useRequest(getAllCate, {
+		onSuccess({ data }) {
+			if (data.status == 200) {
+				setTableData(data.data);
+			}
+		},
+		onError(e) {
+			gMsg.onError("请求不到调查评估的所有信息！" + e.message);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<>
@@ -141,7 +122,7 @@ export default function CategoryManagement() {
 				]}
 				tableOnRow={(record: DataType) => setRecord(record)}
 				tableData={tableData}
-				tableRowKey={(rec: DataType) => rec.id}
+				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>
 	);

@@ -1,20 +1,39 @@
+import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { CrpPlan } from "@/entity/IC/CrpPlan";
+import { jzlbMap, map2Value, sfcnMap } from "@/utils";
+import { getDate } from "@/utils/ie";
+import { DataType } from "../..";
 
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
-	info: any;
+	info: DataType;
 }) {
 	const { open, setOpen, info } = props;
 
 	const getInfos = (info: CrpPlan) => {
 		return [
 			{ label: "方案编号", value: info.id },
+			{ label: "方案名称", value: info.famc },
 			{ label: "对象编号", value: info.dxbh },
 			{ label: "姓名", value: info.xm },
-			{ label: "方案附件", value: info.plan },
+			{
+				label: "矫正类别",
+				value: map2Value(jzlbMap, info.jzlb),
+			},
+			{
+				label: "是否成年",
+				value: map2Value(sfcnMap, info.sfcn),
+			},
+			{ label: "监督管理措施", value: info.jdglcs },
+			{ label: "教育矫正措施", value: info.jyjzcs },
+			{ label: "帮困扶助措施", value: info.bkfzcs },
+			{ label: "其他措施", value: info.qtcs },
+			{ label: "所属机构id", value: info.ssjgid },
+			{ label: "实施效果评估", value: info.ssxgpg },
+			{ label: "评估时间", value: getDate(info.pgsj) },
+			{ label: "评估人", value: info.prg },
 		];
 	};
 
@@ -22,8 +41,8 @@ export default function InfoModal(props: {
 		<TemplateModal
 			InfoDescriptions={
 				<TemplateDescriptions
-					title={"矫正方案"}
-					info={info ? getInfos(info) : []}
+					title={"矫正方案信息"}
+					info={info != undefined ? getInfos(info) : []}
 				/>
 			}
 			open={open}

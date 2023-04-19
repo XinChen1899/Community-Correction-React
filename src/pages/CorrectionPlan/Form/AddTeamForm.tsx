@@ -1,15 +1,14 @@
-import "react";
+import { generateSelect, sfcnMap } from "@/utils";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Form, Input, message } from "antd";
-import { useState } from "react";
 import Upload, {
 	RcFile,
 	UploadChangeParam,
 	UploadFile,
 	UploadProps,
 } from "antd/es/upload";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-
-const { TextArea } = Input;
+import "react";
+import { useState } from "react";
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
 	const reader = new FileReader();
@@ -71,8 +70,23 @@ export function AddTeamForm(props: {
 			<Form.Item name={"dxbh"} label={"社区矫正对象编号"}>
 				<Input placeholder={"请输入社区矫正对象编号"} />
 			</Form.Item>
-			<Form.Item name={"xm"} label="姓名">
-				<Input placeholder={"请输入姓名"} />
+			<Form.Item name={"famc"} label={"方案名称"}>
+				<Input placeholder={"请输入方案名称"} />
+			</Form.Item>
+			<Form.Item name={"sfcn"} label="是否成年">
+				{generateSelect(sfcnMap)}
+			</Form.Item>
+			<Form.Item name={"jdglcs"} label="监督管理措施">
+				<Input.TextArea placeholder={"请输入监督管理措施"} />
+			</Form.Item>
+			<Form.Item name={"jyjzcs"} label="教育矫正措施">
+				<Input.TextArea placeholder={"请输入教育矫正措施"} />
+			</Form.Item>
+			<Form.Item name={"bkfzcs"} label="帮困扶助措施">
+				<Input.TextArea placeholder={"请输入帮困扶助措施"} />
+			</Form.Item>
+			<Form.Item name={"qtcs"} label="其他措施">
+				<Input.TextArea placeholder={"请输入其他措施"} />
 			</Form.Item>
 			<Form.Item name={"plan"} label="矫正方案上传">
 				<Form.Item>

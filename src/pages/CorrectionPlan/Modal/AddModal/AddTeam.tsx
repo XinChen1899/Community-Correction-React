@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { Card, Form } from "antd";
 
-import "@/entity/IE/IEInfo";
-import { GMessage } from "@/utils/msg/GMsg";
-import { AddTeamForm } from "../../Form/AddTeamForm";
-import TemplateModal from "@/template/Modal";
-import { CrpPlan } from "@/entity/IC/CrpPlan";
 import { savePlan } from "@/api/ic/crplan";
+import { CrpPlan } from "@/entity/IC/CrpPlan";
+import TemplateModal from "@/template/Modal";
+import { getDate } from "@/utils/ie";
+import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
+import { AddTeamForm } from "../../Form/AddTeamForm";
 
 const AddModal = (props: {
 	open: boolean;
@@ -18,50 +18,51 @@ const AddModal = (props: {
 	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
 		props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [form] = Form.useForm();
 
 	const handleOk = () => {
 		form.submit();
 	};
 
+	const { loading, run } = useRequest((info) => savePlan(info), {
+		onSuccess() {
+			setTableUpdate(!tableUpdate);
+			gMsg.onSuccess("新增矫正方案");
+		},
+		onError(e) {
+			gMsg.onError("矫正方案保存失败" + e.message);
+		},
+		onFinally() {
+			setOpen(false);
+		},
+		manual: true,
+		debounceWait: 300,
+	});
+
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const info = values as CrpPlan;
-		savePlan(
-			info,
-			() => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("新增矫正方案!");
-			},
-			(msg: string) => {
-				gMsg.onError("矫正方案保存失败!" + msg);
-			},
-			setConfirmLoading
-		);
-		setOpen(false);
+		info.pgsj = getDate(info.pgsj);
+
+		run(info);
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<Card title={"新增矫正方案"}>
-						<AddTeamForm
-							form={form}
-							onFinish={onFinish}
-							initialValues={{
-								dxbh: "00000001",
-							}}
-						/>
-					</Card>
-				}
-				open={open}
-				setOpen={setOpen}
-				confirmLoading={confirmLoading}
-				onOk={handleOk}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<Card title={"新增矫正方案"}>
+					<AddTeamForm
+						form={form}
+						onFinish={onFinish}
+						initialValues={{}}
+					/>
+				</Card>
+			}
+			open={open}
+			setOpen={setOpen}
+			confirmLoading={loading}
+			onOk={handleOk}
+		/>
 	);
 };
 

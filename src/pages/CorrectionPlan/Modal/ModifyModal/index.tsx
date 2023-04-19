@@ -1,46 +1,54 @@
-import { Form } from "antd";
-import { useEffect, useState } from "react";
-import { GMessage } from "@/utils/msg/GMsg";
+import { updatePlan } from "@/api/ic/crplan";
+import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateModal from "@/template/Modal";
+import { getDate } from "@/utils/ie";
+import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
+import { Form } from "antd";
+import dayjs from "dayjs";
+import { useEffect } from "react";
 import { DataType } from "../..";
 import { AddTeamForm } from "../../Form/AddTeamForm";
-import { CrpPlan } from "@/entity/IC/CrpPlan";
-import { updatePlan } from "@/api/ic/crplan";
 
 export default function ModifyModal(props: {
 	open: boolean;
 	setOpen: any;
 	info: DataType;
-	tableUpdate: any;
+	tableUpdate: boolean;
 	setTableUpdate: any;
 	gMsg: GMessage;
 }) {
 	const { open, setOpen, info, setTableUpdate, tableUpdate, gMsg } =
 		props;
 
-	const [confirmLoading, setConfirmLoading] = useState(false);
-
 	const [form] = Form.useForm();
 
 	useEffect(() => {
+		info.pgsj = dayjs(info.pgsj);
 		form.resetFields();
 		form.setFieldsValue(info);
 	});
 
+	const { loading, run } = useRequest((info) => updatePlan(info), {
+		onSuccess() {
+			setTableUpdate(!tableUpdate);
+			gMsg.onSuccess("修改成功！");
+		},
+		onError(e) {
+			gMsg.onError("修改失败！" + e.message);
+		},
+		onFinally() {
+			setOpen(false);
+		},
+		manual: true,
+		debounceWait: 300,
+	});
+
 	const onFinish = (values: any) => {
 		const info = values as CrpPlan;
-		updatePlan(
-			info,
-			() => {
-				setTableUpdate(!tableUpdate);
-				setOpen(false);
-				gMsg.onSuccess("修改成功！");
-			},
-			(msg: string) => {
-				gMsg.onError("修改失败！" + msg);
-			},
-			setConfirmLoading
-		);
+		info.pgsj = getDate(info.pgsj);
+		console.log(info);
+		run(info);
 	};
 
 	const handleOk = () => {
@@ -60,7 +68,7 @@ export default function ModifyModal(props: {
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={confirmLoading}
+				confirmLoading={loading}
 			/>
 		</>
 	);

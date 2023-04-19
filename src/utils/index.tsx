@@ -1,5 +1,20 @@
 import { Select } from "antd";
 
+interface CodeMap {
+	code: string;
+	value: string;
+}
+
+const getCodeMap = (arr: string[][]) => {
+	const codeMap: CodeMap[] = arr.map((item) => {
+		return {
+			code: item[0],
+			value: item[1],
+		} as CodeMap;
+	});
+	return codeMap;
+};
+// 被调查评估人的类型
 export const bdcpgrdlxMap = [
 	{ code: "01", value: "被告人" },
 	{ code: "02", value: "罪犯" },
@@ -160,13 +175,18 @@ export const jcjzlxMap = [
 	{ code: "02", value: "特赦" },
 	{ code: "99", value: "其他" },
 ];
-
+// 认罪态度
 export const rztdMap = [
 	{ code: "01", value: "认罪服法" },
 	{ code: "02", value: "服管不认罪" },
 	{ code: "03", value: "认罪不服管" },
 	{ code: "04", value: "不认罪不服管" },
 ];
+// 是否成年
+export const sfcnMap = getCodeMap([
+	["01", "否"],
+	["02", "是"],
+]);
 
 export const generateSelect = (
 	selectList: any,

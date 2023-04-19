@@ -1,24 +1,19 @@
+import { getAllPlan } from "@/api/ic/crplan";
+import { CrpPlan } from "@/entity/IC/CrpPlan";
+import TemplateHome from "@/template/OperatorAndTable";
+import { jzlbMap, map2Value } from "@/utils";
+import { useMessage } from "@/utils/msg/GMsg";
 import {
-	Button,
-	Dropdown,
-	MenuProps,
-	message,
-	Popconfirm,
-	Space,
-} from "antd";
-import {
-	DeleteOutlined,
+	CheckCircleFilled,
 	DownOutlined,
 	EditOutlined,
 	PlusOutlined,
 } from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddModal from "./Modal/AddModal/AddTeam";
-import TemplateHome from "@/template/OperatorAndTable";
-import { useMessage } from "@/utils/msg/GMsg";
-import { getAllPlan } from "@/api/ic/crplan";
-import { CrpPlan } from "@/entity/IC/CrpPlan";
 import InfoModal from "./Modal/InfoModal";
 import ModifyModal from "./Modal/ModifyModal";
 
@@ -30,7 +25,12 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "id",
 		key: "id",
 		align: "center",
-		width: 150,
+	},
+	{
+		title: "方案名称",
+		dataIndex: "famc",
+		align: "center",
+		key: "famc",
 	},
 	{
 		title: "对象编号",
@@ -46,6 +46,15 @@ const columns: ColumnsType<DataType> = [
 		key: "xm",
 	},
 	{
+		title: "矫正类别",
+		dataIndex: "jzlb",
+		align: "center",
+		key: "jzlb",
+		render: (_, record) => (
+			<Tag>{map2Value(jzlbMap, record.jzlb)}</Tag>
+		),
+	},
+	{
 		title: "操作",
 		key: "action",
 	},
@@ -59,7 +68,10 @@ export default function CorrectionPlan() {
 	const [openInfo, setOpenInfo] = useState(false);
 
 	const [tableUpdate, setTableUpdate] = useState(false);
+
 	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
+
 	const [selectRecord, setSelectRecord] = useState<DataType>(
 		{} as DataType
 	);
@@ -80,18 +92,13 @@ export default function CorrectionPlan() {
 		{ type: "divider" },
 		{
 			label: (
-				<Popconfirm
-					title="是否删除"
-					description="是否删除该调查评估信息！"
-					onOpenChange={() => console.log("open change")}>
-					<Button
-						type={"primary"}
-						danger
-						block
-						icon={<DeleteOutlined />}>
-						删除!
-					</Button>
-				</Popconfirm>
+				<Button
+					block
+					type="text"
+					icon={<CheckCircleFilled />}
+					onClick={() => setOpenModify(true)}>
+					方案评估
+				</Button>
 			),
 			key: "1",
 		},
@@ -124,16 +131,17 @@ export default function CorrectionPlan() {
 		}
 	});
 
-	useEffect(() => {
-		getAllPlan(
-			(data: DataType[]) => {
-				setTableData(data);
-			},
-			(msg: string) => {
-				gMsg.onError("获取全部方案失败!" + msg);
+	useRequest(getAllPlan, {
+		onSuccess({ data }) {
+			if (data.status == 200) {
+				setTableData(data.data);
 			}
-		);
-	}, [tableUpdate]);
+		},
+		onError(e) {
+			gMsg.onError("获取全部方案失败!" + e.message);
+		},
+		refreshDeps: [tableUpdate],
+	});
 
 	return (
 		<div>
@@ -173,6 +181,56 @@ export default function CorrectionPlan() {
 				cardTitle={"矫正方案统计"}
 				statisticList={[
 					{ title: "矫正方案总数", value: 999 },
+				]}
+				searchList={[
+					{
+						placeholder: "请输入方案名称",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.famc.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.dxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
 				]}
 				tableData={tableData.length ? tableData : []}
 				tableOnRow={(rec: DataType) => setSelectRecord(rec)}

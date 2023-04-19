@@ -152,7 +152,9 @@ export default function ModifyModal(props: {
 			InfoDescriptions={
 				<TemplateSteps
 					steps={modifyInfo ? getSteps(modifyInfo) : []}
-					step={modifyInfo ? modifyInfo.step : 0}
+					step={
+						modifyInfo != undefined ? modifyInfo.step : 0
+					}
 				/>
 			}
 			open={open}

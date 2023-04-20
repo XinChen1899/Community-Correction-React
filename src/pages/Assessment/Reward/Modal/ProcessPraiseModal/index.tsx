@@ -1,11 +1,17 @@
+import {
+	getRewardPraiseInfo,
+	saveRewardPraiseInfo,
+} from "@/api/assessment/reward";
 import { RewardPraise } from "@/entity/Assessment/Reward/RewardPraise";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
 import { generateSelect, map2Value, spjgMap } from "@/utils";
 import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
 import { DatePicker, Form, Input, Progress, message } from "antd";
 import { useForm } from "antd/es/form/Form";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { DataType } from "../..";
 
@@ -21,53 +27,68 @@ function ProcessPraiseModal(props: {
 	const { open, setOpen, info, tableUpdate, setTableUpdate, gMsg } =
 		props;
 
-	// const { run: runSend2SFS } = useRequest(
-	// 	(info: DataType) => send2SFS(info),
-	// 	{
-	// 		onSuccess: () => {
-	// 			setTableUpdate(!tableUpdate);
-	// 			gMsg.onSuccess("已向司法所发送禁止令！");
-	// 		},
-	// 		onError: (err) => {
-	// 			gMsg.onError(err);
-	// 		},
-	// 		onFinally: () => {},
-	// 		manual: true,
-	// 		debounceWait: 300,
-	// 	}
-	// );
-	// todo 获取到RewardPraise的信息
+	const { run } = useRequest(
+		(info: RewardPraise) => saveRewardPraiseInfo(info),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("审批成功");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
 	const [praise, setPraise] = useState<RewardPraise>(
 		{} as RewardPraise
 	);
+	useRequest(() => getRewardPraiseInfo(info.processId), {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setPraise(data.data);
+
+				if (praise.xjsqjzjgspsj)
+					praise.xjsqjzjgspsj = dayjs(praise.xjsqjzjgspsj);
+			}
+		},
+		onError: (err) => {
+			gMsg.onError(err);
+		},
+		refreshDeps: [tableUpdate, info.processId],
+		ready: info != undefined,
+		debounceWait: 300,
+	});
 
 	// todo 发起审批更新操作
 
 	const [form] = useForm();
 
-	const getSteps = (info: DataType) => {
-		if (info == undefined) return [];
+	const getSteps = (detail: RewardPraise) => {
+		if (!detail) return [];
 
 		return [
 			{
 				title: "社区矫正机构审批",
 				content: (
 					<TemplateDescriptions
-						title={"表扬审批表"}
+						title="表扬审批表"
 						info={[
 							{
+								// label: "表扬审批表",
 								value: (
 									<Form
 										form={form}
-										initialValues={{ info }}
+										initialValues={{ detail }}
 										onFinish={(values) => {
 											const d =
 												values as RewardPraise;
-											// const d =
-											// 	values as BanInfo;
-											// d.step = info.step;
-											// d.dxbh = info.dxbh;
-											// runSend2JZJG(d);
+											d.step = 0;
+											d.id = info.processId;
+											d.dxbh = info.dxbh;
+											console.log(d);
+											run(d);
 										}}>
 										<Form.Item
 											name="xjsqjzjgspr"
@@ -95,8 +116,12 @@ function ProcessPraiseModal(props: {
 						]}
 					/>
 				),
-				nextAction: (current: number) => {
-					if (info && info.step <= current) form.submit();
+				nextAction: () => {
+					console.log(detail);
+					if (detail && detail.step <= 0) {
+						console.log("a");
+						form.submit();
+					}
 				},
 				check: (current: number) => true,
 			},
@@ -104,13 +129,25 @@ function ProcessPraiseModal(props: {
 				title: "社区矫正机构审批结果",
 				content: (
 					<div className="content">
-						<Progress
-							type="circle"
-							percent={100}
-							format={() =>
-								map2Value(spjgMap, praise.spjg)
-							}
-						/>
+						{detail.spjg == "02" ? (
+							<Progress
+								type="circle"
+								percent={100}
+								format={() =>
+									map2Value(spjgMap, detail.spjg)
+								}
+								status="exception"
+							/>
+						) : (
+							<Progress
+								type="circle"
+								percent={100}
+								status="success"
+								format={() =>
+									map2Value(spjgMap, detail.spjg)
+								}
+							/>
+						)}
 					</div>
 				),
 				nextAction: () => {
@@ -124,8 +161,8 @@ function ProcessPraiseModal(props: {
 		<TemplateModal
 			InfoDescriptions={
 				<TemplateSteps
-					steps={getSteps(info)}
-					step={info.step}
+					steps={getSteps(praise)}
+					step={praise.step ? praise.step : 0}
 				/>
 			}
 			open={open}

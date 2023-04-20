@@ -33,10 +33,14 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 	if (current != step) {
 		setCurrent(step);
 	}
+	// console.log(current, step, steps[current]);
+
 	return (
 		<>
 			<Steps current={current} items={items} />
-			<div style={contentStyle}>{steps[current].content}</div>
+			<div style={contentStyle}>
+				{steps[current] && steps[current].content}
+			</div>
 			<div style={{ marginTop: 24 }}>
 				{current < steps.length - 1 && (
 					<Button

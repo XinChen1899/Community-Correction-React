@@ -15,7 +15,7 @@ export default function TemplateDescriptions(props: {
 			{info.map((item, idx) => {
 				return (
 					<Descriptions.Item
-						label={item.label}
+						label={item.label ? item.label : ""}
 						key={idx}
 						style={{ textAlign: "center" }}>
 						{item.value}

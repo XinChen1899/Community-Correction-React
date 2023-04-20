@@ -17,10 +17,10 @@ export default function AddForm(props: {
 			<Form.Item name={"dxbh"} label={"社区矫正对象编号"}>
 				<Input />
 			</Form.Item>
-			<Form.Item label="奖励类别">
+			<Form.Item label="奖励类别" name={"jllb"}>
 				{generateSelect(jllbMap)}
 			</Form.Item>
-			<Form.Item label="奖励原因">
+			<Form.Item label="奖励原因" name={"jlyy"}>
 				<Input.TextArea />
 			</Form.Item>
 			<Form.Item name={"date"} label="奖励时间">

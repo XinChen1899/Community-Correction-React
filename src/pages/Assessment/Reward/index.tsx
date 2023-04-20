@@ -1,9 +1,11 @@
+import { getAllRewards } from "@/api/assessment/reward";
 import { RewardInfo } from "@/entity/Assessment/Reward/RewardInfo";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { TagType } from "@/template/Tag";
 import { jllbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { useRequest } from "ahooks";
 import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
@@ -45,26 +47,13 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-const staticTableData: DataType[] = [
-	{
-		id: 1,
-		dxbh: "00000001",
-		xm: "xxx",
-		jllb: "01",
-		step: 0,
-		date: "xxx",
-		jlr: "Xxx",
-		jlyy: "yyy",
-	},
-];
-
 export default function Reward() {
 	const [record, setRecord] = useState<DataType>({
 		dxbh: "",
 	} as DataType);
 
-	const [tableData, setTableData] =
-		useState<DataType[]>(staticTableData);
+	const [tableData, setTableData] = useState<DataType[]>([]);
+
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [openInfo, setOpenInfo] = useState(false);
@@ -119,6 +108,26 @@ export default function Reward() {
 		}
 	});
 
+	useRequest(getAllRewards, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				if (record != undefined && record.dxbh != "") {
+					for (let i = 0; i < data.data.length; i++) {
+						if (data.data[i].dxbh == record.dxbh) {
+							setRecord(data.data[i]);
+							break;
+						}
+					}
+				}
+				setTableData(data.data);
+			}
+		},
+		onError: (error: any) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
+
 	return (
 		<>
 			<ProcessPraiseModal
@@ -138,7 +147,6 @@ export default function Reward() {
 				open={openAdd}
 				setOpen={setOpenAdd}
 				gMsg={gMsg}
-				info={record}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 			/>
@@ -160,7 +168,7 @@ export default function Reward() {
 				cardTitle={"奖励查询"}
 				statisticList={undefined}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
-				tableData={staticTableData}
+				tableData={tableData}
 				tableRowKey={(rec: DataType) => rec.id}
 			/>
 		</>

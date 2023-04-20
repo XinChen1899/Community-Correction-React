@@ -11,11 +11,10 @@ export default function AddModal(props: {
 	open: boolean;
 	setOpen: any;
 	gMsg: GMessage;
-	info: DataType;
 	tableUpdate: boolean;
 	setTableUpdate: any;
 }) {
-	const { setOpen, open, gMsg, info, tableUpdate, setTableUpdate } =
+	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
 		props;
 
 	const [form] = Form.useForm();
@@ -55,7 +54,7 @@ export default function AddModal(props: {
 					<AddForm
 						form={form}
 						onFinish={onFinish}
-						initialValues={{ ...info }}
+						initialValues={{}}
 					/>
 				}
 				open={open}

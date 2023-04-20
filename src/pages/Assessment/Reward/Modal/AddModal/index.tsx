@@ -1,17 +1,17 @@
+import { saveRewardInfo } from "@/api/assessment/reward";
+import { RewardInfo } from "@/entity/Assessment/Reward/RewardInfo";
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
-import { Form } from "antd";
-import AddForm from "../../Form/AddForm";
-import dayjs from "dayjs";
-import { ScoreModify } from "@/entity/Assessment/ScoreModify";
-import { saveScoreModify } from "@/api/assessment/score";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import { DataType } from "../..";
+import AddForm from "../../Form/AddForm";
 
 export default function AddModal(props: {
 	open: boolean;
 	setOpen: any;
 	gMsg: GMessage;
-	info: any;
+	info: DataType;
 	tableUpdate: boolean;
 	setTableUpdate: any;
 }) {
@@ -24,29 +24,28 @@ export default function AddModal(props: {
 		form.submit();
 	};
 
-	// const { loading, run } = useRequest(
-	// 	(detail: any) => saveScoreModify(detail),
-	// 	{
-	// 		onSuccess: () => {
-	// 			setTableUpdate(!tableUpdate);
-	// 			gMsg.onSuccess("计分成功!");
-	// 		},
-	// 		onError: (err) => {
-	// 			gMsg.onError(err);
-	// 		},
-	// 		onFinally: () => {
-	// 			setOpen(false);
-	// 		},
-	// 		manual: true,
-	// 		debounceWait: 300,
-	// 	}
-	// );
+	const { loading, run } = useRequest(
+		(detail: DataType) => saveRewardInfo(detail),
+		{
+			onSuccess: () => {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("新增奖励!");
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
-		const detail = values as ScoreModify;
-		// if (values.select == "02") detail.score = -detail.score;
-		// run(detail);
+		const detail = values as RewardInfo;
+		if (detail.dxbh != "") run(detail);
 	};
 
 	return (
@@ -56,13 +55,13 @@ export default function AddModal(props: {
 					<AddForm
 						form={form}
 						onFinish={onFinish}
-						initialValues={{ date: dayjs(), ...info }}
+						initialValues={{ ...info }}
 					/>
 				}
 				open={open}
 				setOpen={setOpen}
 				onOk={handleOk}
-				confirmLoading={false}
+				confirmLoading={loading}
 			/>
 		</>
 	);

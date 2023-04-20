@@ -1,5 +1,5 @@
 import { getAllScores } from "@/api/assessment/score";
-import { Score } from "@/entity/Assessment/Score";
+import { Score } from "@/entity/Assessment/Score/Score";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { TagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";

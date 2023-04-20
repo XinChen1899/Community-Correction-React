@@ -1,5 +1,5 @@
 import { getScoreDetail } from "@/api/assessment/score";
-import { ScoreDetail } from "@/entity/Assessment/ScoreDetail";
+import { ScoreDetail } from "@/entity/Assessment/Score/ScoreDetail";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateTag, { TagType } from "@/template/Tag";

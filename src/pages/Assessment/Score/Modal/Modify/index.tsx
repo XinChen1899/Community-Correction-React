@@ -1,11 +1,11 @@
+import { saveScoreModify } from "@/api/assessment/score";
+import { ScoreModify } from "@/entity/Assessment/Score/ScoreModify";
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
-import { Form } from "antd";
-import ModifyForm from "../../Form/ModifyForm";
-import dayjs from "dayjs";
-import { ScoreModify } from "@/entity/Assessment/ScoreModify";
-import { saveScoreModify } from "@/api/assessment/score";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import dayjs from "dayjs";
+import ModifyForm from "../../Form/ModifyForm";
 
 export default function ModifyModal(props: {
 	open: boolean;

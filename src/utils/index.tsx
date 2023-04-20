@@ -21,10 +21,10 @@ export const bdcpgrdlxMap = [
 	{ code: "99", value: "其他" },
 ];
 
-export const xbMap = [
-	{ code: "01", value: "男" },
-	{ code: "02", value: "女" },
-];
+export const xbMap = getCodeMap([
+	["01", "男"],
+	["02", "女"],
+]);
 
 export const zmMap = [
 	{ code: "01", value: "危害国家安全" },
@@ -105,10 +105,10 @@ export const gjMap = [
 	{ code: "99", value: "其他" },
 ];
 
-export const hjlxMap = [
-	{ code: "01", value: "乡村人口" },
-	{ code: "02", value: "城镇人口" },
-];
+export const hjlxMap = getCodeMap([
+	["01", "乡村人口"],
+	["02", "城镇人口"],
+]);
 
 export const hyzkMap = [
 	{ code: "01", value: "未婚" },
@@ -153,10 +153,10 @@ export const zzjzlxMap = [
 	{ code: "99", value: "其他" },
 ];
 
-export const sjMap = [
-	{ code: "01", value: "否" },
-	{ code: "02", value: "是" },
-];
+export const sjMap = getCodeMap([
+	["01", "否"],
+	["02", "是"],
+]);
 
 export const sjzxlxMap = [
 	{ code: "01", value: "撤销缓刑" },
@@ -165,23 +165,25 @@ export const sjzxlxMap = [
 	{ code: "03", value: "对暂予监外执行社区矫正对象决定收监执行" },
 ];
 
-export const jllbMap = [
-	{ code: "01", value: "表扬" },
-	{ code: "02", value: "减刑" },
-];
+export const jllbMap = getCodeMap([
+	["01", "表扬"],
+	["02", "立功"],
+	["03", "重大立功"],
+	["04", "减刑"],
+]);
 
-export const jcjzlxMap = [
-	{ code: "01", value: "期满解除" },
-	{ code: "02", value: "特赦" },
-	{ code: "99", value: "其他" },
-];
+export const jcjzlxMap = getCodeMap([
+	["01", "期满解除"],
+	["02", "特赦"],
+	["99", "其他"],
+]);
 // 认罪态度
-export const rztdMap = [
-	{ code: "01", value: "认罪服法" },
-	{ code: "02", value: "服管不认罪" },
-	{ code: "03", value: "认罪不服管" },
-	{ code: "04", value: "不认罪不服管" },
-];
+export const rztdMap = getCodeMap([
+	["01", "认罪服法"],
+	["02", "服管不认罪"],
+	["03", "认罪不服管"],
+	["04", "不认罪不服管"],
+]);
 // 是否成年
 export const sfcnMap = getCodeMap([
 	["01", "否"],

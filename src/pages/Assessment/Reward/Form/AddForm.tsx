@@ -1,6 +1,6 @@
-import "react";
-import { DatePicker, Form, Input, InputNumber, Select } from "antd";
 import { generateSelect, jllbMap } from "@/utils";
+import { DatePicker, Form, Input } from "antd";
+import "react";
 
 export default function AddForm(props: {
 	form: any;
@@ -21,13 +21,13 @@ export default function AddForm(props: {
 				{generateSelect(jllbMap)}
 			</Form.Item>
 			<Form.Item label="奖励原因">
-				{generateSelect(jllbMap)}
+				<Input.TextArea />
 			</Form.Item>
 			<Form.Item name={"date"} label="奖励时间">
 				<DatePicker />
 			</Form.Item>
 			<Form.Item name={"jlr"} label="记录人">
-				<Input disabled />
+				<Input />
 			</Form.Item>
 		</Form>
 	);

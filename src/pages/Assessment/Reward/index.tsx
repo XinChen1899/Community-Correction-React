@@ -1,23 +1,15 @@
+import { RewardInfo } from "@/entity/Assessment/Reward/RewardInfo";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
+import { jllbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal";
 import InfoModal from "./Modal/InfoModal";
-import TaskRecvModal from "./Modal/RecvModal";
-
-export interface RewardInfo {
-	id: number;
-	dxbh: string;
-	xm: string;
-	jllb: string; // 奖励类型
-	jlyy: string; // 奖励原因
-	date: string; // 奖励时间
-	jlr: string; // 记录人
-	step: number; // 当前审批步骤
-}
+import ProcessPraiseModal from "./Modal/ProcessPraiseModal";
 
 export type DataType = RewardInfo;
 
@@ -40,7 +32,12 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "jllb",
 		align: "center",
 		key: "jllb",
-		render: (_, record) => <Tag>{record.jllb}</Tag>,
+		render: (_, record) => (
+			<TemplateTag
+				value={map2Value(jllbMap, record.jllb)}
+				type={TagType.Info}
+			/>
+		),
 	},
 	{
 		title: "操作",
@@ -53,7 +50,7 @@ const staticTableData: DataType[] = [
 		id: 1,
 		dxbh: "00000001",
 		xm: "xxx",
-		jllb: "yyy",
+		jllb: "01",
 		step: 0,
 		date: "xxx",
 		jlr: "Xxx",
@@ -71,6 +68,7 @@ export default function Reward() {
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [openInfo, setOpenInfo] = useState(false);
+	const [openPraise, setOpenPraise] = useState(false);
 	const [openAdd, setOpenAdd] = useState(false);
 	const [openRecv, setOpenRecv] = useState(false);
 
@@ -97,11 +95,11 @@ export default function Reward() {
 						<Button
 							type={"dashed"}
 							onClick={() => setOpenInfo(true)}>
-							查看奖励
+							查看奖励信息
 						</Button>
 						<Button
 							type={"primary"}
-							onClick={() => setOpenInfo(true)}>
+							onClick={() => setOpenPraise(true)}>
 							审批
 						</Button>
 
@@ -123,9 +121,10 @@ export default function Reward() {
 
 	return (
 		<>
-			<TaskRecvModal
-				open={openRecv}
-				setOpen={setOpenRecv}
+			<ProcessPraiseModal
+				open={openPraise}
+				setOpen={setOpenPraise}
+				info={record}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
@@ -134,14 +133,12 @@ export default function Reward() {
 				open={openInfo}
 				setOpen={setOpenInfo}
 				info={record}
-				gMsg={gMsg}
-				tableUpdate={tableUpdate}
 			/>
 			<AddModal
 				open={openAdd}
 				setOpen={setOpenAdd}
 				gMsg={gMsg}
-				info={undefined}
+				info={record}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 			/>
@@ -150,22 +147,14 @@ export default function Reward() {
 				columns={columns}
 				cardExtra={
 					<>
-						<Space>
-							<Button
-								onClick={() => setOpenRecv(true)}
-								type={"primary"}
-								icon={<PlusOutlined />}>
-								接收表扬审批表
-							</Button>
-							<Button
-								type="primary"
-								icon={<PlusOutlined />}
-								onClick={() => {
-									setOpenAdd(true);
-								}}>
-								新增奖励
-							</Button>
-						</Space>
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={() => {
+								setOpenAdd(true);
+							}}>
+							新增奖励
+						</Button>
 					</>
 				}
 				cardTitle={"奖励查询"}

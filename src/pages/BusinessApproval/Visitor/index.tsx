@@ -1,7 +1,9 @@
-import { getAllBans } from "@/api/business/ban";
-import { BanInfo } from "@/entity/Business/Ban/BanInfo";
+import { getAllVisitor } from "@/api/business/visitor";
+import { VisitorInfo } from "@/entity/Business/Visitor/VisitorInfo";
+import TemplateNotification from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { TagType } from "@/template/Tag";
+import { map2Value, spjgMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	DownOutlined,
@@ -15,35 +17,41 @@ import { useState } from "react";
 import AddModal from "./Modal/AddModal";
 import ProcessModal from "./Modal/ProcessModal";
 
-export type DataType = BanInfo;
+export type DataType = VisitorInfo;
 
 const columns: ColumnsType<DataType> = [
 	{
 		title: "申请对象编号",
 		dataIndex: "dxbh",
 		key: "dxbh",
+		align: "center",
 	},
 	{
 		title: "申请对象姓名",
 		dataIndex: "xm",
+		align: "center",
 		key: "xm",
 	},
 	{
-		title: "申请进入的场所",
-		dataIndex: "sqjrcs",
-		key: "sqjrcs",
+		title: "会见人姓名",
+		dataIndex: "hjrxm",
+		align: "center",
+		key: "hjrxm",
 		render: (_, rec) => (
-			<TemplateTag value={rec.sqjrcs} type={TagType.Info} />
+			<TemplateTag value={rec.hjrxm} type={TagType.Info} />
 		),
 	},
 	{
 		title: "审批结果",
-		dataIndex: "xjsqjzjgspyj",
-		key: "xjsqjzjgspyj",
+		dataIndex: "spjg",
+		align: "center",
+		key: "spjg",
 		render: (_, rec) => (
 			<TemplateTag
-				value={rec.xjsqjzjgspyj}
-				type={TagType.Accept}
+				value={map2Value(spjgMap, rec.spjg)}
+				type={
+					rec.spjg == "01" ? TagType.Accept : TagType.Error
+				}
 			/>
 		),
 	},
@@ -110,18 +118,37 @@ export default function VisitorApproval() {
 	const [openAdd, setOpenAdd] = useState(false);
 	const [openProcess, setOpenProcess] = useState(false);
 
-	useRequest(getAllBans, {
+	useRequest(getAllVisitor, {
 		onSuccess: ({ data }) => {
-			setTableData(data.data);
+			if (data.status == 200) {
+				if (
+					selectRecord != undefined &&
+					selectRecord.dxbh != ""
+				) {
+					for (let i = 0; i < data.data.length; i++) {
+						if (data.data[i].dxbh == selectRecord.dxbh) {
+							setSelectRecord(data.data[i]);
+							break;
+						}
+					}
+				}
+				setTableData(data.data);
+			}
 		},
 		onError: (error) => {
 			gMsg.onError(error);
 		},
 		refreshDeps: [tableUpdate],
 	});
+	const [showNotify, setShowNotify] = useState(false);
 
 	return (
 		<>
+			<TemplateNotification
+				message={"新的待办消息"}
+				description={"会客审批待办！请及时处理"}
+				runCondition={showNotify}
+			/>
 			<ProcessModal
 				open={openProcess}
 				setOpen={setOpenProcess}
@@ -129,6 +156,7 @@ export default function VisitorApproval() {
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
+				setNotify={setShowNotify}
 			/>
 			<AddModal
 				open={openAdd}
@@ -150,11 +178,11 @@ export default function VisitorApproval() {
 								setSelectRecord({} as DataType);
 								setOpenAdd(true);
 							}}>
-							添加进入特定场所/区域审批
+							添加会客审批
 						</Button>
 					</>
 				}
-				cardTitle={"进入特定场所审批"}
+				cardTitle={"会客审批"}
 				statisticList={[{ title: "今日审批数", value: 999 }]}
 				tableOnRow={(rec: DataType) => setSelectRecord(rec)}
 				tableData={tableData}

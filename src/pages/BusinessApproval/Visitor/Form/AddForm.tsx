@@ -1,6 +1,6 @@
-import "react";
 import TemplateForm from "@/template/Form";
 import { DatePicker, Input } from "antd";
+import "react";
 
 export default function AddForm(props: {
 	form: any;
@@ -23,29 +23,29 @@ export default function AddForm(props: {
 					component: <Input />,
 				},
 				{
-					name: "sqjrcs",
-					label: "申请进入场所",
+					name: "hjrxm",
+					label: "会见人姓名",
+					component: <Input />,
+				},
+				{
+					name: "hksj",
+					label: "会客时间",
+					component: <DatePicker />,
+				},
+				{
+					name: "hkdd",
+					label: "会客地点",
+					component: <Input />,
+				},
+				{
+					name: "hkyy",
+					label: "会客原因",
 					component: <Input />,
 				},
 				{
 					name: "sqrq",
 					label: "申请日期",
 					component: <DatePicker />,
-				},
-				{
-					name: "sqjrsj",
-					label: "申请进入时间",
-					component: <DatePicker />,
-				},
-				{
-					name: "sqjssj",
-					label: "申请结束时间",
-					component: <DatePicker />,
-				},
-				{
-					name: "sqly",
-					label: "申请理由",
-					component: <Input.TextArea />,
 				},
 				{
 					name: "sfsshr",

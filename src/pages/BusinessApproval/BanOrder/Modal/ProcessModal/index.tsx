@@ -7,6 +7,7 @@ import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
+import { generateSelect, spjgMap } from "@/utils";
 import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
@@ -184,6 +185,11 @@ function ProcessModal(props: {
 											name="xjsqjzjgspyj"
 											label="县级社区矫正机构审批意见">
 											<Input.TextArea />
+										</Form.Item>
+										<Form.Item
+											name="spjg"
+											label="县级社区矫正机构审批结果">
+											{generateSelect(spjgMap)}
 										</Form.Item>
 									</Form>
 								),

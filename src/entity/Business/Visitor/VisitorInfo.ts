@@ -1,16 +1,17 @@
 import { Dayjs } from "dayjs";
 
-export interface BanInfo {
+export interface VisitorInfo {
 	step: number; // 审批步骤
 	processId?: string;
 
 	dxbh: string; // 申请对象的编号
 	xm: string; // 申请人姓名
-	sqjrcs: string; // 申请进入场所
-	sqrq: string | Dayjs; //申请日期
-	sqjrsj: string | Dayjs; //申请进入时间
-	sqjssj: string | Dayjs; //申请结束时间
-	sqly: string; // 申请理由
+
+	hjrxm: string; // 会见人姓名
+	hksj: string | Dayjs; //会客时间
+	hkdd: string; // 会客地点
+	hkyy: string; // 会客原因
+	sqrq: string | Dayjs; // 申请时间
 
 	sfsshr: string; // 受委托的司法所审核人
 	sfsshsj: string | Dayjs; //司法所审核时间
@@ -20,5 +21,5 @@ export interface BanInfo {
 	xjsqjzjgspsj: string | Dayjs; // 县级社区矫正机构审批时间
 	xjsqjzjgspyj: string; // 县级社区矫正机构审批意见
 
-	spjg: string; // 审批结果
+	spjg: string; //审批结果
 }

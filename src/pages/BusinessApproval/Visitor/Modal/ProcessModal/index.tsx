@@ -1,7 +1,16 @@
+import {
+	visSend2JZJG,
+	visSend2SFS,
+	visSfsSendToJzjg,
+} from "@/api/business/visitor";
+import { VisitorInfo } from "@/entity/Business/Visitor/VisitorInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
-import { DataType } from "../..";
+import { generateSelect, spjgMap } from "@/utils";
+import { getDate } from "@/utils/ie";
+import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
 import {
 	Button,
 	DatePicker,
@@ -11,16 +20,8 @@ import {
 	Spin,
 	message,
 } from "antd";
-import {
-	send2JZJG,
-	send2SFS,
-	sfsSendToJzjg,
-} from "@/api/business/ban";
-import { GMessage } from "@/utils/msg/GMsg";
-import { useRequest } from "ahooks";
-import { getDate } from "@/utils/ie";
 import { useForm } from "antd/es/form/Form";
-import { BanInfo } from "@/entity/Business/Ban/BanInfo";
+import { DataType } from "../..";
 
 function ProcessModal(props: {
 	open: boolean;
@@ -29,30 +30,48 @@ function ProcessModal(props: {
 	tableUpdate: boolean;
 	setTableUpdate: any;
 	gMsg: GMessage;
+	setNotify: any;
 }) {
-	const { open, setOpen, info, tableUpdate, setTableUpdate, gMsg } =
-		props;
+	const {
+		open,
+		setOpen,
+		info,
+		tableUpdate,
+		setTableUpdate,
+		gMsg,
+		setNotify,
+	} = props;
 
 	const { run: runSfsSendToJzjg } = useRequest(
-		(info: DataType) => sfsSendToJzjg(info),
+		(info: DataType) => visSfsSendToJzjg(info),
 		{
+			onSuccess() {
+				setTableUpdate(!tableUpdate);
+			},
+			onFinally() {
+				setOpen(false);
+				setNotify(true);
+			},
 			manual: true,
 		}
 	);
 
 	const { run: runSend2JZJG } = useRequest(
-		(info: DataType) => send2JZJG(info),
+		(info: DataType) => visSend2JZJG(info),
 		{
+			onSuccess() {
+				setTableUpdate(!tableUpdate);
+			},
 			manual: true,
 		}
 	);
 
 	const { run: runSend2SFS } = useRequest(
-		(info: DataType) => send2SFS(info),
+		(info: DataType) => visSend2SFS(info),
 		{
 			onSuccess: () => {
 				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("已向司法所发送禁止令！");
+				gMsg.onSuccess("已向司法所发送会客审批！");
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -77,21 +96,28 @@ function ProcessModal(props: {
 							{ label: "对象编号", value: info.dxbh },
 							{ label: "对象姓名", value: info.xm },
 							{
-								label: "申请进入场所",
-								value: info.sqjrcs,
+								label: "会见人姓名",
+								value: info.hjrxm,
 							},
 							{
-								label: "申请日期",
+								label: "会客时间",
+								value: getDate(info.hksj),
+							},
+							{
+								label: "会客地点",
+								value: info.hkdd,
+							},
+
+							{
+								label: "申请时间",
 								value: getDate(info.sqrq),
 							},
-							{ label: "申请理由", value: info.sqly },
+							{ label: "会客原因", value: info.hkyy },
 						]}
 					/>
 				),
 				nextAction: () => {
 					runSend2SFS(info);
-					setTableUpdate(!tableUpdate);
-					message.info("Next Action");
 				},
 				check: () => true,
 			},
@@ -125,7 +151,7 @@ function ProcessModal(props: {
 				title: "社区矫正机构审批",
 				content: (
 					<TemplateDescriptions
-						title={"进入特定场所审批表"}
+						title={"会客审批表"}
 						info={[
 							{
 								label: "司法所审核人",
@@ -147,7 +173,7 @@ function ProcessModal(props: {
 										initialValues={{ info }}
 										onFinish={(values) => {
 											const d =
-												values as BanInfo;
+												values as VisitorInfo;
 											d.step = info.step;
 											d.dxbh = info.dxbh;
 											runSend2JZJG(d);
@@ -166,6 +192,11 @@ function ProcessModal(props: {
 											name="xjsqjzjgspyj"
 											label="县级社区矫正机构审批意见">
 											<Input.TextArea />
+										</Form.Item>
+										<Form.Item
+											name="spjg"
+											label="县级社区矫正机构审批结果">
+											{generateSelect(spjgMap)}
 										</Form.Item>
 									</Form>
 								),

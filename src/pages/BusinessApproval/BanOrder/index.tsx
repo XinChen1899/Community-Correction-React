@@ -3,6 +3,7 @@ import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import TemplateNotification from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { TagType } from "@/template/Tag";
+import { map2Value, spjgMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	DownOutlined,
@@ -22,16 +23,19 @@ const columns: ColumnsType<DataType> = [
 	{
 		title: "申请对象编号",
 		dataIndex: "dxbh",
+		align: "center",
 		key: "dxbh",
 	},
 	{
 		title: "申请对象姓名",
 		dataIndex: "xm",
+		align: "center",
 		key: "xm",
 	},
 	{
 		title: "申请进入的场所",
 		dataIndex: "sqjrcs",
+		align: "center",
 		key: "sqjrcs",
 		render: (_, rec) => (
 			<TemplateTag value={rec.sqjrcs} type={TagType.Info} />
@@ -39,12 +43,15 @@ const columns: ColumnsType<DataType> = [
 	},
 	{
 		title: "审批结果",
-		dataIndex: "xjsqjzjgspyj",
-		key: "xjsqjzjgspyj",
+		dataIndex: "spjg",
+		align: "center",
+		key: "spjg",
 		render: (_, rec) => (
 			<TemplateTag
-				value={rec.xjsqjzjgspyj}
-				type={TagType.Accept}
+				value={map2Value(spjgMap, rec.spjg)}
+				type={
+					rec.spjg == "01" ? TagType.Accept : TagType.Error
+				}
 			/>
 		),
 	},

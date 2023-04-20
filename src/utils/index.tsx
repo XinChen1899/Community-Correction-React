@@ -188,6 +188,12 @@ export const sfcnMap = getCodeMap([
 	["02", "是"],
 ]);
 
+// 审批结果
+export const spjgMap = getCodeMap([
+	["01", "通过"],
+	["02", "不通过"],
+]);
+
 export const generateSelect = (
 	selectList: any,
 	config?: { width?: number; disabled?: boolean }

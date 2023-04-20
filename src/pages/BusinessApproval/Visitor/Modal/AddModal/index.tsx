@@ -1,13 +1,12 @@
+import { saveVisitorInfo } from "@/api/business/visitor";
+import { VisitorInfo } from "@/entity/Business/Visitor/VisitorInfo";
 import TemplateModal from "@/template/Modal";
-import AddForm from "../../Form/AddForm";
 import { GMessage } from "@/utils/msg/GMsg";
-import { Form } from "antd";
-import { DataType } from "../..";
-import { saveBanInfo } from "@/api/business/ban";
-import { BanInfo } from "@/entity/Business/Ban/BanInfo";
-import { getDate } from "@/utils/ie";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
 import dayjs from "dayjs";
+import { DataType } from "../..";
+import AddForm from "../../Form/AddForm";
 
 export default function AddModal(props: {
 	open: boolean;
@@ -27,7 +26,7 @@ export default function AddModal(props: {
 	};
 
 	const { loading, run } = useRequest(
-		(detail: any) => saveBanInfo(detail),
+		(detail: any) => saveVisitorInfo(detail),
 		{
 			onSuccess: () => {
 				setTableUpdate(!tableUpdate);
@@ -46,7 +45,7 @@ export default function AddModal(props: {
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
-		const detail = values as BanInfo;
+		const detail = values as VisitorInfo;
 		if (detail.dxbh != "") {
 			detail.step =
 				info == undefined ? 0 : info.step ? info.step : 0;
@@ -56,8 +55,7 @@ export default function AddModal(props: {
 
 	if (info != undefined) {
 		if (info.sqrq) info.sqrq = dayjs(info.sqrq);
-		if (info.sqjrsj) info.sqjrsj = dayjs(info.sqjrsj);
-		if (info.sqjssj) info.sqjssj = dayjs(info.sqjssj);
+		if (info.hksj) info.hksj = dayjs(info.hksj);
 		if (info.sfsshsj) info.sfsshsj = dayjs(info.sfsshsj);
 		if (info.xjsqjzjgspsj)
 			info.xjsqjzjgspsj = dayjs(info.xjsqjzjgspsj);

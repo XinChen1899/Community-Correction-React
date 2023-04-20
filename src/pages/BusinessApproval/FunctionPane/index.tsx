@@ -1,4 +1,4 @@
-import { Card, Space, Row, Col } from "antd";
+import { Card, Col, Row, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 
 export default function FunctionPane() {
@@ -25,8 +25,14 @@ export default function FunctionPane() {
 						</Card>
 					</Col>
 					<Col span={8}>
-						<Card title="会客" bordered={false} hoverable>
-							Card content
+						<Card
+							title="会客"
+							bordered={false}
+							hoverable
+							onClick={() => {
+								navigate("/business/visitor");
+							}}>
+							会客审批
 						</Card>
 					</Col>
 					<Col span={8}>

@@ -6,6 +6,8 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 	const { token } = theme.useToken();
 	const [current, setCurrent] = useState(step);
 
+	// console.log(current, step);
+
 	const next = () => {
 		setCurrent(current + 1);
 	};

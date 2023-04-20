@@ -1,6 +1,5 @@
 import { getAllBans } from "@/api/business/ban";
 import { BanInfo } from "@/entity/Business/Ban/BanInfo";
-import TemplateNotification from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { TagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -53,7 +52,7 @@ const columns: ColumnsType<DataType> = [
 		key: "action",
 	},
 ];
-export default function BanOrder() {
+export default function VisitorApproval() {
 	const [gMsg, contextHolder] = useMessage();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
@@ -110,24 +109,10 @@ export default function BanOrder() {
 
 	const [openAdd, setOpenAdd] = useState(false);
 	const [openProcess, setOpenProcess] = useState(false);
-	const [showNotify, setShowNotify] = useState(false);
 
 	useRequest(getAllBans, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
-				if (
-					selectRecord != undefined &&
-					selectRecord.dxbh != ""
-				) {
-					for (let i = 0; i < data.data.length; i++) {
-						if (data.data[i].dxbh == selectRecord.dxbh) {
-							setSelectRecord(data.data[i]);
-							break;
-						}
-					}
-				}
-				setTableData(data.data);
-			}
+			setTableData(data.data);
 		},
 		onError: (error) => {
 			gMsg.onError(error);
@@ -137,11 +122,6 @@ export default function BanOrder() {
 
 	return (
 		<>
-			<TemplateNotification
-				message={"新的待办消息"}
-				description={"禁止令待办！请及时处理"}
-				runCondition={showNotify}
-			/>
 			<ProcessModal
 				open={openProcess}
 				setOpen={setOpenProcess}
@@ -149,7 +129,6 @@ export default function BanOrder() {
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
-				setNotify={setShowNotify}
 			/>
 			<AddModal
 				open={openAdd}

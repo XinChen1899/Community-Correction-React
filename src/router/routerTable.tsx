@@ -43,6 +43,7 @@ export const routeNameMap = {
 
 	business: "业务审批",
 	ban: "禁止令",
+	visitor: "会客审批",
 
 	assesment: "考核奖惩",
 	score: "计分考核",
@@ -249,6 +250,17 @@ export const routeTable = [
 							import(
 								"@/pages/BusinessApproval/BanOrder"
 							)
+					)
+				),
+			},
+			{
+				url: "business/visitor",
+				page: getPageItem(
+					"visitor",
+					routeNameMap.visitor,
+					lazy(
+						() =>
+							import("@/pages/BusinessApproval/Visitor")
 					)
 				),
 			},

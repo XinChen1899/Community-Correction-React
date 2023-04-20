@@ -9,11 +9,22 @@
 - Axios
 - [ahooks](https://ahooks.js.org/zh-CN/guide)
 
-## 启动项目
-
+## 操作
+### 配置
 ```bash
-yarn run dev
+git clone https://github.com/xieyuquanxx/Community-Correction-React.git
+npm install
 ```
+### 启动项目
+```bash
+npm run dev
+or
+yarn run dev 
+```
+
+
+## Features
+1. 全局流程代办通知
 
 ## Bugs
 1. 分类管理-管理审批 设置step无效 ✅

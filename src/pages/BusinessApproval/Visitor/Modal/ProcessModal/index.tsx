@@ -1,15 +1,7 @@
-import {
-	send2JZJG,
-	send2SFS,
-	sfsSendToJzjg,
-} from "@/api/business/ban";
-import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
-import { getDate } from "@/utils/ie";
-import { GMessage } from "@/utils/msg/GMsg";
-import { useRequest } from "ahooks";
+import { DataType } from "../..";
 import {
 	Button,
 	DatePicker,
@@ -19,8 +11,16 @@ import {
 	Spin,
 	message,
 } from "antd";
+import {
+	send2JZJG,
+	send2SFS,
+	sfsSendToJzjg,
+} from "@/api/business/ban";
+import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
+import { getDate } from "@/utils/ie";
 import { useForm } from "antd/es/form/Form";
-import { DataType } from "../..";
+import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 
 function ProcessModal(props: {
 	open: boolean;
@@ -29,28 +29,13 @@ function ProcessModal(props: {
 	tableUpdate: boolean;
 	setTableUpdate: any;
 	gMsg: GMessage;
-	setNotify: any;
 }) {
-	const {
-		open,
-		setOpen,
-		info,
-		tableUpdate,
-		setTableUpdate,
-		gMsg,
-		setNotify,
-	} = props;
+	const { open, setOpen, info, tableUpdate, setTableUpdate, gMsg } =
+		props;
 
 	const { run: runSfsSendToJzjg } = useRequest(
 		(info: DataType) => sfsSendToJzjg(info),
 		{
-			onSuccess() {
-				setTableUpdate(!tableUpdate);
-			},
-			onFinally() {
-				setOpen(false);
-				setNotify(true);
-			},
 			manual: true,
 		}
 	);
@@ -58,10 +43,6 @@ function ProcessModal(props: {
 	const { run: runSend2JZJG } = useRequest(
 		(info: DataType) => send2JZJG(info),
 		{
-			onSuccess() {
-				setTableUpdate(!tableUpdate);
-			},
-
 			manual: true,
 		}
 	);
@@ -76,6 +57,7 @@ function ProcessModal(props: {
 			onError: (err) => {
 				gMsg.onError(err);
 			},
+			onFinally: () => {},
 			manual: true,
 			debounceWait: 300,
 		}
@@ -107,7 +89,9 @@ function ProcessModal(props: {
 					/>
 				),
 				nextAction: () => {
-					if (info.step == 0) runSend2SFS(info);
+					runSend2SFS(info);
+					setTableUpdate(!tableUpdate);
+					message.info("Next Action");
 				},
 				check: () => true,
 			},
@@ -166,8 +150,6 @@ function ProcessModal(props: {
 												values as BanInfo;
 											d.step = info.step;
 											d.dxbh = info.dxbh;
-											d.processId =
-												info.processId;
 											runSend2JZJG(d);
 										}}>
 										<Form.Item

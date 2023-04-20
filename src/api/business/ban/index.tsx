@@ -1,15 +1,15 @@
+import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import { getDate } from "@/utils/ie";
 import { api } from "..";
-import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 
 export const getAllBans = () => {
 	return api.get("/ban/all");
 };
 
 const formConvertObject = (info: BanInfo) => {
-	info.sqrq = getDate(info.sqrq);
-	info.sqjrsj = getDate(info.sqjrsj);
-	info.sqjssj = getDate(info.sqjssj);
+	if (info.sqrq) info.sqrq = getDate(info.sqrq);
+	if (info.sqjrsj) info.sqjrsj = getDate(info.sqjrsj);
+	if (info.sqjssj) info.sqjssj = getDate(info.sqjssj);
 	if (info.sfsshsj) info.sfsshsj = getDate(info.sfsshsj);
 	if (info.xjsqjzjgspsj)
 		info.xjsqjzjgspsj = getDate(info.xjsqjzjgspsj);
@@ -24,11 +24,13 @@ export const sfsSendToJzjg = (info: BanInfo) => {
 
 // 更新司法所审核部分
 export const send2SFS = (info: BanInfo) => {
+	info = formConvertObject(info);
 	return api.post("/ban/sfs", info);
 };
-// 发送给社区矫正机构
+// 发送给社区矫正机构，就是更新操作
 export const send2JZJG = (info: BanInfo) => {
-	info.xjsqjzjgspsj = getDate(info.xjsqjzjgspsj);
+	info = formConvertObject(info);
+	console.log(info);
 	return api.post("/ban/jzjg", info);
 };
 

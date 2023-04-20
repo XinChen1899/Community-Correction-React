@@ -1,14 +1,15 @@
+import { getAllScores } from "@/api/assessment/score";
 import { Score } from "@/entity/Assessment/Score";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InfoModal from "./Modal/InfoModal";
 import ModifyModal from "./Modal/Modify";
-import { getAllScores } from "@/api/assessment/score";
-import { useRequest } from "ahooks";
 
 export type DataType = Score;
 
@@ -31,7 +32,9 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "score",
 		key: "score",
 		align: "center",
-		render: (_, record) => <Tag>{record.score}</Tag>,
+		render: (_, record) => (
+			<TemplateTag value={record.score} type={TagType.Info} />
+		),
 	},
 	{
 		title: "操作",
@@ -50,6 +53,8 @@ export default function AssessmentScore() {
 
 	const [tableData, setTableData] =
 		useState<DataType[]>(staticTableData);
+	const [history, setHistory] = useState<DataType[]>([]);
+
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [openInfo, setOpenInfo] = useState(false);
@@ -129,7 +134,40 @@ export default function AssessmentScore() {
 				columns={columns}
 				cardExtra={<></>}
 				cardTitle={"计分考核"}
-				statisticList={undefined}
+				searchList={[
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.dxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+				]}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={tableData}
 				tableRowKey={(rec: DataType) => rec.dxbh}

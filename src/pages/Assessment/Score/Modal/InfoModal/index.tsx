@@ -1,13 +1,15 @@
+import { getScoreDetail } from "@/api/assessment/score";
+import { ScoreDetail } from "@/entity/Assessment/ScoreDetail";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { List, Space, Tag } from "antd";
-import { useState } from "react";
-import { GMessage } from "@/utils/msg/GMsg";
-import { ScoreDetail } from "@/entity/Assessment/ScoreDetail";
-import { DataType } from "../..";
-import { getScoreDetail } from "@/api/assessment/score";
-import { useRequest } from "ahooks";
+import TemplateTag, { TagType } from "@/template/Tag";
 import { getDate } from "@/utils/ie";
+import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
+import { List, Skeleton } from "antd";
+import { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { DataType } from "../..";
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
@@ -46,29 +48,62 @@ export default function InfoModal(props: {
 		ready: info && info.dxbh != "",
 	});
 
-	const getInfos = (info: ScoreDetail) => {
+	const getInfos = (detail: ScoreDetail) => {
+		if (detail == undefined || detail.detail == undefined)
+			return [];
 		return [
-			{ label: "对象编号", value: info.dxbh },
+			{ label: "对象编号", value: detail.dxbh },
+			{ label: "对象姓名", value: info.xm },
+			{ label: "总分", value: info.score },
 			{
 				label: "计分情况",
 				value: (
-					<List
-						bordered
-						dataSource={info.detail}
-						renderItem={(item) => {
-							return (
-								<List.Item>
-									<Space>
-										<Tag>{item.score}分</Tag>-
-										<Tag>{item.reason}</Tag>-
-										<Tag>
-											{getDate(item.date)}
-										</Tag>
-									</Space>
-								</List.Item>
-							);
-						}}
-					/>
+					<InfiniteScroll
+						dataLength={detail.detail.length}
+						next={() => {}}
+						scrollableTarget="scrollableDiv"
+						hasMore={false}
+						loader={
+							<Skeleton
+								avatar
+								paragraph={{ rows: 1 }}
+								active
+							/>
+						}>
+						<List
+							bordered
+							dataSource={detail.detail}
+							renderItem={(item) => {
+								return (
+									<List.Item>
+										<List.Item.Meta
+											title={item.reason}
+											description={getDate(
+												item.date
+											)}
+										/>
+										<div>
+											{item.score > 0 ? (
+												<TemplateTag
+													value={`+${item.score} 分`}
+													type={
+														TagType.Accept
+													}
+												/>
+											) : (
+												<TemplateTag
+													value={`${item.score} 分`}
+													type={
+														TagType.Error
+													}
+												/>
+											)}
+										</div>
+									</List.Item>
+								);
+							}}
+						/>
+					</InfiniteScroll>
 				),
 			},
 		];

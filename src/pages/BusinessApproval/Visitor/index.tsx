@@ -64,7 +64,10 @@ export default function VisitorApproval() {
 	const [gMsg, contextHolder] = useMessage();
 
 	const [tableUpdate, setTableUpdate] = useState(false);
-	const [tableData, setTableData] = useState<DataType[]>();
+
+	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
+
 	const [selectRecord, setSelectRecord] = useState<DataType>(
 		{} as DataType
 	);
@@ -184,6 +187,56 @@ export default function VisitorApproval() {
 				}
 				cardTitle={"会客审批"}
 				statisticList={[{ title: "今日审批数", value: 999 }]}
+				searchList={[
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.dxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入审批结果",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.spjg.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+				]}
 				tableOnRow={(rec: DataType) => setSelectRecord(rec)}
 				tableData={tableData}
 				tableRowKey={(rec: DataType) => rec.dxbh}

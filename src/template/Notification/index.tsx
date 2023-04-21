@@ -1,26 +1,53 @@
-import { notification } from "antd";
-import { useEffect } from "react";
+import { SmileOutlined } from "@ant-design/icons";
+import { Button, notification } from "antd";
 
-type NotificationType = "success" | "info" | "warning" | "error";
+export type NotificationType =
+	| "success"
+	| "info"
+	| "warning"
+	| "error";
 
 const TemplateNotification = (props: {
 	message: string;
 	description: any;
-	runCondition: boolean;
+	runCondition?: boolean;
 }) => {
 	const { message, description, runCondition } = props;
 	const [api, contextHolder] = notification.useNotification();
-	const openNotificationWithIcon = (type: NotificationType) => {
-		api[type]({
+
+	const openNotification = () => {
+		api.open({
 			message,
 			description,
+			icon: <SmileOutlined style={{ color: "#108ee9" }} />,
 		});
 	};
-	useEffect(() => {
-		if (runCondition) openNotificationWithIcon("success");
-	}, [runCondition]);
 
-	return <>{contextHolder}</>;
+	return (
+		<>
+			{contextHolder}
+			<Button type="primary" onClick={openNotification}>
+				点我
+			</Button>
+		</>
+	);
 };
 
 export default TemplateNotification;
+
+export const useNotification = (
+	message: string,
+	description: any,
+	icon?: any
+): [any, () => void] => {
+	const [api, notifyContext] = notification.useNotification();
+
+	const openNotification = () => {
+		api.open({
+			message,
+			description,
+			icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+		});
+	};
+	return [notifyContext, openNotification];
+};

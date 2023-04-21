@@ -35,7 +35,7 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 	}, [step]);
 
 	const [current, setCurrent] = useState(0);
-	console.log(current, step, steps[current]);
+	// console.log(current, step, steps[current]);
 
 	return (
 		<>
@@ -44,6 +44,16 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 				{steps[current] && steps[current].content}
 			</div>
 			<div style={{ marginTop: 24 }}>
+				{steps[current] && steps[current].store && (
+					<Button
+						type="primary"
+						style={{ margin: "0 8px" }}
+						onClick={() => {
+							steps[current].onStore(current);
+						}}>
+						保存
+					</Button>
+				)}
 				{current < steps.length - 1 && (
 					<Button
 						type="primary"

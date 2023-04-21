@@ -1,17 +1,19 @@
+import { getAllTerminations, implTermSFS } from "@/api/termination";
+import { TerminationInfo } from "@/entity/Termination/TerminationInfo";
+import { useNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { TagType } from "@/template/Tag";
+import { map2Value, zzjzlxMap } from "@/utils";
+import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
-import RecvModal from "./Modal/RecvModal";
+import ProcessModal from "./Modal/ProcessModal";
 
-export interface DataType {
-	id: number;
-	dxbh: string; // 矫正对象编号
-	xm: string; // 矫正对象姓名
-	cf: string; // 处罚类型
-}
+export type DataType = TerminationInfo;
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -28,10 +30,28 @@ const columns: ColumnsType<DataType> = [
 		key: "xm",
 	},
 	{
-		title: "处罚",
-		dataIndex: "cf",
+		title: "终止矫正类型",
+		dataIndex: "zzjzlx",
+		key: "zzjzlx",
 		align: "center",
-		render: (_, record) => <Tag>{record.cf}</Tag>,
+		render: (_, record) => (
+			<TemplateTag
+				value={map2Value(zzjzlxMap, record.zzjzlx)}
+				type={TagType.Info}
+			/>
+		),
+	},
+	{
+		title: "终止矫正日期",
+		dataIndex: "zzjzrq",
+		key: "zzjzrq",
+		align: "center",
+		render: (_, record) => (
+			<TemplateTag
+				value={getDate(record.zzjzrq)}
+				type={TagType.Info}
+			/>
+		),
 	},
 	{
 		title: "操作",
@@ -39,21 +59,18 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-const staticTableData: DataType[] = [
-	{ id: 1, dxbh: "00000001", xm: "xxx", cf: "yyy" },
-];
-
 export default function TerminationCorrection() {
 	const [record, setRecord] = useState<DataType>({
 		dxbh: "",
 	} as DataType);
+	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
 
-	const [tableData, setTableData] =
-		useState<DataType[]>(staticTableData);
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [openInfo, setInfoModal] = useState(false);
 	const [openModify, setModifyModal] = useState(false);
+	const [openProcess, setOpenProcess] = useState(false);
 
 	const [gMsg, contextHolder] = useMessage();
 
@@ -64,21 +81,10 @@ export default function TerminationCorrection() {
 					block
 					type="text"
 					onClick={() => setModifyModal(true)}>
-					立功审核
+					占位
 				</Button>
 			),
 			key: "0",
-		},
-		{
-			label: (
-				<Button
-					block
-					type="text"
-					onClick={() => setModifyModal(true)}>
-					减刑审核
-				</Button>
-			),
-			key: "1",
 		},
 	];
 	columns.map((column) => {
@@ -87,9 +93,9 @@ export default function TerminationCorrection() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
-							onClick={() => setInfoModal(true)}>
-							查看处罚信息
+							type="primary"
+							onClick={() => setOpenProcess(true)}>
+							审批
 						</Button>
 
 						<Dropdown
@@ -108,33 +114,99 @@ export default function TerminationCorrection() {
 		}
 	});
 
+	const [notifyContext, openNotification] = useNotification(
+		"终止矫正待办",
+		"您有一条「终止矫正」待办信息，请及时处理"
+	);
+
+	useRequest(getAllTerminations, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setTableData(data.data);
+			}
+		},
+		refreshDeps: [tableUpdate],
+	});
+
+	const { run: implSfs } = useRequest(implTermSFS, {
+		manual: true,
+		onSuccess: ({ data }) => {
+			if (data.status == 200 && data.data == true) {
+				openNotification();
+				setTableUpdate(!tableUpdate);
+			}
+		},
+	});
+
 	return (
 		<>
-			<RecvModal
-				open={openModify}
-				setOpen={setModifyModal}
-				dxbh={""}
+			<ProcessModal
+				open={openProcess}
+				setOpen={setOpenProcess}
+				info={record}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
-				infoUpdate={false}
-				setInfoUpdate={undefined}
 			/>
 			{contextHolder}
+			{notifyContext}
 			<TemplateOperatorAndTable
 				columns={columns}
 				cardExtra={
-					<>
+					<Space>
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={() => {
+								implSfs();
+							}}>
+							接收终止矫正请求
+						</Button>
 						<Button
 							type="primary"
 							icon={<PlusOutlined />}
 							onClick={() => setModifyModal(true)}>
-							发起终止矫正
+							添加终止矫正
 						</Button>
-					</>
+					</Space>
 				}
 				cardTitle={"终止矫正"}
-				statisticList={undefined}
+				searchList={[
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.dxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+				]}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
-				tableData={staticTableData}
+				tableData={tableData}
 				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</>

@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-
+// todo yaml配置
 export const ServerTable = {
 	ie: "http://localhost:9006",
 	ic: "http://localhost:9007",
@@ -8,6 +8,7 @@ export const ServerTable = {
 	daily: "http://localhost:9010",
 	assessment: "http://localhost:9011",
 	business: "http://localhost:9012",
+	termination: "http://localhost:9013",
 };
 
 export const useAPI = (

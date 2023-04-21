@@ -1,4 +1,4 @@
-import { Layout, Tabs, theme } from "antd";
+import { Layout, theme } from "antd";
 
 import AppContent from "./Content";
 import AppFooter from "./Footer";

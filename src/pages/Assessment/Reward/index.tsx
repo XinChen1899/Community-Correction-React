@@ -123,14 +123,6 @@ export default function Reward() {
 	useRequest(getAllRewards, {
 		onSuccess: ({ data }) => {
 			if (data.status == 200) {
-				// if (record != undefined && record.dxbh != "") {
-				// 	for (let i = 0; i < data.data.length; i++) {
-				// 		if (data.data[i].dxbh == record.dxbh) {
-				// 			setRecord(data.data[i]);
-				// 			break;
-				// 		}
-				// 	}
-				// }
 				setTableData(data.data);
 			}
 		},

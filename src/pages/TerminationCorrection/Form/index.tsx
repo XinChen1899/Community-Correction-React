@@ -1,20 +1,11 @@
-import "react";
 import TemplateForm from "@/template/Form";
+import { generateSelect, sjMap, sjzxlxMap, spjgMap, zzjzlxMap } from "@/utils";
 import { DatePicker, Input } from "antd";
-import {
-	crjzjzlMap,
-	generateSelect,
-	jzlbMap,
-	sjMap,
-	sjzxlxMap,
-	xbMap,
-	zzjzlxMap,
-} from "@/utils";
 
 /**
  * 矫正解除（终止）信息 表单
  */
-export function TerminationForm(props: {
+export default function TerminationForm(props: {
 	form: any;
 	onFinish: any;
 	initialValues: any;
@@ -40,7 +31,7 @@ export function TerminationForm(props: {
 					component: generateSelect(zzjzlxMap),
 				},
 				{
-					name: "jjrq",
+					name: "zzjzrq",
 					label: "终止矫正日期",
 					component: <DatePicker />,
 				},
@@ -52,7 +43,7 @@ export function TerminationForm(props: {
 				{
 					name: "sjzxlx",
 					label: "收监执行类型",
-					component: generateSelect(sjzxlxMap, 300),
+					component: generateSelect(sjzxlxMap),
 				},
 				{
 					name: "sjzxrq",
@@ -65,67 +56,67 @@ export function TerminationForm(props: {
 					component: <Input />,
 				},
 				{
-					name: "CXJSSJZXYY",
+					name: "cxjssjzxyy",
 					label: "撤销假释收监执行原因",
 					component: <Input />,
 				},
 				{
-					name: "SJZXYY",
+					name: "sjzxyy",
 					label: "收监执行原因",
 					component: <Input />,
 				},
 				{
-					name: "SWSJ",
+					name: "swsj",
 					label: "死亡日期",
 					component: <DatePicker />,
 				},
 				{
-					name: "SWLX",
+					name: "swlx",
 					label: "死亡类型",
 					component: <Input />,
 				},
 				{
-					name: "JTSY",
+					name: "jtsy",
 					label: "具体死因",
 					component: <Input />,
 				},
 				{
-					name: "JZQJBX",
+					name: "jzqjbx",
 					label: "矫正期间表现",
 					component: <Input />,
 				},
 				{
-					name: "RZTD",
+					name: "rztd",
 					label: "认罪态度",
 					component: <Input />,
 				},
 				{
-					name: "SFCJZYJNPX",
+					name: "sfcjzyjnpx",
 					label: "矫正期间是否参加职业技能培训",
 					component: <Input />,
 				},
 				{
-					name: "SFHDZYJNZS",
+					name: "sfhdzyjnzs",
 					label: "矫正期间是否获得职业技能证书",
 					component: <Input />,
 				},
 				{
-					name: "JSTCJDJ",
+					name: "jstcjdj",
 					label: "技术特长及等级",
 					component: <Input />,
 				},
 				{
-					name: "WXXPG",
+					name: "wxxpg",
 					label: "危险性评估",
 					component: <Input />,
 				},
 				{
-					name: "JTLXQK",
+					name: "jtgx",
 					label: "家庭关系",
 					component: <Input />,
 				},
 				{
-					name: "TSQKBZJBJJY",
+					name: "tsqkbzjbjjy",
 					label: "矫正期间特殊情况备注及帮教建议",
 					component: <Input />,
 				},
@@ -133,6 +124,11 @@ export function TerminationForm(props: {
 					name: "bz",
 					label: "备注",
 					component: <Input />,
+				},
+				{
+					name: "spjg",
+					label: "审批结果",
+					component: generateSelect(spjgMap),
 				},
 			]}
 		/>

@@ -1,5 +1,6 @@
 import { getAllRewards } from "@/api/assessment/reward";
 import { RewardInfo } from "@/entity/Assessment/Reward/RewardInfo";
+import TemplateNotification from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { TagType } from "@/template/Tag";
 import { jllbMap, map2Value } from "@/utils";
@@ -11,6 +12,7 @@ import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal";
 import InfoModal from "./Modal/InfoModal";
+import ProcessLgModal from "./Modal/ProcessLgModal";
 import ProcessPraiseModal from "./Modal/ProcessPraiseModal";
 
 export type DataType = RewardInfo;
@@ -53,15 +55,25 @@ export default function Reward() {
 	} as DataType);
 
 	const [tableData, setTableData] = useState<DataType[]>([]);
+	const [history, setHistory] = useState<DataType[]>([]);
 
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [openInfo, setOpenInfo] = useState(false);
 	const [openPraise, setOpenPraise] = useState(false);
+	const [openLg, setOpenLg] = useState(false);
 	const [openAdd, setOpenAdd] = useState(false);
-	const [openRecv, setOpenRecv] = useState(false);
 
 	const [gMsg, contextHolder] = useMessage();
+	// 根据奖励的不同打开不同的审批界面
+	const jllbModalMap = (jllb: string) => {
+		if (jllb == "01") {
+			setOpenPraise(true);
+		} else if (jllb == "02") {
+			setOpenLg(true);
+		} else {
+		}
+	};
 
 	const items: MenuProps["items"] = [
 		{
@@ -88,7 +100,7 @@ export default function Reward() {
 						</Button>
 						<Button
 							type={"primary"}
-							onClick={() => setOpenPraise(true)}>
+							onClick={() => jllbModalMap(record.jllb)}>
 							审批
 						</Button>
 
@@ -127,9 +139,24 @@ export default function Reward() {
 		},
 		refreshDeps: [tableUpdate],
 	});
+	const [showNotify, setShowNotify] = useState(false);
 
 	return (
 		<>
+			<TemplateNotification
+				message={"新的待办消息"}
+				description={"奖励审批待办！请及时处理"}
+				runCondition={showNotify}
+			/>
+			<ProcessLgModal
+				open={openLg}
+				setOpen={setOpenLg}
+				info={record}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+				gMsg={gMsg}
+				setNotify={setShowNotify}
+			/>
 			<ProcessPraiseModal
 				open={openPraise}
 				setOpen={setOpenPraise}
@@ -166,7 +193,40 @@ export default function Reward() {
 					</>
 				}
 				cardTitle={"奖励查询"}
-				statisticList={undefined}
+				searchList={[
+					{
+						placeholder: "请输入对象编号",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.dxbh.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+					{
+						placeholder: "请输入对象姓名",
+						onSearch: (value: string) => {
+							if (value == "") {
+								setTableData(history);
+								return;
+							}
+							const filterData = tableData.filter(
+								(item) => item.xm.includes(value)
+							);
+							setTableData((prev) => {
+								setHistory(prev);
+								return filterData;
+							});
+						},
+					},
+				]}
 				tableOnRow={(rec: DataType) => setRecord(rec)}
 				tableData={tableData}
 				tableRowKey={(rec: DataType) => rec.id}

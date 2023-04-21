@@ -3,7 +3,6 @@ import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import { jllbMap, map2Value } from "@/utils";
 import { getDate } from "@/utils/ie";
-import { GMessage } from "@/utils/msg/GMsg";
 import { DataType } from "../..";
 
 export default function InfoModal(props: {

@@ -11,5 +11,5 @@ export interface RewardInfo {
 	date: string | Dayjs; // 奖励时间
 	jlr: string; // 记录人
 
-	processId: number; // 所属奖励流程id
+	rewardId: number; // 所属奖励流程id
 }

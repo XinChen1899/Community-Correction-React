@@ -44,7 +44,7 @@ function ProcessPraiseModal(props: {
 	const [praise, setPraise] = useState<RewardPraise>(
 		{} as RewardPraise
 	);
-	useRequest(() => getRewardPraiseInfo(info.processId), {
+	useRequest(() => getRewardPraiseInfo(info.rewardId), {
 		onSuccess: ({ data }) => {
 			if (data.status == 200) {
 				setPraise(data.data);
@@ -56,7 +56,7 @@ function ProcessPraiseModal(props: {
 		onError: (err) => {
 			gMsg.onError(err);
 		},
-		refreshDeps: [tableUpdate, info.processId],
+		refreshDeps: [tableUpdate, info.rewardId],
 		ready: info != undefined,
 		debounceWait: 300,
 	});
@@ -85,7 +85,7 @@ function ProcessPraiseModal(props: {
 											const d =
 												values as RewardPraise;
 											d.step = 0;
-											d.id = info.processId;
+											d.id = info.rewardId;
 											d.dxbh = info.dxbh;
 											console.log(d);
 											run(d);

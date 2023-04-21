@@ -25,7 +25,7 @@ export default function InfoModal(props: {
 	useRequest(() => getScoreDetail(info.dxbh), {
 		onSuccess: ({ data }) => {
 			const detail = data.data;
-			const lists = detail.map((item: any) => {
+			const lists: ScoreDetail[] = detail.map((item: any) => {
 				return {
 					reason: item.reason,
 					score: item.score,
@@ -34,14 +34,11 @@ export default function InfoModal(props: {
 			});
 			setScoreDetail({
 				dxbh: detail[0].dxbh,
-				detail: lists,
+				detail: lists.reverse(),
 			});
 		},
 		onError: (err) => {
 			gMsg.onError(err);
-		},
-		onFinally: () => {
-			setOpen(false);
 		},
 		debounceWait: 300,
 		refreshDeps: [info.dxbh, tableUpdate],

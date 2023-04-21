@@ -78,7 +78,6 @@ function ProcessModal(props: {
 			},
 			onFinally: () => {},
 			manual: true,
-			debounceWait: 300,
 		}
 	);
 	const [form] = useForm();
@@ -238,7 +237,6 @@ function ProcessModal(props: {
 			open={open}
 			setOpen={setOpen}
 			onOk={() => {
-				setTableUpdate(!tableUpdate);
 				setOpen(false);
 			}}
 		/>

@@ -57,8 +57,7 @@ function ProcessPraiseModal(props: {
 			gMsg.onError(err);
 		},
 		refreshDeps: [tableUpdate, info.rewardId],
-		ready: info != undefined,
-		debounceWait: 300,
+		ready: info != undefined && open,
 	});
 
 	// todo 发起审批更新操作
@@ -66,8 +65,9 @@ function ProcessPraiseModal(props: {
 	const [form] = useForm();
 
 	const getSteps = (detail: RewardPraise) => {
-		if (!detail) return [];
-
+		if (!detail || !open) return [];
+		// console.log("表扬审批步骤!");
+		// console.log(detail, info);
 		return [
 			{
 				title: "社区矫正机构审批",
@@ -168,7 +168,6 @@ function ProcessPraiseModal(props: {
 			open={open}
 			setOpen={setOpen}
 			onOk={() => {
-				setTableUpdate(!tableUpdate);
 				setOpen(false);
 			}}
 		/>

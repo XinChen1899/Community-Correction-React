@@ -1,10 +1,9 @@
 import { Button, message, Steps, theme } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const TemplateSteps = (props: { steps: any[]; step: number }) => {
 	const { steps, step } = props;
 	const { token } = theme.useToken();
-	const [current, setCurrent] = useState(step);
 
 	// console.log(current, step);
 
@@ -30,10 +29,13 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 		border: `1px dashed ${token.colorBorder}`,
 		marginTop: 16,
 	};
-	if (current != step) {
-		setCurrent(step);
-	}
-	// console.log(current, step, steps[current]);
+
+	useEffect(() => {
+		if (current != step) setCurrent(step);
+	}, [step]);
+
+	const [current, setCurrent] = useState(0);
+	console.log(current, step, steps[current]);
 
 	return (
 		<>

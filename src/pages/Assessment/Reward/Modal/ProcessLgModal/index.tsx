@@ -102,8 +102,7 @@ function ProcessLgModal(props: {
 			gMsg.onError(err);
 		},
 		refreshDeps: [tableUpdate, info.rewardId],
-		ready: info != undefined,
-		debounceWait: 300,
+		ready: info != undefined && open,
 	});
 
 	// todo 发起审批更新操作
@@ -111,8 +110,7 @@ function ProcessLgModal(props: {
 	const [form] = useForm();
 
 	const getSteps = (detail: RewardLg) => {
-		if (!detail) return [];
-
+		if (!detail || !open) return [];
 		return [
 			{
 				title: "社区矫正机构审批",

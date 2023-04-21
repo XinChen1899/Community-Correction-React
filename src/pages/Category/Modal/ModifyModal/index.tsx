@@ -56,7 +56,7 @@ export default function ModifyModal(props: {
 			}
 		},
 		refreshDeps: [dxbh, tableUpdate],
-		ready: dxbh != "",
+		ready: dxbh != "" && open,
 	});
 
 	const onFinish = (values: any) => {
@@ -71,7 +71,7 @@ export default function ModifyModal(props: {
 	};
 
 	const getSteps = (info: CrpCategoryMoify) => {
-		if (info == undefined) return [];
+		if (info == undefined || !open) return [];
 
 		return [
 			{

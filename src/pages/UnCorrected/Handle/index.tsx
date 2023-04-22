@@ -1,20 +1,21 @@
+import { getAllUncorrected, implUncorrSFS } from "@/api/uncorrected";
+import { UnCorrectdInfo } from "@/entity/Uncorrected/UnCorrectedInfo";
+import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { MyTagType } from "@/template/Tag";
+import { map2Value, zzjzlxMap } from "@/utils";
+import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
-import HandleInfoModal from "../Modal/HandleInfo";
+import ProcessModal from "../Modal/ProcessModal";
 
 // 解除矫正办理信息
-export interface UnCorrectedHandleInfo {
-	dxbh: string;
-	xm: string;
-	jdb: string; // 鉴定表
-	zms: string; // 证明书
-	step: number; // 审批步骤
-}
-export type DataType = UnCorrectedHandleInfo;
+
+export type DataType = UnCorrectdInfo;
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -31,38 +32,57 @@ const columns: ColumnsType<DataType> = [
 		key: "xm",
 	},
 	{
+		title: "解除矫正类型",
+		dataIndex: "jcjzlx",
+		key: "jcjzlx",
+		align: "center",
+		render: (_, record) => (
+			<TemplateTag
+				value={map2Value(zzjzlxMap, record.jcjzlx)}
+				type={MyTagType.Info}
+			/>
+		),
+	},
+	{
+		title: "解除矫正日期",
+		dataIndex: "jcjzrq",
+		key: "jcjzrq",
+		align: "center",
+		render: (_, record) => (
+			<TemplateTag
+				value={getDate(record.jcjzrq)}
+				type={MyTagType.Info}
+			/>
+		),
+	},
+	{
 		title: "操作",
 		key: "action",
 	},
-];
-
-const staticTableData: DataType[] = [
-	{ dxbh: "00000001", xm: "xxx", jdb: "xxx", zms: "xxx", step: 0 },
-	{ dxbh: "00000002", xm: "xx", jdb: "xxx", zms: "xxx", step: 0 },
-	{ dxbh: "00000003", xm: "yx", jdb: "xxx", zms: "xxx", step: 0 },
-	{ dxbh: "00000004", xm: "yyx", jdb: "xxx", zms: "xxx", step: 0 },
-	{ dxbh: "00000005", xm: "z", jdb: "xxx", zms: "xxx", step: 0 },
 ];
 
 export default function UncorrectedHandle() {
 	const [record, setRecord] = useState<DataType>({
 		dxbh: "",
 	} as DataType);
-
+	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
 
-	const [tableData, setTableData] =
-		useState<DataType[]>(staticTableData);
 	const [tableUpdate, setTableUpdate] = useState(false);
 
-	const [openInfo, setOpenInfo] = useState(false);
+	const [openInfo, setInfoModal] = useState(false);
+	const [openModify, setModifyModal] = useState(false);
+	const [openProcess, setOpenProcess] = useState(false);
 
 	const [gMsg, contextHolder] = useMessage();
 
 	const items: MenuProps["items"] = [
 		{
 			label: (
-				<Button block type="text" onClick={() => {}}>
+				<Button
+					block
+					type="text"
+					onClick={() => setModifyModal(true)}>
 					占位
 				</Button>
 			),
@@ -75,9 +95,9 @@ export default function UncorrectedHandle() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
-							onClick={() => setOpenInfo(true)}>
-							查看/修改《解除矫正证明书》
+							type="primary"
+							onClick={() => setOpenProcess(true)}>
+							审批
 						</Button>
 
 						<Dropdown
@@ -95,29 +115,64 @@ export default function UncorrectedHandle() {
 			};
 		}
 	});
+
+	const [notifyContext, openNotification] = useMyNotification(
+		"解除矫正待办",
+		"您有一条「解除矫正」待办信息，请及时处理"
+	);
+
+	useRequest(getAllUncorrected, {
+		onSuccess: ({ data }) => {
+			if (data.status == 200) {
+				setTableData(data.data);
+			}
+		},
+		refreshDeps: [tableUpdate],
+	});
+
+	const { run: implSfs } = useRequest(implUncorrSFS, {
+		manual: true,
+		onSuccess: ({ data }) => {
+			if (data.status == 200 && data.data == true) {
+				openNotification();
+				setTableUpdate(!tableUpdate);
+			}
+		},
+	});
+
 	return (
 		<>
-			<HandleInfoModal
-				open={openInfo}
-				setOpen={setOpenInfo}
-				gMsg={gMsg}
+			<ProcessModal
+				open={openProcess}
+				setOpen={setOpenProcess}
+				info={record}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
+				gMsg={gMsg}
 			/>
 			{contextHolder}
+			{notifyContext}
 			<TemplateOperatorAndTable
 				columns={columns}
 				cardExtra={
-					<>
+					<Space>
 						<Button
 							type="primary"
 							icon={<PlusOutlined />}
-							onClick={() => setOpenInfo(true)}>
-							新增解除矫正
+							onClick={() => {
+								implSfs();
+							}}>
+							接收解除矫正请求
 						</Button>
-					</>
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={() => setModifyModal(true)}>
+							添加解除矫正
+						</Button>
+					</Space>
 				}
-				cardTitle={"解矫办理"}
+				cardTitle={"解除矫正"}
 				searchList={[
 					{
 						placeholder: "请输入对象编号",

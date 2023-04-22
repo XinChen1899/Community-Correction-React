@@ -1,7 +1,7 @@
 import { getAllCate } from "@/api/cate";
 import { CrpCategory } from "@/entity/Category/CategoryInfo";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, nsyjzlbMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import { EditOutlined } from "@ant-design/icons";
@@ -35,7 +35,7 @@ const columns: ColumnsType<DataType> = [
 		render: (_, record) => (
 			<TemplateTag
 				value={map2Value(nsyjzlbMap, record.gllb)}
-				type={TagType.Info}
+				type={MyTagType.Info}
 			/>
 		),
 	},

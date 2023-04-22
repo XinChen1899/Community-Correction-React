@@ -1,7 +1,7 @@
 import { getAllScores } from "@/api/assessment/score";
 import { Score } from "@/entity/Assessment/Score/Score";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
@@ -33,7 +33,7 @@ const columns: ColumnsType<DataType> = [
 		key: "score",
 		align: "center",
 		render: (_, record) => (
-			<TemplateTag value={record.score} type={TagType.Info} />
+			<TemplateTag value={record.score} type={MyTagType.Info} />
 		),
 	},
 	{

@@ -11,7 +11,7 @@ import CategoryManagement from "./Category";
 import NoCheckIn from "./NoCheckIn";
 import NoExit from "./NoExit";
 import PlanRepository from "./PlanRepository";
-import TerminationCorrection from "./TerminationCorrection";
+import UnCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected/Handle";
 import Worker from "./Woker";
 
@@ -40,7 +40,7 @@ export {
 	CategoryManagement,
 	DailyFunctionPane,
 	BusinessApproval,
-	TerminationCorrection,
+	UnCorrection as TerminationCorrection,
 	UnCorrected,
 	PlanRepository,
 	Announcement,

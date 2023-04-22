@@ -9,6 +9,7 @@ export const ServerTable = {
 	assessment: "http://localhost:9011",
 	business: "http://localhost:9012",
 	termination: "http://localhost:9013",
+	uncorrected: "http://localhost:9014",
 };
 
 export const useAPI = (

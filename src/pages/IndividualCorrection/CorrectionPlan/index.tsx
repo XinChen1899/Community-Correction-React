@@ -1,7 +1,7 @@
 import { getAllPlan } from "@/api/ic/crplan";
 import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateHome from "@/template/OperatorAndTable";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { jzlbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
@@ -54,7 +54,7 @@ const columns: ColumnsType<DataType> = [
 		render: (_, record) => (
 			<TemplateTag
 				value={map2Value(jzlbMap, record.jzlb)}
-				type={TagType.Info}
+				type={MyTagType.Info}
 			/>
 		),
 	},

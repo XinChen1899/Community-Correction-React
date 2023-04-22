@@ -2,7 +2,7 @@ import { getAllVisitor } from "@/api/business/visitor";
 import { VisitorInfo } from "@/entity/Business/Visitor/VisitorInfo";
 import TemplateNotification from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, spjgMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
@@ -38,7 +38,7 @@ const columns: ColumnsType<DataType> = [
 		align: "center",
 		key: "hjrxm",
 		render: (_, rec) => (
-			<TemplateTag value={rec.hjrxm} type={TagType.Info} />
+			<TemplateTag value={rec.hjrxm} type={MyTagType.Info} />
 		),
 	},
 	{
@@ -50,7 +50,9 @@ const columns: ColumnsType<DataType> = [
 			<TemplateTag
 				value={map2Value(spjgMap, rec.spjg)}
 				type={
-					rec.spjg == "01" ? TagType.Accept : TagType.Error
+					rec.spjg == "01"
+						? MyTagType.Accept
+						: MyTagType.Error
 				}
 			/>
 		),

@@ -1,10 +1,10 @@
+import { saveCheck } from "@/api/daily/check";
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
 import { Form } from "antd";
 import dayjs from "dayjs";
-import { saveCheck } from "@/api/daily/check";
-import { useRequest } from "ahooks";
-import { UncorrectForm } from "../Form";
+import { UncorrectForm } from "../Form/UncorrectedForm";
 
 export default function HandleInfoModal(props: {
 	open: boolean;

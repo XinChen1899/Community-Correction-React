@@ -1,8 +1,8 @@
 import { getAllTerminations, implTermSFS } from "@/api/termination";
 import { TerminationInfo } from "@/entity/Termination/TerminationInfo";
-import { useNotification } from "@/template/Notification";
+import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, zzjzlxMap } from "@/utils";
 import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -37,7 +37,7 @@ const columns: ColumnsType<DataType> = [
 		render: (_, record) => (
 			<TemplateTag
 				value={map2Value(zzjzlxMap, record.zzjzlx)}
-				type={TagType.Info}
+				type={MyTagType.Info}
 			/>
 		),
 	},
@@ -49,7 +49,7 @@ const columns: ColumnsType<DataType> = [
 		render: (_, record) => (
 			<TemplateTag
 				value={getDate(record.zzjzrq)}
-				type={TagType.Info}
+				type={MyTagType.Info}
 			/>
 		),
 	},
@@ -59,7 +59,7 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-export default function TerminationCorrection() {
+export default function UnCorrection() {
 	const [record, setRecord] = useState<DataType>({
 		dxbh: "",
 	} as DataType);
@@ -114,7 +114,7 @@ export default function TerminationCorrection() {
 		}
 	});
 
-	const [notifyContext, openNotification] = useNotification(
+	const [notifyContext, openNotification] = useMyNotification(
 		"终止矫正待办",
 		"您有一条「终止矫正」待办信息，请及时处理"
 	);

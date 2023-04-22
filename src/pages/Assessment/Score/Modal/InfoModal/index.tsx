@@ -2,7 +2,7 @@ import { getScoreDetail } from "@/api/assessment/score";
 import { ScoreDetail } from "@/entity/Assessment/Score/ScoreDetail";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
@@ -84,14 +84,14 @@ export default function InfoModal(props: {
 												<TemplateTag
 													value={`+${item.score} 分`}
 													type={
-														TagType.Accept
+														MyTagType.Accept
 													}
 												/>
 											) : (
 												<TemplateTag
 													value={`${item.score} 分`}
 													type={
-														TagType.Error
+														MyTagType.Error
 													}
 												/>
 											)}

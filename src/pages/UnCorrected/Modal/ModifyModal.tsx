@@ -1,32 +1,38 @@
-import { saveAnnouncement } from "@/api/uncorrected/announcement";
+import { updateAnnouncement } from "@/api/uncorrected/announcement";
 import { UnCorrectedAnnouncement } from "@/entity/Uncorrected/UnCorrectedAnnouncement";
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import { Form } from "antd";
+import { useForm } from "antd/es/form/Form";
+import dayjs from "dayjs";
+import { useEffect } from "react";
 import AnnouncementForm from "../Form/AnnouncementForm";
 
-export default function AddAnnouncementModal(props: {
+function ModifyAnnouncementModal(props: {
 	open: boolean;
 	setOpen: any;
+	info: UnCorrectedAnnouncement;
 	gMsg: GMessage;
 	tableUpdate: boolean;
 	setTableUpdate: any;
 }) {
-	const { setOpen, open, gMsg, tableUpdate, setTableUpdate } =
+	const { open, setOpen, info, gMsg, tableUpdate, setTableUpdate } =
 		props;
+	const [form] = useForm();
 
-	const [form] = Form.useForm();
+	useEffect(() => {
+		if (info.xgrq) info.xgrq = dayjs(info.xgrq);
+	}, [info]);
 
 	const handleOk = () => {
 		form.submit();
 	};
 	const { loading, run } = useRequest(
-		(detail) => saveAnnouncement(detail),
+		(detail) => updateAnnouncement(detail),
 		{
 			onSuccess: () => {
 				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("保存成功！");
+				gMsg.onSuccess("更新成功！");
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -47,20 +53,20 @@ export default function AddAnnouncementModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<AnnouncementForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={{}}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<AnnouncementForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={info}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }
+
+export default ModifyAnnouncementModal;

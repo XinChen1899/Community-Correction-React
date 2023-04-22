@@ -2,7 +2,7 @@ import { getAllRewards } from "@/api/assessment/reward";
 import { RewardInfo } from "@/entity/Assessment/Reward/RewardInfo";
 import TemplateNotification from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { jllbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
@@ -39,7 +39,7 @@ const columns: ColumnsType<DataType> = [
 		render: (_, record) => (
 			<TemplateTag
 				value={map2Value(jllbMap, record.jllb)}
-				type={TagType.Info}
+				type={MyTagType.Info}
 			/>
 		),
 	},

@@ -35,7 +35,7 @@ const TemplateNotification = (props: {
 
 export default TemplateNotification;
 
-export const useNotification = (
+export const useMyNotification = (
 	message: string,
 	description: any,
 	icon?: any

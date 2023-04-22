@@ -1,6 +1,6 @@
-import "react";
 import TemplateForm from "@/template/Form";
 import { DatePicker, Input } from "antd";
+import "react";
 
 export default function AnnouncementForm(props: {
 	form: any;
@@ -20,11 +20,6 @@ export default function AnnouncementForm(props: {
 				{
 					name: "dxbh",
 					label: "社区矫正对象编号",
-					component: <Input />,
-				},
-				{
-					name: "xm",
-					label: "姓名",
 					component: <Input />,
 				},
 				{

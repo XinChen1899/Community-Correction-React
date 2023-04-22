@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 
-export enum TagType {
+export enum MyTagType {
 	Accept = "#389e0d",
 	Error = "#f5222d",
 	Warning = "#faad14",
@@ -10,7 +10,7 @@ export enum TagType {
 
 function TemplateTag(props: {
 	value: string | number;
-	type: TagType;
+	type: MyTagType;
 }) {
 	const { value, type } = props;
 	return <Tag color={type}>{value}</Tag>;

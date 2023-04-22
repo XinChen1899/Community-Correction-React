@@ -1,7 +1,7 @@
 import { getAllCrp } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import TemplateHome from "@/template/OperatorAndTable";
-import TemplateTag, { TagType } from "@/template/Tag";
+import TemplateTag, { MyTagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	CheckCircleFilled,
@@ -60,7 +60,7 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "status",
 		key: "status",
 		render: (value) => (
-			<TemplateTag value={value} type={TagType.Accept} />
+			<TemplateTag value={value} type={MyTagType.Accept} />
 		),
 	},
 	{
@@ -69,7 +69,10 @@ const columns: ColumnsType<DataType> = [
 		align: "center",
 		key: "team",
 		render: (value) => (
-			<TemplateTag value={`小组${value}`} type={TagType.Info} />
+			<TemplateTag
+				value={`小组${value}`}
+				type={MyTagType.Info}
+			/>
 		),
 	},
 	{

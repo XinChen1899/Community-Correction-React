@@ -14,7 +14,7 @@ ReactDOM.createRoot(
 			locale={zhCN}
 			theme={{
 				token: {
-					colorPrimary: "#5A54F9",
+					colorPrimary: "#5A54F9", // 设置主题色
 				},
 			}}>
 			<Suspense

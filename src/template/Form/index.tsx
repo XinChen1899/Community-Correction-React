@@ -19,6 +19,7 @@ export default function TemplateForm(props: {
 		form.resetFields();
 		form.setFieldsValue(initialValues);
 	}, [initialValues]);
+
 	return (
 		<Form
 			disabled={disabled}

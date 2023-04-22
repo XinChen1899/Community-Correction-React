@@ -3,6 +3,9 @@ import { message } from "antd";
 export interface GMessage {
 	onSuccess: any;
 	onError: any;
+	onInfo?: any;
+	onWarning?: any;
+	onLoading?: any;
 }
 
 export const useMessage = (): [
@@ -11,22 +14,18 @@ export const useMessage = (): [
 ] => {
 	const [messageApi, contextHolder] = message.useMessage();
 
-	const successMsg = (msg: string) => {
-		messageApi.open({
-			type: "success",
-			content: msg,
-		});
-	};
+	const onSuccess = (msg: string) => messageApi.success(msg);
+	const onError = (msg: string) => messageApi.error(msg);
+	const onWarning = (msg: string) => messageApi.warning(msg);
+	const onInfo = (msg: string) => messageApi.info(msg);
+	const onLoading = (msg: string) => messageApi.loading(msg);
 
-	const errorMsg = (msg: string) => {
-		messageApi.open({
-			type: "error",
-			content: msg,
-		});
-	};
 	const gMsg: GMessage = {
-		onSuccess: successMsg,
-		onError: errorMsg,
+		onSuccess,
+		onError,
+		onInfo,
+		onWarning,
+		onLoading,
 	};
 	return [gMsg, contextHolder];
 };

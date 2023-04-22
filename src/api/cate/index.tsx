@@ -1,9 +1,8 @@
 import { CrpCategoryMoify } from "@/entity/Category/CategoryModifty";
 import axios from "axios";
-import { ServerTable } from "..";
 
 const api = axios.create({
-	baseURL: `${ServerTable.cate}/cate`,
+	baseURL: "/cate/api",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 

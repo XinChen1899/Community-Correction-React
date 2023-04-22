@@ -1,19 +1,8 @@
 import { IEInfo } from "@/entity/IE/IEInfo";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { getDateFromDayjs } from "../date";
 
-export const getDate = (date: Dayjs | string) => {
-	if (
-		date != null &&
-		date != undefined &&
-		typeof date != "string"
-	) {
-		return `${date.year()}-${date.month() + 1}-${date.date()}`;
-	} else if (typeof date == "string") {
-		return date;
-	} else {
-		return "";
-	}
-};
+export const getDate = getDateFromDayjs;
 
 export const IeInfo2Ieform = (info: any) => {
 	const tempInfo = info as IEInfo;

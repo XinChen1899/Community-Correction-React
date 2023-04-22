@@ -1,13 +1,12 @@
-import { Form } from "antd";
-import { useEffect } from "react";
 import { updateIEInfo } from "@/api/ie";
-import { IeFormConvert2IeInfo, IeInfo2Ieform } from "@/utils/ie";
-import { IEInfoForm } from "@/pages/InvestigatorsEvaluated/Form/IEInfoForm";
-import { GMessage } from "@/utils/msg/GMsg";
 import { IEInfo } from "@/entity/IE/IEInfo";
+import { IEInfoForm } from "@/pages/InvestigatorsEvaluated/Form/IEInfoForm";
 import TemplateModal from "@/template/Modal";
-import { DataType } from "../..";
+import { IeFormConvert2IeInfo, IeInfo2Ieform } from "@/utils/ie";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import { DataType } from "../..";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -24,17 +23,16 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 
 	const [form] = Form.useForm();
 
-	useEffect(() => {
-		form.resetFields();
-		form.setFieldsValue(IeInfo2Ieform(info));
-	});
-
 	const { loading, run } = useRequest(
 		(detail: IEInfo) => updateIEInfo(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("修改成功！!");
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("修改成功！!");
+				} else {
+					gMsg.onWarning(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -49,7 +47,6 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 
 	const onFinish = (values: any) => {
 		const info = IeFormConvert2IeInfo(values);
-
 		run(info);
 	};
 
@@ -64,7 +61,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 					<IEInfoForm
 						form={form}
 						onFinish={onFinish}
-						initialValues={info}
+						initialValues={IeInfo2Ieform(info)}
 						disabled={info.finish == 0}
 					/>
 				}

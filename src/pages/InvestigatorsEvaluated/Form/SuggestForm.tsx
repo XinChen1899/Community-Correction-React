@@ -1,8 +1,8 @@
 // 调查评估意见书
 import TemplateForm from "@/template/Form";
 import { Input } from "antd";
-import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 /**
  * 调查评估意见书
@@ -50,7 +50,7 @@ export function SuggestForm(props: {
 			<ReactQuill
 				theme="snow"
 				value={quillValue}
-				onChange={setQuillValue}
+				onChange={() => {}}
 			/>
 		</>
 	);

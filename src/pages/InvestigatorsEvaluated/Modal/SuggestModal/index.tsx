@@ -1,11 +1,11 @@
+import { getSuggestInfoById, updateSuggestInfoData } from "@/api/ie";
+import { SuggestInfo } from "@/entity/IE/SuggestInfo";
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
-import { SuggestForm } from "../../Form/SuggestForm";
-import { Form } from "antd";
-import { getSuggestInfoById, updateSuggestInfoData } from "@/api/ie";
-import { useState } from "react";
-import { SuggestInfo } from "@/entity/IE/SuggestInfo";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import { useState } from "react";
+import { SuggestForm } from "../../Form/SuggestForm";
 const DefaultYJS = `
 <h1>调查评估意见书</h1>
 <br/>
@@ -29,7 +29,6 @@ const DefaultYJS = `
 export default function SuggestModal(props: {
 	open: boolean;
 	setOpen: any;
-	taskUpdate: boolean;
 	wtbh: string;
 	gMsg: GMessage;
 	tableUpdate: boolean;
@@ -40,20 +39,24 @@ export default function SuggestModal(props: {
 
 	const [form] = Form.useForm();
 
-	const [suggest, setSuggest] = useState<SuggestInfo>(
-		{} as SuggestInfo
-	);
+	const [suggest, setSuggest] = useState<SuggestInfo>({
+		wtbh: "",
+	} as SuggestInfo);
 
 	const handleOk = () => {
 		form.submit();
 	};
 
 	const { loading, run } = useRequest(
-		(detail: any) => updateSuggestInfoData(detail),
+		(detail) => updateSuggestInfoData(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("更新成功!");
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("更新成功!");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -68,7 +71,7 @@ export default function SuggestModal(props: {
 
 	useRequest(() => getSuggestInfoById(wtbh), {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				const sug = data.data;
 				if (!sug.yjs || sug.yjs == "") sug.yjs = DefaultYJS;
 				setSuggest(sug);
@@ -77,8 +80,10 @@ export default function SuggestModal(props: {
 		onError: (error) => {
 			gMsg.onError(error);
 		},
-		refreshDeps: [wtbh, tableUpdate],
+		refreshDeps: [wtbh],
+		ready: open,
 	});
+	const [docx, setDocx] = useState("");
 
 	return (
 		<>
@@ -89,14 +94,13 @@ export default function SuggestModal(props: {
 						form={form}
 						onFinish={(v: any) => {
 							suggest.dcyjshr = v.dcyjshr;
+							console.log(docx);
 							run(suggest);
 						}}
-						initialValues={suggest}
+						initialValues={{ ...suggest }}
 						quillValue={suggest.yjs}
 						setQuillValue={(v: any) => {
-							const ns = suggest;
-							ns.yjs = v;
-							setSuggest(ns);
+							setDocx(v);
 						}}
 					/>
 				}

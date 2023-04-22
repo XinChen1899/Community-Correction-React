@@ -1,9 +1,8 @@
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import axios from "axios";
-import { ServerTable, useAPI } from "..";
 
 export const api = axios.create({
-	baseURL: `${ServerTable.ic}/ic`,
+	baseURL: "/ic/api",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 

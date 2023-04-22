@@ -1,44 +1,28 @@
-import TemplateModal from "@/template/Modal";
-import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Button, Input, Popconfirm, Space, Table } from "antd";
-import { ColumnsType } from "antd/es/table";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { GMessage } from "@/utils/msg/GMsg";
-import TaskInfoModal from "../TaskInfoModal";
 import {
-	implBack,
-	implRecv,
+	acceptDcpg,
+	getAllDcpg,
 	implSend2JZJG,
 	implWTF,
+	unacceptedDcpg,
 } from "@/api/ie/impl";
+import { IEInfo } from "@/entity/IE/IEInfo";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import { Button, Input, Popconfirm, Space, Table } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { useState } from "react";
+import TaskInfoModal from "../TaskInfoModal";
 
-interface DataType {
-	id: number;
-	processId: string;
-	taskId: string;
-	name: string;
-	assignee: string;
-	wtbh: string;
-}
-
-const defaultTableData: DataType[] = [
-	{
-		id: 1,
-		processId: "xxx",
-		wtbh: "99999999",
-		taskId: "xxx",
-		name: "决定方",
-		assignee: "decision",
-	},
-];
+export type DataType = IEInfo;
 
 const columns: ColumnsType<DataType> = [
 	{
 		title: "流程id",
 		dataIndex: "processId",
 		key: "processId",
-		width: 150,
+		width: 300,
 	},
 	{
 		title: "委托编号",
@@ -59,6 +43,7 @@ export default function TaskRecvModal(props: {
 	tableUpdate: boolean;
 	setTableUpdate: any;
 	gMsg: GMessage;
+	openNotification: any;
 }) {
 	const {
 		open,
@@ -66,47 +51,84 @@ export default function TaskRecvModal(props: {
 		tableUpdate,
 		setTableUpdate,
 		gMsg,
+		openNotification,
 	} = props;
-	const [tableData, setTableData] =
-		useState<DataType[]>(defaultTableData);
-	const [addModalOpen, setAddModalOpen] = useState(false);
+	const [tableData, setTableData] = useState<DataType[]>();
+
+	const [openInfo, setOpenInfo] = useState(false);
+
 	const [record, setRecord] = useState<DataType>({
-		id: 1,
-		processId: "xxx",
 		wtbh: "",
-		taskId: "xxx",
-		name: "决定方",
-		assignee: "decision",
 	} as DataType);
 	const [recvUpdate, setRecvUpdate] = useState(false);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const result = await axios
-				.get(
-					"http://localhost:9006/ie/task/tasks?assignee=jzjg"
-				)
-				.then(({ data }) => data.data);
-			setTableData(result);
-		};
+	useRequest(getAllDcpg, {
+		onSuccess: ({ data }) => {
+			if (data.status == "200") {
+				setTableData(data.data);
+			}
+		},
+		refreshDeps: [recvUpdate],
+	});
 
-		fetchData();
-	}, [recvUpdate]);
+	const { run: runUnaccepted } = useRequest(
+		(info) => unacceptedDcpg(info),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setRecvUpdate(!recvUpdate);
+					gMsg.onSuccess("已退回!");
+				} else {
+					gMsg.onWarning(data.message);
+				}
+			},
+			manual: true,
+		}
+	);
 
-	const back = () => {
-		implBack(record.processId, () => {
-			setRecvUpdate(!recvUpdate);
-			gMsg.onSuccess("已退回调查评估!");
-		});
-	};
+	const { run: runAccept } = useRequest(
+		(info) => acceptDcpg(info),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setRecvUpdate(!recvUpdate);
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("已接收!");
+				} else {
+					gMsg.onWarning(data.message);
+				}
+			},
+			onFinally: () => {
+				setOpen(false);
+			},
+			manual: true,
+		}
+	);
 
-	const agree = () => {
-		implRecv(record.processId, () => {
-			setTableUpdate(!tableUpdate);
-			setRecvUpdate(!recvUpdate);
-			gMsg.onSuccess("已接收!");
-		});
-	};
+	const { run: runImplSend } = useRequest(implSend2JZJG, {
+		onSuccess: ({ data }) => {
+			if (data.status == "200") {
+				setRecvUpdate(!recvUpdate);
+				gMsg.onSuccess("已发送给社区矫正机构!");
+				openNotification();
+			} else {
+				gMsg.onWarning(data.message);
+			}
+		},
+		manual: true,
+	});
+
+	const { run: runStart } = useRequest(implWTF, {
+		onSuccess: ({ data }) => {
+			if (data.status == "200") {
+				setRecvUpdate(!recvUpdate);
+				gMsg.onSuccess("委托方正在准备材料!");
+			} else {
+				gMsg.onWarning(data.message);
+			}
+		},
+		manual: true,
+	});
 
 	// 绑定操作栏的操作
 	columns.map((column) => {
@@ -116,7 +138,7 @@ export default function TaskRecvModal(props: {
 					<Space size="middle">
 						<Button
 							type={"dashed"}
-							onClick={() => setAddModalOpen(true)}>
+							onClick={() => setOpenInfo(true)}>
 							查看文书
 						</Button>
 
@@ -130,7 +152,8 @@ export default function TaskRecvModal(props: {
 									/>
 								}
 								onConfirm={(e) => {
-									back();
+									if (record && record.wtbh != "")
+										runUnaccepted(record);
 								}}
 								icon={
 									<QuestionCircleOutlined
@@ -145,7 +168,8 @@ export default function TaskRecvModal(props: {
 							<Button
 								type={"primary"}
 								onClick={() => {
-									agree();
+									if (record && record.wtbh != "")
+										runAccept(record);
 								}}>
 								接收
 							</Button>
@@ -159,10 +183,9 @@ export default function TaskRecvModal(props: {
 	return (
 		<>
 			<TaskInfoModal
-				open={addModalOpen}
-				setOpen={setAddModalOpen}
+				open={openInfo}
+				setOpen={setOpenInfo}
 				info={record}
-				gMsg={gMsg}
 				recv={true}
 			/>
 
@@ -173,22 +196,14 @@ export default function TaskRecvModal(props: {
 						<Button
 							type="link"
 							onClick={() => {
-								implWTF();
-								gMsg.onSuccess(
-									"开启一个调查评估流程!"
-								);
+								runStart();
 							}}>
 							模拟委托方开启调查评估流程
 						</Button>
 						<Button
 							type="link"
 							onClick={() => {
-								implSend2JZJG(() => {
-									setRecvUpdate(!recvUpdate);
-									gMsg.onSuccess(
-										"提交委托函，流程进入矫正机构!"
-									);
-								});
+								runImplSend();
 							}}>
 							模拟委托方提交调查评估委托函
 						</Button>
@@ -203,7 +218,7 @@ export default function TaskRecvModal(props: {
 						<Table
 							columns={columns}
 							dataSource={tableData}
-							rowKey={(record) => record.processId}
+							rowKey={(record) => record.wtbh}
 							onRow={(record) => {
 								return {
 									onClick: () => {

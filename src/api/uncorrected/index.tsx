@@ -1,27 +1,26 @@
 import { UnCorrectdInfo } from "@/entity/Uncorrected/UnCorrectedInfo";
 import { getDate } from "@/utils/ie";
 import axios from "axios";
-import { ServerTable } from "..";
 
 export const api = axios.create({
-	baseURL: `${ServerTable.uncorrected}`,
+	baseURL: "/uncorrected/api",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
 export const getAllUncorrected = () => {
-	return api.get("/uncorrected/all");
+	return api.get("/all");
 };
 
 export const implUncorrSFS = () => {
-	return api.get("/uncorrected/sfs");
+	return api.get("/sfs");
 };
 
 export const updateUnCorr = (info: UnCorrectdInfo) => {
 	if (info.jcjzrq) info.jcjzrq = getDate(info.jcjzrq);
-	return api.post("/uncorrected/update", info);
+	return api.post("/update", info);
 };
 
 export const storeUncorr = (info: UnCorrectdInfo) => {
 	if (info.jcjzrq) info.jcjzrq = getDate(info.jcjzrq);
-	return api.post("/uncorrected/store", info);
+	return api.post("/store", info);
 };

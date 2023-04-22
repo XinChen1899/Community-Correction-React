@@ -2,6 +2,8 @@ import { Dayjs } from "dayjs";
 
 export interface IEInfo {
 	wtbh: string; // 委托编号
+	processId: string; // 委托流程id
+	step: number; // 流程步骤
 	finish: number; // 完成时间
 	wtdw: string; // 委托单位
 	wtdch: string; // 调查评估委托函

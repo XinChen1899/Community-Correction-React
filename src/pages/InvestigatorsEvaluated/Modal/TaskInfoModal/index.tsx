@@ -1,6 +1,4 @@
 import TaskInfo from "@/pages/InvestigatorsEvaluated/Modal/TaskInfoModal/TaskInfo";
-
-import { GMessage } from "@/utils/msg/GMsg";
 import TemplateModal from "@/template/Modal";
 import { Card, Steps } from "antd";
 
@@ -8,12 +6,11 @@ interface ITaskInfoModal {
 	open: boolean;
 	setOpen: any;
 	info: any;
-	gMsg: GMessage;
 	recv?: boolean;
 }
 
 export default function TaskInfoModal(props: ITaskInfoModal) {
-	const { open, setOpen, info, gMsg, recv } = props;
+	const { open, setOpen, info, recv } = props;
 
 	let current = 1;
 	if (!info || info.finish == -1 || recv) current = 1;

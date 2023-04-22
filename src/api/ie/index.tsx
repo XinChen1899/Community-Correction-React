@@ -1,10 +1,10 @@
 import { IEInfo } from "@/entity/IE/IEInfo";
-import axios from "axios";
-import { ServerTable, useAPI } from "..";
 import { SuggestInfo } from "@/entity/IE/SuggestInfo";
+import axios from "axios";
+import { useAPI } from "..";
 
 export const api = axios.create({
-	baseURL: `${ServerTable.ie}/ie`,
+	baseURL: "/ie/api",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
@@ -67,17 +67,6 @@ export const updateSuggestInfoData = (data: SuggestInfo) => {
 	return api.post("/suggest/update", data);
 };
 
-export const updateIEInfoTimeData = (
-	data: IEInfo,
-	onSuccess?: any,
-	onError?: any,
-	setConfirmLoading?: any
-) => {
-	useAPI(
-		api,
-		{ url: "/update/time", method: "post", data: data },
-		onSuccess,
-		onError,
-		setConfirmLoading
-	);
+export const updateIEInfoTimeData = (data: IEInfo) => {
+	return api.post("/update/time", data);
 };

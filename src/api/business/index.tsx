@@ -1,7 +1,6 @@
-import { ServerTable } from "@/api";
 import axios from "axios";
 
 export const api = axios.create({
-	baseURL: `${ServerTable.business}/business`,
+	baseURL: "/business/api",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });

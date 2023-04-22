@@ -1,5 +1,3 @@
-import "react";
-import { DatePicker, Form, Input } from "antd";
 import {
 	bdcpgrdlxMap,
 	fjxMap,
@@ -11,6 +9,9 @@ import {
 	ypxfMap,
 	zmMap,
 } from "@/utils";
+import { DatePicker, Form, Input } from "antd";
+import "react";
+import { useEffect } from "react";
 
 const { TextArea } = Input;
 
@@ -21,6 +22,12 @@ export function IEInfoForm(props: {
 	disabled: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;
+
+	useEffect(() => {
+		form.resetFields();
+		form.setFieldsValue(initialValues);
+	}, [initialValues]);
+
 	return (
 		<Form
 			disabled={disabled}

@@ -1,10 +1,10 @@
-import axios from "axios";
-import { ServerTable, useAPI } from "..";
 import { BBInfo } from "@/entity/NoExit/BBInfo";
 import { getDate } from "@/utils/ie";
+import axios from "axios";
+import { useAPI } from "..";
 
 export const api = axios.create({
-	baseURL: `${ServerTable.noexit}/noexit`,
+	baseURL: "/noexit/api",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
@@ -21,7 +21,7 @@ export const getBBForm = (dxbh: string) => {
 
 export const updateBBForm = (bbInfo: BBInfo) => {
 	bbInfo = convert2BBForm(bbInfo);
-	return api.post("bb/update", bbInfo);
+	return api.post("/bb/update", bbInfo);
 };
 
 export const getExitInfoByDXBH = (

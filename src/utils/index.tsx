@@ -15,11 +15,11 @@ const getCodeMap = (arr: string[][]) => {
 	return codeMap;
 };
 // 被调查评估人的类型
-export const bdcpgrdlxMap = [
-	{ code: "01", value: "被告人" },
-	{ code: "02", value: "罪犯" },
-	{ code: "99", value: "其他" },
-];
+export const bdcpgrdlxMap = getCodeMap([
+	["01", "被告人"],
+	["02", "罪犯"],
+	["99", "其他"],
+]);
 
 export const xbMap = getCodeMap([
 	["01", "男"],

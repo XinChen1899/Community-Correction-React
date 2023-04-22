@@ -1,32 +1,29 @@
-import { Button, Dropdown, Space, Spin, Tag } from "antd";
-import "react";
-import { useState } from "react";
+import { finishIE, getAllIEInfos } from "@/api/ie";
+import { IEInfo } from "@/entity/IE/IEInfo";
+import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
-import {
-	LoadingOutlined,
-	CheckCircleOutlined,
-	EditOutlined,
-	PlusOutlined,
-	DownOutlined,
-	AppstoreAddOutlined,
-	CheckCircleTwoTone,
-} from "@ant-design/icons";
-import { ColumnsType } from "antd/es/table";
+import TemplateTag, { MyTagType } from "@/template/Tag";
+import { map2Value, wtdwMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
-	finishIE,
-	getAllIEInfos,
-	updateIEInfoTimeData,
-} from "@/api/ie";
-import { IEInfo } from "@/entity/IE/IEInfo";
+	AppstoreTwoTone,
+	CheckCircleOutlined,
+	CheckCircleTwoTone,
+	DownOutlined,
+	EditTwoTone,
+	PlusOutlined,
+} from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, Space, Spin } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { MenuProps } from "antd/lib";
+import "react";
+import { useState } from "react";
+import SuggestModal from "./Modal/SuggestModal";
+import TaskAddTimeModal from "./Modal/TaskAddTimeModal";
 import TaskInfoModal from "./Modal/TaskInfoModal";
 import TaskModifyModal from "./Modal/TaskModifyModal";
-import { MenuProps } from "antd/lib";
-import TaskAddTimeModal from "./Modal/TaskAddTimeModal";
 import TaskRecvModal from "./Modal/TaskRecvModal";
-import { map2Value, wtdwMap } from "@/utils";
-import SuggestModal from "./Modal/SuggestModal";
-import { useRequest } from "ahooks";
 
 /**
  * 调查评估:
@@ -42,17 +39,12 @@ const columns: ColumnsType<DataType> = [
 		title: "进度",
 		dataIndex: "isFinished",
 		key: "isFinished",
+		align: "center",
 		width: 100,
 		render: (_, record) => {
 			const { finish } = record;
 			let loading;
-			if (finish != 0)
-				loading = (
-					<Space>
-						<Spin indicator={<LoadingOutlined />} />
-						还需{finish}日
-					</Space>
-				);
+			if (finish != 0) loading = <a>还需{finish}日</a>;
 			else
 				loading = (
 					<Spin indicator={<CheckCircleOutlined />} />
@@ -63,18 +55,27 @@ const columns: ColumnsType<DataType> = [
 	{
 		title: "委托编号",
 		dataIndex: "wtbh",
+		align: "center",
 		key: "wtbh",
 		width: 150,
 	},
 	{
 		title: "委托单位",
 		dataIndex: "wtdw",
+		align: "center",
 		key: "wtdw",
 		width: 150,
+		render: (_, record) => (
+			<TemplateTag
+				value={map2Value(wtdwMap, record.wtdw)}
+				type={MyTagType.Info}
+			/>
+		),
 	},
 	{
 		title: "姓名",
 		dataIndex: "bgrxm",
+		align: "center",
 		key: "bgrxm",
 		width: 150,
 	},
@@ -121,7 +122,7 @@ export default function IE() {
 				<Button
 					block
 					type="text"
-					icon={<EditOutlined />}
+					icon={<EditTwoTone />}
 					onClick={() => setOpenModify(true)}>
 					修改信息
 				</Button>
@@ -133,7 +134,7 @@ export default function IE() {
 				<Button
 					block
 					type="text"
-					icon={<EditOutlined />}
+					icon={<EditTwoTone />}
 					onClick={() => setOpenSuggest(true)}>
 					调查评估意见书编辑
 				</Button>
@@ -145,9 +146,9 @@ export default function IE() {
 				<Button
 					block
 					type="text"
-					icon={<AppstoreAddOutlined />}
+					icon={<AppstoreTwoTone />}
 					onClick={() => setOpenAddTime(true)}>
-					延长调查期限
+					修改调查期限
 				</Button>
 			),
 			key: "2",
@@ -192,7 +193,7 @@ export default function IE() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
+							type={"link"}
 							onClick={() => setOpenInfo(true)}>
 							调查评估信息表
 						</Button>
@@ -210,20 +211,21 @@ export default function IE() {
 					</Space>
 				);
 			};
-		} else if (column.key == "wtdw") {
-			column.render = (_, rec) => (
-				<Tag>{map2Value(wtdwMap, rec.wtdw)}</Tag>
-			);
 		}
 	});
 
+	const [notifyContext, openNotification] = useMyNotification(
+		"调查评估待办",
+		"您有一条「调查评估」待办信息，请及时处理"
+	);
+
 	return (
 		<>
+			{notifyContext}
 			{contextHolder}
 			<SuggestModal
 				open={openSuggest}
 				setOpen={setOpenSuggest}
-				taskUpdate={false}
 				wtbh={selectRecord.wtbh}
 				gMsg={gMsg}
 				tableUpdate={tableUpdate}
@@ -235,6 +237,7 @@ export default function IE() {
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
+				openNotification={openNotification}
 			/>
 			<TaskAddTimeModal
 				open={openAddTime}
@@ -250,7 +253,6 @@ export default function IE() {
 				open={openInfo}
 				setOpen={setOpenInfo}
 				info={selectRecord}
-				gMsg={gMsg}
 			/>
 			<TaskModifyModal
 				open={openModify}
@@ -277,14 +279,6 @@ export default function IE() {
 					</>
 				}
 				cardTitle={"调查评估"}
-				statisticList={[
-					{ title: "调查评估总数", value: 999 },
-					{ title: "今日新增调查评估数", value: 999 },
-					{
-						title: "正在处理中的调查评估数",
-						value: 999,
-					},
-				]}
 				searchList={[
 					{
 						placeholder: "请输入委托编号",
@@ -326,7 +320,13 @@ export default function IE() {
 								return;
 							}
 							const filterData = tableData.filter(
-								(item) => item.wtdw.includes(value)
+								(item) => {
+									const wtdw = map2Value(
+										wtdwMap,
+										item.wtdw
+									);
+									return wtdw.includes(value);
+								}
 							);
 							setTableData((prev) => {
 								setHistory(prev);

@@ -1,19 +1,18 @@
 import { TerminationInfo } from "@/entity/Termination/TerminationInfo";
 import { getDate } from "@/utils/ie";
 import axios from "axios";
-import { ServerTable } from "..";
 
 export const api = axios.create({
-	baseURL: `${ServerTable.termination}`,
+	baseURL: "/termination/api",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 
 export const getAllTerminations = () => {
-	return api.get("/termination/all");
+	return api.get("/all");
 };
 
 export const implTermSFS = () => {
-	return api.get("/termination/sfs");
+	return api.get("/sfs");
 };
 
 export const updateTerm = (info: TerminationInfo) => {
@@ -21,7 +20,7 @@ export const updateTerm = (info: TerminationInfo) => {
 	info.sjzxrq = getDate(info.sjzxrq);
 	info.swsj = getDate(info.swsj);
 	info.zzjzrq = getDate(info.zzjzrq);
-	return api.post("/termination/update", info);
+	return api.post("/update", info);
 };
 
 export const storeTerm = (info: TerminationInfo) => {
@@ -29,5 +28,5 @@ export const storeTerm = (info: TerminationInfo) => {
 	info.sjzxrq = getDate(info.sjzxrq);
 	info.swsj = getDate(info.swsj);
 	info.zzjzrq = getDate(info.zzjzrq);
-	return api.post("/termination/store", info);
+	return api.post("/store", info);
 };

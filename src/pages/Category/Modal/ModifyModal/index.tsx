@@ -3,7 +3,6 @@ import { CrpCategoryMoify } from "@/entity/Category/CategoryModifty";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
-import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Button, Form, Progress, Spin, message } from "antd";
@@ -19,19 +18,38 @@ export default function ModifyModal(props: {
 	gMsg: GMessage;
 	tableUpdate: boolean;
 	setTableUpdate: any;
+	openNotification: any;
 }) {
-	const { open, setOpen, info, gMsg, tableUpdate, setTableUpdate } =
-		props;
+	const {
+		open,
+		setOpen,
+		info,
+		gMsg,
+		tableUpdate,
+		setTableUpdate,
+		openNotification,
+	} = props;
+
 	const [form] = Form.useForm();
+
 	const { dxbh } = info;
 
-	const [modifyInfo, setModifyInfo] = useState<CrpCategoryMoify>(
-		{} as CrpCategoryMoify
-	);
+	const [modifyInfo, setModifyInfo] = useState<CrpCategoryMoify>({
+		dxbh: "",
+	} as CrpCategoryMoify);
 
 	const { run: runCateSFS } = useRequest(
 		(info: CrpCategoryMoify) => implCateSFS(info),
 		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+					setOpen(false);
+					openNotification();
+				} else {
+					gMsg.onError(data.message);
+				}
+			},
 			manual: true,
 		}
 	);
@@ -39,6 +57,14 @@ export default function ModifyModal(props: {
 	const { run: runUpdateCateModify } = useRequest(
 		(info: CrpCategoryMoify) => updateCate(info),
 		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setOpen(false);
+					setTableUpdate(!tableUpdate);
+				} else {
+					gMsg.onError(data.message);
+				}
+			},
 			manual: true,
 		}
 	);
@@ -46,13 +72,15 @@ export default function ModifyModal(props: {
 	// !查找 变更信息modifyInfo, 如果step <=0,则说明还在第一阶段
 	useRequest(() => getModifyInfo(dxbh), {
 		onSuccess({ data }) {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				const info = data.data;
 				info.bdrq = dayjs(info.bdrq);
 				info.sfsshsj = dayjs(info.sfsshsj);
 				info.xjsqjzjgspsj = dayjs(info.xjsqjzjgspsj);
-				console.log(info);
+
 				setModifyInfo(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		refreshDeps: [dxbh, tableUpdate],
@@ -61,13 +89,9 @@ export default function ModifyModal(props: {
 
 	const onFinish = (values: any) => {
 		const info = values as CrpCategoryMoify;
-		info.bdrq = getDate(info.bdrq);
-		info.sfsshsj = getDate(info.sfsshsj);
-		info.xjsqjzjgspsj = getDate(info.xjsqjzjgspsj);
 		console.log(info);
 
 		runUpdateCateModify(info);
-		setTableUpdate(!tableUpdate);
 	};
 
 	const getSteps = (info: CrpCategoryMoify) => {
@@ -83,7 +107,6 @@ export default function ModifyModal(props: {
 								type="primary"
 								onClick={() => {
 									runCateSFS(info);
-									setTableUpdate(!tableUpdate);
 								}}>
 								模拟司法所发送审批表
 							</Button>

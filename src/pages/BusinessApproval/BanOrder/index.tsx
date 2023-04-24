@@ -1,6 +1,6 @@
 import { getAllBans } from "@/api/business/ban";
 import { BanInfo } from "@/entity/Business/Ban/BanInfo";
-import TemplateNotification from "@/template/Notification";
+import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, spjgMap } from "@/utils";
@@ -122,11 +122,10 @@ export default function BanOrder() {
 
 	const [openAdd, setOpenAdd] = useState(false);
 	const [openProcess, setOpenProcess] = useState(false);
-	const [showNotify, setShowNotify] = useState(false);
 
 	useRequest(getAllBans, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				if (
 					selectRecord != undefined &&
 					selectRecord.dxbh != ""
@@ -139,6 +138,8 @@ export default function BanOrder() {
 					}
 				}
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError: (error) => {
@@ -147,13 +148,14 @@ export default function BanOrder() {
 		refreshDeps: [tableUpdate],
 	});
 
+	const [notifyContext, openNotification] = useMyNotification(
+		"禁止令待办",
+		"禁止令待办！请及时处理"
+	);
+
 	return (
 		<>
-			<TemplateNotification
-				message={"新的待办消息"}
-				description={"禁止令待办！请及时处理"}
-				runCondition={showNotify}
-			/>
+			{notifyContext}
 			<ProcessModal
 				open={openProcess}
 				setOpen={setOpenProcess}
@@ -161,7 +163,7 @@ export default function BanOrder() {
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
-				setNotify={setShowNotify}
+				setNotify={openNotification}
 			/>
 			<AddModal
 				open={openAdd}

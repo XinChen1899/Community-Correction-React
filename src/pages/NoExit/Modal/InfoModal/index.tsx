@@ -1,7 +1,7 @@
-import { GMessage } from "@/utils/msg/GMsg";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
+import { map2Value, zjMap } from "@/utils";
 import { DataType } from "../..";
 
 /**
@@ -27,7 +27,7 @@ export default function InfoModal(props: {
 				label: "报备状态",
 				value: exitInfo.bb ? "已报备" : "待报备",
 			},
-			{ label: "证件", value: exitInfo.zj },
+			{ label: "证件", value: map2Value(zjMap, exitInfo.zj) },
 			{
 				label: "边控状态",
 				value: exitInfo.bk ? "已边控" : "未边控",

@@ -8,9 +8,8 @@ export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
 	info: any;
-	gMsg: GMessage;
 }) {
-	const { open, setOpen, info, gMsg } = props;
+	const { open, setOpen, info } = props;
 
 	const getInfos = (info: CrpCategory) => {
 		return [

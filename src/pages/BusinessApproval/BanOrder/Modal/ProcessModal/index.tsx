@@ -50,7 +50,7 @@ function ProcessModal(props: {
 			},
 			onFinally() {
 				setOpen(false);
-				setNotify(true);
+				setNotify();
 			},
 			manual: true,
 		}
@@ -224,14 +224,11 @@ function ProcessModal(props: {
 			InfoDescriptions={
 				<TemplateSteps
 					steps={getSteps(info)}
-					step={info.step}
+					step={info.step ? info.step : 0}
 				/>
 			}
 			open={open}
 			setOpen={setOpen}
-			onOk={() => {
-				setOpen(false);
-			}}
 		/>
 	);
 }

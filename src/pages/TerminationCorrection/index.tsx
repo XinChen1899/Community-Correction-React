@@ -121,8 +121,10 @@ export default function UnCorrection() {
 
 	useRequest(getAllTerminations, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		refreshDeps: [tableUpdate],
@@ -131,9 +133,11 @@ export default function UnCorrection() {
 	const { run: implSfs } = useRequest(implTermSFS, {
 		manual: true,
 		onSuccess: ({ data }) => {
-			if (data.status == 200 && data.data == true) {
+			if (data.status == "200" && data.data == true) {
 				openNotification();
 				setTableUpdate(!tableUpdate);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 	});

@@ -2,19 +2,21 @@ import { getAllExitInfos } from "@/api/noexit";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { MyTagType } from "@/template/Tag";
+import { map2Value, zjMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	AppstoreAddOutlined,
 	DownOutlined,
-	EditOutlined,
+	EditTwoTone,
 	InfoCircleFilled,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Button, Dropdown, MenuProps, Space, Tag } from "antd";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import BBModal from "./Modal/BBModal";
 import InfoModal from "./Modal/InfoModal";
+import ZJModal from "./Modal/ZJModal";
 
 export type DataType = Exit;
 
@@ -54,7 +56,16 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "zj",
 		key: "zj",
 		align: "center",
-		render: (_, record) => <Tag>{record.zj}</Tag>,
+		render: (_, record) => (
+			<TemplateTag
+				value={map2Value(zjMap, record.zj)}
+				type={
+					record.zj == "06"
+						? MyTagType.Warning
+						: MyTagType.Info
+				}
+			/>
+		),
 		width: 120,
 	},
 	{
@@ -80,23 +91,6 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-const staticTableData: DataType[] = [
-	{
-		dxbh: "00000001",
-		xm: "xxx",
-		bb: "0",
-		zj: "代管",
-		bk: "1",
-	},
-	{
-		dxbh: "00000002",
-		xm: "yyy",
-		bb: "0",
-		zj: "归还",
-		bk: "0",
-	},
-];
-
 /**
  * 不准出境
  * todoList
@@ -110,11 +104,11 @@ export default function NoExit() {
 		dxbh: "",
 	} as DataType);
 
-	const [infoModal, setInfoModal] = useState(false);
-	const [bbModal, setBBModal] = useState(false);
+	const [openInfo, setOpenInfo] = useState(false);
+	const [openBB, setOpenBB] = useState(false);
+	const [openZJ, setOpenZJ] = useState(false);
 
-	const [tableData, setTableData] =
-		useState<DataType[]>(staticTableData);
+	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
 	const [tableUpdate, setTableUpdate] = useState(false);
 
@@ -126,9 +120,9 @@ export default function NoExit() {
 				<Button
 					block
 					type="text"
-					icon={<EditOutlined />}
+					icon={<EditTwoTone />}
 					onClick={() => {
-						setBBModal(true);
+						setOpenBB(true);
 					}}>
 					报备审批
 				</Button>
@@ -141,9 +135,7 @@ export default function NoExit() {
 					block
 					type="text"
 					icon={<AppstoreAddOutlined />}
-					onClick={() => {
-						gMsg.onSuccess("证照代管");
-					}}>
+					onClick={() => setOpenZJ(true)}>
 					证照代管审批
 				</Button>
 			),
@@ -174,10 +166,8 @@ export default function NoExit() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
-							onClick={() => {
-								setInfoModal(true);
-							}}>
+							type="link"
+							onClick={() => setOpenInfo(true)}>
 							出入境情况
 						</Button>
 
@@ -199,8 +189,10 @@ export default function NoExit() {
 
 	useRequest(getAllExitInfos, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError: (error) => {
@@ -211,24 +203,30 @@ export default function NoExit() {
 
 	return (
 		<>
+			<ZJModal
+				open={openZJ}
+				setOpen={setOpenZJ}
+				dxbh={record.dxbh}
+				gMsg={gMsg}
+				tableUpdate={tableUpdate}
+				setTableUpdate={setTableUpdate}
+			/>
 			<BBModal
-				open={bbModal}
-				setOpen={setBBModal}
+				open={openBB}
+				setOpen={setOpenBB}
 				dxbh={record.dxbh}
 				gMsg={gMsg}
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 			/>
 			<InfoModal
-				open={infoModal}
-				setOpen={setInfoModal}
+				open={openInfo}
+				setOpen={setOpenInfo}
 				info={record}
-				gMsg={gMsg}
 			/>
 			{contextHolder}
 			<TemplateOperatorAndTable
 				columns={columns}
-				cardExtra={undefined}
 				cardTitle={"出入境管理"}
 				statisticList={[
 					{ title: "矫正人员总数", value: 999 },

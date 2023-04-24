@@ -1,4 +1,5 @@
 import { BBInfo } from "@/entity/NoExit/BBInfo";
+import { ZJInfo } from "@/entity/NoExit/ZJInfo";
 import { getDate } from "@/utils/ie";
 import axios from "axios";
 import { useAPI } from "..";
@@ -15,13 +16,21 @@ const convert2BBForm = (info: BBInfo): BBInfo => {
 	return info;
 };
 
-export const getBBForm = (dxbh: string) => {
+export const getBBInfo = (dxbh: string) => {
 	return api.get(`/bb/${dxbh}`);
 };
 
-export const updateBBForm = (bbInfo: BBInfo) => {
+export const getZJInfo = (dxbh: string) => {
+	return api.get(`/zj/${dxbh}`);
+};
+
+export const updateBBInfo = (bbInfo: BBInfo) => {
 	bbInfo = convert2BBForm(bbInfo);
 	return api.post("/bb/update", bbInfo);
+};
+
+export const updateZJInfo = (info: ZJInfo) => {
+	return api.post("/zj/update", info);
 };
 
 export const getExitInfoByDXBH = (
@@ -43,7 +52,11 @@ export const getAllExitInfos = () => {
 	return api.get("/info/all");
 };
 
-export const implAccept = (info: BBInfo) => {
+export const implBBInfoAccept = (info: BBInfo) => {
 	info = convert2BBForm(info);
 	return api.post("/bb/task/accept", info);
+};
+
+export const implZJInfoAccept = (info: ZJInfo) => {
+	return api.post("/zj/task/accept", info);
 };

@@ -3,7 +3,6 @@ import { Dayjs } from "dayjs";
 export interface BBInfo {
 	dxbh: string; // 对象编号
 	xm: string; // 姓名
-	xb: string; // 性别
 	sfzhm: string; // 身份证号
 
 	crjzjzl: string; // 出入境证件种类
@@ -15,4 +14,5 @@ export interface BBInfo {
 	bbjsrq: string | Dayjs; // 报备结束日期
 
 	step: number; // 当前的状态
+	processId?: string;
 }

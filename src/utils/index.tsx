@@ -205,6 +205,16 @@ export const zzmmMap = getCodeMap([
 	["05", "无党派人士"],
 ]);
 
+export const zjMap = getCodeMap([
+	// 代管/归还/收缴/吊销/作废
+	["01", "代管"],
+	["02", "归还"],
+	["03", "收缴"],
+	["04", "吊销"],
+	["05", "作废"],
+	["06", "未操作"],
+]);
+
 export const generateSelect = (
 	selectList: any,
 	config?: { width?: number; disabled?: boolean }

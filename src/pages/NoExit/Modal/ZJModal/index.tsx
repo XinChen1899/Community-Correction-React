@@ -1,20 +1,19 @@
 import {
-	getBBInfo,
-	implBBInfoAccept,
-	updateBBInfo,
+	getZJInfo,
+	implZJInfoAccept,
+	updateZJInfo,
 } from "@/api/noexit";
-import { BBInfo } from "@/entity/NoExit/BBInfo";
+import { ZJInfo } from "@/entity/NoExit/ZJInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Button, Form, Progress, Spin, message } from "antd";
-import dayjs from "dayjs";
 import { useState } from "react";
-import { BBForm } from "../../Form/BBForm";
+import { ZJForm } from "../../Form/ZJForm";
 
-export default function BBModal(props: {
+export default function ZJModal(props: {
 	open: boolean;
 	setOpen: any;
 	dxbh: string;
@@ -25,17 +24,14 @@ export default function BBModal(props: {
 	const { open, setOpen, dxbh, gMsg, tableUpdate, setTableUpdate } =
 		props;
 	const [form] = Form.useForm();
-	const [bbInfo, setBBInfo] = useState<BBInfo>();
+	const [ZJInfo, setZJInfo] = useState<ZJInfo>({
+		dxbh: "",
+	} as ZJInfo);
 
-	useRequest(() => getBBInfo(dxbh), {
+	useRequest(() => getZJInfo(dxbh), {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
-				const { data: bbForm } = data;
-				console.log(bbForm);
-				bbForm.bbrq = dayjs(bbForm.bbrq);
-				bbForm.bbksrq = dayjs(bbForm.bbksrq);
-				bbForm.bbjsrq = dayjs(bbForm.bbjsrq);
-				setBBInfo(bbForm);
+				setZJInfo(data.data);
 			} else {
 				gMsg.onError(data.message);
 			}
@@ -48,7 +44,7 @@ export default function BBModal(props: {
 	});
 
 	const { run: runSubmitForm } = useRequest(
-		(detail: BBInfo) => updateBBInfo(detail),
+		(detail) => updateZJInfo(detail),
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200" && data.data == true) {
@@ -67,7 +63,7 @@ export default function BBModal(props: {
 	);
 
 	const { run: runImplAccept } = useRequest(
-		(detail: BBInfo) => implBBInfoAccept(detail),
+		(detail) => implZJInfoAccept(detail),
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200" && data.data == true) {
@@ -86,12 +82,12 @@ export default function BBModal(props: {
 	);
 
 	const onFinish = (values: any) => {
-		const bbInfo = values as BBInfo;
-		console.log(bbInfo);
-		runSubmitForm(bbInfo);
+		const info = values as ZJInfo;
+		console.log(info);
+		runSubmitForm(info);
 	};
 
-	const getSteps = (info: BBInfo) => {
+	const getSteps = (info: ZJInfo) => {
 		if (info == undefined) return [];
 
 		return [
@@ -99,11 +95,11 @@ export default function BBModal(props: {
 				title: "填写相应的信息表",
 				content: (
 					<TemplateDescriptions
-						title={"出入境信息表"}
+						title={"证件代管信息表"}
 						info={[
 							{
 								value: (
-									<BBForm
+									<ZJForm
 										disabled={
 											info
 												? info.step > 0
@@ -169,11 +165,11 @@ export default function BBModal(props: {
 
 	return (
 		<TemplateModal
-			title="出入境报备信息"
+			title="证件代管信息"
 			InfoDescriptions={
 				<TemplateSteps
-					steps={bbInfo ? getSteps(bbInfo) : []}
-					step={bbInfo ? bbInfo.step : 0}
+					steps={ZJInfo ? getSteps(ZJInfo) : []}
+					step={ZJInfo ? ZJInfo.step : 0}
 				/>
 			}
 			open={open}

@@ -17,7 +17,7 @@ export function ReceiveForm(props: {
 
 	useRequest(getAllCrt, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				const teamList = data.data;
 				const temp = teamList.map((team: CrTeam) => {
 					return {

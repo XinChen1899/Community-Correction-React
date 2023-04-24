@@ -2,7 +2,6 @@ import { Form } from "antd";
 import { GMessage } from "@/utils/msg/GMsg";
 import { RegisterForm } from "../../Form/RegisterForm";
 import { CorrectionPeople } from "@/entity/IC/Crp";
-import { getDate } from "@/utils/ie";
 import { registerCrp } from "@/api/ic";
 import TemplateModal from "@/template/Modal";
 import { useRequest } from "ahooks";
@@ -44,8 +43,6 @@ const RegisterModal = (props: {
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const crp = values as CorrectionPeople;
-		crp.csrq = getDate(crp.csrq);
-
 		run(crp);
 	};
 

@@ -4,12 +4,12 @@ import TemplateHome from "@/template/OperatorAndTable";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
-	CheckCircleFilled,
 	CheckCircleOutlined,
+	CheckCircleTwoTone,
 	CloseCircleFilled,
 	DeleteOutlined,
 	DownOutlined,
-	EditOutlined,
+	EditTwoTone,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
@@ -68,12 +68,22 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "team",
 		align: "center",
 		key: "team",
-		render: (value) => (
-			<TemplateTag
-				value={`小组${value}`}
-				type={MyTagType.Info}
-			/>
-		),
+		render: (value) => {
+			if (value != null)
+				return (
+					<TemplateTag
+						value={`小组${value}`}
+						type={MyTagType.Info}
+					/>
+				);
+			else
+				return (
+					<TemplateTag
+						value={`无小组`}
+						type={MyTagType.Info}
+					/>
+				);
+		},
 	},
 	{
 		title: "操作",
@@ -101,7 +111,7 @@ export default function WaitPeople() {
 
 	useRequest(getAllCrp, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
 			}
 		},
@@ -117,7 +127,7 @@ export default function WaitPeople() {
 				<Button
 					block
 					type="text"
-					icon={<EditOutlined />}
+					icon={<EditTwoTone />}
 					onClick={() => setOpenModift(true)}>
 					修改信息
 				</Button>
@@ -129,7 +139,7 @@ export default function WaitPeople() {
 				<Button
 					block
 					type="text"
-					icon={<CheckCircleFilled />}
+					icon={<CheckCircleTwoTone />}
 					onClick={() => setOpenRecv(true)}>
 					接收入矫
 				</Button>
@@ -166,7 +176,7 @@ export default function WaitPeople() {
 					return (
 						<Space size="middle" direction="horizontal">
 							<Button
-								type={"dashed"}
+								type="link"
 								onClick={() => setOpenInfo(true)}>
 								矫正对象信息表
 							</Button>

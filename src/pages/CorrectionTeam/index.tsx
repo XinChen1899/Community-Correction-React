@@ -1,22 +1,22 @@
-import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
+import { getAllWorkers } from "@/api/ic";
+import { getAllCrt } from "@/api/ic/crteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
+import { Worker } from "@/entity/IC/Worker";
+import TemplateHome from "@/template/OperatorAndTable";
+import { useMessage } from "@/utils/msg/GMsg";
 import {
 	DeleteOutlined,
 	DownOutlined,
-	EditOutlined,
+	EditTwoTone,
 	PlusOutlined,
 } from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useMemo, useState } from "react";
 import AddTeamModal from "./Modal/AddTeamModal";
-import TemplateHome from "@/template/OperatorAndTable";
 import TeamInfoModal from "./Modal/TeamInfoModal";
 import TeamModifyModal from "./Modal/TeamModifyModal";
-import { useMessage } from "@/utils/msg/GMsg";
-import { getAllWorkers } from "@/api/ic";
-import { Worker } from "@/entity/IC/Worker";
-import { CrTeam } from "@/entity/IC/CrTeam";
-import { getAllCrt } from "@/api/ic/crteam";
-import { useRequest } from "ahooks";
 
 export type DataType = CrTeam;
 
@@ -83,8 +83,8 @@ export default function CorrectionTeam() {
 			label: (
 				<Button
 					block
-					type="text"
-					icon={<EditOutlined />}
+					type="link"
+					icon={<EditTwoTone />}
 					onClick={() => setOpenModify(true)}>
 					修改小组信息
 				</Button>
@@ -117,7 +117,7 @@ export default function CorrectionTeam() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
+							type="link"
 							onClick={() => setOpenInfo(true)}>
 							小组信息
 						</Button>
@@ -143,7 +143,7 @@ export default function CorrectionTeam() {
 
 	useRequest(getAllWorkers, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setWorker(data.data);
 			}
 		},
@@ -155,7 +155,7 @@ export default function CorrectionTeam() {
 
 	useRequest(getAllCrt, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
 			}
 		},

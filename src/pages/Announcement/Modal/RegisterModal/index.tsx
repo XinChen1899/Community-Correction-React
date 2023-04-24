@@ -43,8 +43,6 @@ export default function RegisterModal(props: {
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const crp = values as CrpAnnouncement;
-		crp.xgrq = getDate(crp.xgrq);
-
 		run(crp);
 	};
 

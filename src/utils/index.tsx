@@ -196,6 +196,15 @@ export const spjgMap = getCodeMap([
 	["02", "不通过"],
 ]);
 
+// 政治面貌
+export const zzmmMap = getCodeMap([
+	["01", "党员"],
+	["02", "共青团员"],
+	["03", "群众"],
+	["04", "民主党派"],
+	["05", "无党派人士"],
+]);
+
 export const generateSelect = (
 	selectList: any,
 	config?: { width?: number; disabled?: boolean }

@@ -1,13 +1,13 @@
-import { Form } from "antd";
-import { useEffect, useState } from "react";
-import { GMessage } from "@/utils/msg/GMsg";
-import { DataType } from "../..";
-import { CrTeam } from "@/entity/IC/CrTeam";
-import { AddTeamForm } from "../../Form/AddTeamForm";
-import TemplateModal from "@/template/Modal";
-import { Worker } from "@/entity/IC/Worker";
 import { updateCrt } from "@/api/ic/crteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
+import { Worker } from "@/entity/IC/Worker";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import { useEffect } from "react";
+import { DataType } from "../..";
+import { AddTeamForm } from "../../Form/AddTeamForm";
 
 export default function TeamModifyModal(props: {
 	open: boolean;
@@ -56,8 +56,6 @@ export default function TeamModifyModal(props: {
 	const onFinish = (values: any) => {
 		const cteam = values as CrTeam;
 		cteam.teamNumber = cteam.workers.length;
-		// console.log(values);
-		// console.log(cteam);
 		run(cteam);
 	};
 

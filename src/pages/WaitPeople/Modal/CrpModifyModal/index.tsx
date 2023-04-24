@@ -1,14 +1,14 @@
-import { Form } from "antd";
-import { useEffect, useState } from "react";
+import { updateCrp } from "@/api/ic";
+import { CorrectionPeople } from "@/entity/IC/Crp";
+import TemplateModal from "@/template/Modal";
+import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
+import { Form } from "antd";
+import dayjs from "dayjs";
+import { useEffect } from "react";
 import { DataType } from "../..";
 import { RegisterForm } from "../../Form/RegisterForm";
-import { CorrectionPeople } from "@/entity/IC/Crp";
-import { updateCrp } from "@/api/ic";
-import dayjs from "dayjs";
-import { getDate } from "@/utils/ie";
-import TemplateModal from "@/template/Modal";
-import { useRequest } from "ahooks";
 
 export default function CrpModifyModal(props: {
 	open: boolean;
@@ -55,7 +55,6 @@ export default function CrpModifyModal(props: {
 
 	const onFinish = (values: any) => {
 		const crp = values as CorrectionPeople;
-		crp.csrq = getDate(crp.csrq);
 		run(crp);
 	};
 
@@ -64,21 +63,20 @@ export default function CrpModifyModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<RegisterForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={selectRecord}
-						gMsg={gMsg}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<RegisterForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={selectRecord}
+					gMsg={gMsg}
+					disabled={true}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

@@ -1,20 +1,14 @@
+import { getAllNoCheck } from "@/api/ic/nocheck";
+import { CrpCheck } from "@/entity/IC/CrpCheck";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import { useMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
 import { Button } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import InfoModal from "./Modal";
-import { CrpCheck } from "@/entity/IC/CrpCheck";
-import { getAllNoCheck } from "@/api/ic/nocheck";
-import { useRequest } from "ahooks";
 
 export type DataType = CrpCheck;
-
-const defaultDataType: DataType = {
-	dxbh: "12",
-	xm: "2112",
-	date: "xxxx",
-};
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -48,8 +42,9 @@ export default function NoCheckIn() {
 	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
 
-	const [selectRecord, setSelectRecord] =
-		useState<DataType>(defaultDataType);
+	const [selectRecord, setSelectRecord] = useState<DataType>({
+		dxbh: "",
+	} as DataType);
 
 	// 绑定操作栏的操作
 	columns.map((column) => {
@@ -57,7 +52,7 @@ export default function NoCheckIn() {
 			column.render = (_, record) => {
 				return (
 					<Button
-						type={"dashed"}
+						type="link"
 						onClick={() => setOpenInfo(true)}>
 						查看详细情况
 					</Button>
@@ -69,7 +64,7 @@ export default function NoCheckIn() {
 	const [openInfo, setOpenInfo] = useState(false);
 	useRequest(getAllNoCheck, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
 			}
 		},

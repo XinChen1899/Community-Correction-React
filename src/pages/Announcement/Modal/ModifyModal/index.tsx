@@ -51,8 +51,6 @@ export default function ModifyModal(props: ITaskInfoModal) {
 
 	const onFinish = (values: any) => {
 		const info = values as CrpAnnouncement;
-		info.xgrq = getDate(info.xgrq);
-
 		run(info);
 	};
 

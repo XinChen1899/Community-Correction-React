@@ -1,11 +1,11 @@
-import TemplateModal from "@/template/Modal";
-import CrpInfo from "@/pages/WaitPeople/Modal/CrpInfoModal/CrpInfo";
-import { useState } from "react";
-import { CorrectionPeople } from "@/entity/IC/Crp";
 import { getCrpByDxbh } from "@/api/ic";
-import { DataType } from "..";
-import { useRequest } from "ahooks";
+import { CorrectionPeople } from "@/entity/IC/Crp";
+import CrpInfo from "@/pages/WaitPeople/Modal/CrpInfoModal/CrpInfo";
+import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
+import { useState } from "react";
+import { DataType } from "..";
 
 export default function InfoModal(props: {
 	open: boolean;
@@ -18,16 +18,19 @@ export default function InfoModal(props: {
 	const [crpInfo, setCrpInfo] = useState<CorrectionPeople>(
 		{} as CorrectionPeople
 	);
-	useRequest((dxbh) => getCrpByDxbh(dxbh), {
+	useRequest(() => getCrpByDxbh(info.dxbh), {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setCrpInfo(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError: (error: any) => {
 			gMsg.onError(error);
 		},
 		refreshDeps: [dxbh],
+		ready: open && info.dxbh != undefined && info.dxbh != "",
 	});
 
 	return (

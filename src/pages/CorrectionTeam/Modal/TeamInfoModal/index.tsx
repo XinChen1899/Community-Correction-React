@@ -1,6 +1,6 @@
-import CrpInfo from "./TeamInfo";
-import { DataType } from "../..";
 import TemplateModal from "@/template/Modal";
+import { DataType } from "../..";
+import CrpInfo from "./TeamInfo";
 
 export default function TeamInfoModal(props: {
 	open: boolean;

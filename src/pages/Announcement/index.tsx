@@ -1,33 +1,25 @@
+import { finishAnnounce, getAllAnnounces } from "@/api/ic/announce";
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import TemplateTag, { MyTagType } from "@/template/Tag";
+import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
-	EditOutlined,
+	CheckCircleTwoTone,
 	DeleteOutlined,
 	DownOutlined,
+	EditTwoTone,
 	PlusOutlined,
-	CheckCircleFilled,
-	LoadingOutlined,
 } from "@ant-design/icons";
+import { useRequest } from "ahooks";
 import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
-import {  useState } from "react";
-import RegisterModal from "./Modal/RegisterModal";
+import { useState } from "react";
 import InfoModal from "./Modal/InfoModal";
-import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
-import { getAllAnnounces } from "@/api/ic/announce";
 import ModifyModal from "./Modal/ModifyModal";
-import { getDate } from "@/utils/ie";
-import { useRequest } from "ahooks";
+import RegisterModal from "./Modal/RegisterModal";
 
 export type DataType = CrpAnnouncement;
-
-const defaultDataType: DataType = {
-	dxbh: "12",
-	xm: "2112",
-	xgrq: "21121",
-	finish: false,
-	audio: "",
-};
 
 const columns: ColumnsType<DataType> = [
 	{
@@ -54,11 +46,16 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: "finish",
 		align: "center",
 		key: "finish",
-		render: (_, record) => {
-			const { finish } = record;
-			if (finish) return <CheckCircleFilled />;
-			else return <LoadingOutlined />;
-		},
+		render: (_, record) => (
+			<TemplateTag
+				value={record.finish ? "已完成" : "未完成"}
+				type={
+					record.finish
+						? MyTagType.Accept
+						: MyTagType.Warning
+				}
+			/>
+		),
 	},
 	{
 		title: "操作",
@@ -75,8 +72,9 @@ export default function Announcement() {
 	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
 
-	const [selectRecord, setSelectRecord] =
-		useState<DataType>(defaultDataType);
+	const [selectRecord, setSelectRecord] = useState<DataType>({
+		dxbh: "",
+	} as DataType);
 
 	const items: MenuProps["items"] = [
 		{
@@ -84,12 +82,24 @@ export default function Announcement() {
 				<Button
 					block
 					type="text"
-					icon={<EditOutlined />}
+					icon={<EditTwoTone />}
 					onClick={() => setOpenModify(true)}>
 					修改宣告书
 				</Button>
 			),
 			key: "0",
+		},
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<CheckCircleTwoTone />}
+					onClick={() => runFinishAnnounce(selectRecord)}>
+					已宣告
+				</Button>
+			),
+			key: "2",
 		},
 		{ type: "divider" },
 		{
@@ -117,7 +127,7 @@ export default function Announcement() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
+							type="link"
 							onClick={() => setOpenInfo(true)}>
 							查看宣告书
 						</Button>
@@ -143,7 +153,7 @@ export default function Announcement() {
 
 	useRequest(getAllAnnounces, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
 			}
 		},
@@ -152,6 +162,23 @@ export default function Announcement() {
 		},
 		refreshDeps: [tableUpdate],
 	});
+
+	const { run: runFinishAnnounce } = useRequest(
+		(record) => finishAnnounce(record),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					gMsg.onSuccess("已完成入矫宣告");
+				} else {
+					gMsg.onError("请稍后再试");
+				}
+			},
+			debounceWait: 150,
+			manual: true,
+			ready:
+				selectRecord != undefined && selectRecord.dxbh != "",
+		}
+	);
 
 	return (
 		<>

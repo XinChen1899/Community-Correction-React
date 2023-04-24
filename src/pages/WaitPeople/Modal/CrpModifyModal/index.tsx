@@ -1,7 +1,6 @@
 import { updateCrp } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import TemplateModal from "@/template/Modal";
-import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Form } from "antd";
@@ -38,9 +37,13 @@ export default function CrpModifyModal(props: {
 	const { loading, run } = useRequest(
 		(detail: CorrectionPeople) => updateCrp(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("修改成功！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("修改成功！");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);

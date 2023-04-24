@@ -1,11 +1,10 @@
-import TemplateModal from "@/template/Modal";
-import RegisterForm from "../../Form/RegisterForm";
-import { GMessage } from "@/utils/msg/GMsg";
-import { Form } from "antd";
-import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
-import { getDate } from "@/utils/ie";
 import { saveAnnounce } from "@/api/ic/announce";
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import RegisterForm from "../../Form/RegisterForm";
 
 export default function RegisterModal(props: {
 	open: boolean;
@@ -25,9 +24,13 @@ export default function RegisterModal(props: {
 	const { loading, run } = useRequest(
 		(detail: CrpAnnouncement) => saveAnnounce(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("登记成功！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("登记成功");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);

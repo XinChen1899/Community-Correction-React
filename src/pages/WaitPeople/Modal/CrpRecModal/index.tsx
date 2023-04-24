@@ -1,14 +1,13 @@
-import { Card, Form } from "antd";
-import { useEffect } from "react";
-import { GMessage } from "@/utils/msg/GMsg";
-import { DataType } from "../..";
-import { CorrectionPeople } from "@/entity/IC/Crp";
-import { ReceiveForm } from "../../Form/ReceiveForm";
-import TemplateModal from "@/template/Modal";
-import { getDate } from "@/utils/ie";
 import { recvCrp } from "@/api/ic";
-import dayjs from "dayjs";
+import { CorrectionPeople } from "@/entity/IC/Crp";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Card, Form } from "antd";
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { DataType } from "../..";
+import { ReceiveForm } from "../../Form/ReceiveForm";
 
 export default function CrpRecModal(props: {
 	open: boolean;
@@ -37,9 +36,13 @@ export default function CrpRecModal(props: {
 	const { loading, run } = useRequest(
 		(detail: CorrectionPeople) => recvCrp(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("接收入矫成功");
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("接收入矫成功");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -53,8 +56,6 @@ export default function CrpRecModal(props: {
 	);
 	const onFinish = (values: any) => {
 		const info = values as CorrectionPeople;
-		info.csrq = getDate(info.csrq);
-		console.log(info);
 		run(info);
 	};
 

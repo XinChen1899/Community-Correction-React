@@ -1,10 +1,10 @@
-import { Form } from "antd";
-import { GMessage } from "@/utils/msg/GMsg";
-import { RegisterForm } from "../../Form/RegisterForm";
-import { CorrectionPeople } from "@/entity/IC/Crp";
 import { registerCrp } from "@/api/ic";
+import { CorrectionPeople } from "@/entity/IC/Crp";
 import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import { RegisterForm } from "../../Form/RegisterForm";
 
 const RegisterModal = (props: {
 	open: boolean;
@@ -25,9 +25,13 @@ const RegisterModal = (props: {
 	const { loading, run } = useRequest(
 		(detail: CorrectionPeople) => registerCrp(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("登记成功！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("登记成功");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);

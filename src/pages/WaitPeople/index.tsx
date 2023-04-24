@@ -113,6 +113,8 @@ export default function WaitPeople() {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError: (error) => {

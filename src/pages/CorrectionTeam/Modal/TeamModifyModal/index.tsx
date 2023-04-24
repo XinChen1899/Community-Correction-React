@@ -38,9 +38,13 @@ export default function TeamModifyModal(props: {
 	const { loading, run } = useRequest(
 		(detail: CrTeam) => updateCrt(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("修改成功！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("修改成功");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);

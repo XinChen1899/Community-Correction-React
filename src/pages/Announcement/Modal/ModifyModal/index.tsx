@@ -1,14 +1,13 @@
-import { Form } from "antd";
-import { useEffect } from "react";
-import { getDate } from "@/utils/ie";
-import { GMessage } from "@/utils/msg/GMsg";
+import { updateAnnounce } from "@/api/ic/announce";
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
+import { useRequest } from "ahooks";
+import { Form } from "antd";
+import dayjs from "dayjs";
+import { useEffect } from "react";
 import { DataType } from "../..";
 import RegisterForm from "../../Form/RegisterForm";
-import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
-import { updateAnnounce } from "@/api/ic/announce";
-import dayjs from "dayjs";
-import { useRequest } from "ahooks";
 
 interface ITaskInfoModal {
 	open: boolean;
@@ -34,9 +33,13 @@ export default function ModifyModal(props: ITaskInfoModal) {
 	const { loading, run } = useRequest(
 		(detail: CrpAnnouncement) => updateAnnounce(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("修改成功！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("修改成功！");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);

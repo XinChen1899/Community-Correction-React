@@ -1,11 +1,11 @@
 import { Card, Form } from "antd";
 
-import { GMessage } from "@/utils/msg/GMsg";
-import { AddTeamForm } from "../../Form/AddTeamForm";
-import TemplateModal from "@/template/Modal";
-import { CrTeam } from "@/entity/IC/CrTeam";
 import { saveCrt } from "@/api/ic/crteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { AddTeamForm } from "../../Form/AddTeamForm";
 
 const AddTeamModal = (props: {
 	open: boolean;
@@ -33,9 +33,13 @@ const AddTeamModal = (props: {
 	const { loading, run } = useRequest(
 		(detail: CrTeam) => saveCrt(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("新增小组！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("新增小组");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);

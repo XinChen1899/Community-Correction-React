@@ -45,7 +45,7 @@ const columns: ColumnsType<DataType> = [
 		align: "center",
 		render: (value) => {
 			let loading;
-			if (value == "0")
+			if (value == "1")
 				loading = (
 					<Spin indicator={<CheckCircleOutlined />} />
 				);

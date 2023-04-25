@@ -24,25 +24,32 @@ export default function InfoModal(props: {
 
 	useRequest(() => getScoreDetail(info.dxbh), {
 		onSuccess: ({ data }) => {
-			const detail = data.data;
-			const lists: ScoreDetail[] = detail.map((item: any) => {
-				return {
-					reason: item.reason,
-					score: item.score,
-					date: item.date,
-				};
-			});
-			setScoreDetail({
-				dxbh: detail[0].dxbh,
-				detail: lists.reverse(),
-			});
+			console.log("aaa", data);
+			if (data.status == "200") {
+				const detail = data.data;
+				const lists: ScoreDetail[] = detail.map(
+					(item: any) => {
+						return {
+							reason: item.reason,
+							score: item.score,
+							date: item.date,
+						};
+					}
+				);
+				setScoreDetail({
+					dxbh: info.dxbh,
+					detail: lists.reverse(),
+				});
+			} else {
+				gMsg.onError(data.message);
+			}
 		},
 		onError: (err) => {
 			gMsg.onError(err);
 		},
 		debounceWait: 300,
 		refreshDeps: [info.dxbh, tableUpdate],
-		ready: info && info.dxbh != "",
+		ready: info && info.dxbh != "" && open,
 	});
 
 	const getInfos = (detail: ScoreDetail) => {

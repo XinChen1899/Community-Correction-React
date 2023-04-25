@@ -25,12 +25,12 @@ export default function InfoModal(props: {
 			{ label: "姓名", value: exitInfo.xm },
 			{
 				label: "报备状态",
-				value: exitInfo.bb ? "已报备" : "待报备",
+				value: exitInfo.bb == "1" ? "已报备" : "待报备",
 			},
 			{ label: "证件", value: map2Value(zjMap, exitInfo.zj) },
 			{
 				label: "边控状态",
-				value: exitInfo.bk ? "已边控" : "未边控",
+				value: exitInfo.bk == "1" ? "已边控" : "未边控",
 			},
 		];
 	};

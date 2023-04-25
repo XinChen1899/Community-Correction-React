@@ -1,3 +1,4 @@
+import { uploadImg } from "@/api/ic";
 import { getAllCrt } from "@/api/ic/crteam";
 import { CrTeam } from "@/entity/IC/CrTeam";
 import {
@@ -15,23 +16,29 @@ import {
 import { GMessage } from "@/utils/msg/GMsg";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { DatePicker, Form, Input, Select, message } from "antd";
+import {
+	DatePicker,
+	Form,
+	Input,
+	Modal,
+	Select,
+	message,
+} from "antd";
 import Upload, {
 	RcFile,
-	UploadChangeParam,
 	UploadFile,
 	UploadProps,
 } from "antd/es/upload";
 import "react";
 import { useState } from "react";
 
-const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-	const reader = new FileReader();
-	reader.addEventListener("load", () =>
-		callback(reader.result as string)
-	);
-	reader.readAsDataURL(img);
-};
+const getBase64 = (file: RcFile): Promise<string> =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result as string);
+		reader.onerror = (error) => reject(error);
+	});
 
 const beforeUpload = (file: RcFile) => {
 	const isJpgOrPng =
@@ -54,31 +61,63 @@ export function RegisterForm(props: {
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, gMsg, disabled } = props;
+
 	const [loading, setLoading] = useState(false);
 	const [imageUrl, setImageUrl] = useState<string>();
+	const [previewOpen, setPreviewOpen] = useState(false);
+	const [previewImage, setPreviewImage] = useState("");
+	const [previewTitle, setPreviewTitle] = useState("");
+	const [fileList, setFileList] = useState<UploadFile[]>([
+		// {
+		// 	uid: "-1",
+		// 	name: "image.png",
+		// 	status: "done",
+		// 	url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+		// },
+		// {
+		// 	uid: "-xxx",
+		// 	percent: 50,
+		// 	name: "image.png",
+		// 	status: "uploading",
+		// 	url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+		// },
+		// {
+		// 	uid: "-5",
+		// 	name: "image.png",
+		// 	status: "error",
+		// },
+	]);
+
 	const [team, setTeam] = useState<any[]>();
 
-	const handleChange: UploadProps["onChange"] = (
-		info: UploadChangeParam<UploadFile>
-	) => {
-		if (info.file.status === "uploading") {
-			setLoading(true);
-			return;
+	const handleCancel = () => setPreviewOpen(false);
+
+	const handlePreview = async (file: UploadFile) => {
+		if (!file.url && !file.preview) {
+			file.preview = await getBase64(
+				file.originFileObj as RcFile
+			);
 		}
-		if (info.file.status === "done") {
-			// Get this url from response in real world.
-			getBase64(info.file.originFileObj as RcFile, (url) => {
-				setLoading(false);
-				setImageUrl(url);
-			});
-		}
+
+		setPreviewImage(file.url || (file.preview as string));
+		setPreviewOpen(true);
+		setPreviewTitle(
+			file.name ||
+				file.url!.substring(file.url!.lastIndexOf("/") + 1)
+		);
 	};
+
+	const handleChange: UploadProps["onChange"] = ({
+		fileList: newFileList,
+	}) => setFileList(newFileList);
+
 	const uploadButton = (
 		<div>
 			{loading ? <LoadingOutlined /> : <PlusOutlined />}
 			<div style={{ marginTop: 8 }}>Upload</div>
 		</div>
 	);
+
 	useRequest(getAllCrt, {
 		onSuccess: ({ data }) => {
 			if (data.status == 200) {
@@ -98,11 +137,78 @@ export function RegisterForm(props: {
 		refreshDeps: [form],
 	});
 
+	const { run: runUploadImg } = useRequest(
+		(img) => uploadImg(img),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					gMsg.onSuccess("上传成功!");
+					setImageUrl(data.data);
+				} else {
+					gMsg.onError("上传失败!" + data.message);
+				}
+			},
+			onError: (error: any) => {
+				gMsg.onError(error);
+			},
+			manual: true,
+		}
+	);
+
+	const customRequest = (options: any) => {
+		console.log("aaa");
+		const { file, filename, onProgress, onSuccess } = options;
+		const imgItem = {
+			uid: file.uid,
+			name: file.name,
+			status: "uploading",
+			url: "",
+			percent: 99,
+		} as UploadFile;
+		setFileList([imgItem]);
+
+		console.log(file, filename);
+		runUploadImg(file);
+		const afterImgItem = {
+			uid: file.uid,
+			name: file.name,
+			status: "done",
+			url: "https://ccorr-bucket.oss-cn-shenzhen.aliyuncs.com/ccorr/images/20230425/106453304_p0.jpg",
+			percent: 100,
+		} as UploadFile;
+
+		console.log(afterImgItem);
+		setFileList([afterImgItem]);
+	};
+
 	return (
 		<Form
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
+			<Form.Item name={"zp"} label="照片">
+				<Upload
+					name="avatar"
+					listType="picture-card"
+					className="avatar-uploader"
+					fileList={fileList}
+					customRequest={customRequest}
+					onPreview={handlePreview}
+					onChange={handleChange}>
+					{fileList.length == 1 ? null : uploadButton}
+				</Upload>
+				<Modal
+					open={previewOpen}
+					title={previewTitle}
+					footer={null}
+					onCancel={handleCancel}>
+					<img
+						alt="example"
+						style={{ width: "100%" }}
+						src={previewImage}
+					/>
+				</Modal>
+			</Form.Item>
 			<Form.Item
 				name={"dxbh"}
 				label={"社区矫正对象编号"}
@@ -270,7 +376,7 @@ export function RegisterForm(props: {
 				rules={[
 					{
 						required: true,
-						message: "请输入个人的练习对话",
+						message: "请输入个人的联系电话",
 					},
 				]}>
 				<Input placeholder="请输入个人联系电话" />
@@ -282,28 +388,6 @@ export function RegisterForm(props: {
 					<Select.Option value="0">否</Select.Option>
 					<Select.Option value="1">是</Select.Option>
 				</Select>
-			</Form.Item>
-			<Form.Item name={"zp"} label="照片">
-				<Form.Item>
-					<Upload
-						name="avatar"
-						listType="picture-card"
-						className="avatar-uploader"
-						showUploadList={false}
-						action=""
-						beforeUpload={beforeUpload}
-						onChange={handleChange}>
-						{imageUrl ? (
-							<img
-								src={imageUrl}
-								alt="avatar"
-								style={{ width: "100%" }}
-							/>
-						) : (
-							uploadButton
-						)}
-					</Upload>
-				</Form.Item>
 			</Form.Item>
 		</Form>
 	);

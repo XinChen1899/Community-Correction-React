@@ -39,6 +39,7 @@ export default function ModifyModal(props: {
 			},
 			manual: true,
 			debounceWait: 300,
+			ready: info && info != undefined && open,
 		}
 	);
 

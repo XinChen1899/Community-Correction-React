@@ -104,8 +104,10 @@ export default function AssessmentScore() {
 
 	useRequest(getAllScores, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError: (error) => {

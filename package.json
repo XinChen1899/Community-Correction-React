@@ -2,7 +2,7 @@
   "name": "community-correction-react",
   "description": "社区矫正监督管理子系统前端",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

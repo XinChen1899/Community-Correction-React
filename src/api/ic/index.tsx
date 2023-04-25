@@ -33,3 +33,9 @@ export const getAllCrp = () => {
 export const getAllWorkers = () => {
 	return api.get("/worker/all");
 };
+
+export const uploadImg = (img: any) => {
+	let form = new FormData();
+	form.append("file", img);
+	return api.post("/crp/upload", form);
+};

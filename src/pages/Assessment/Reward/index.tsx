@@ -1,6 +1,6 @@
 import { getAllRewards } from "@/api/assessment/reward";
 import { RewardInfo } from "@/entity/Assessment/Reward/RewardInfo";
-import TemplateNotification from "@/template/Notification";
+import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { jllbMap, map2Value } from "@/utils";
@@ -131,15 +131,14 @@ export default function Reward() {
 		},
 		refreshDeps: [tableUpdate],
 	});
-	const [showNotify, setShowNotify] = useState(false);
+
+	const [notifyContext, openNotification] = useMyNotification(
+		"奖励待办",
+		"您有一条「奖励」待办信息，请及时处理"
+	);
 
 	return (
 		<>
-			<TemplateNotification
-				message={"新的待办消息"}
-				description={"奖励审批待办！请及时处理"}
-				runCondition={showNotify}
-			/>
 			<ProcessLgModal
 				open={openLg}
 				setOpen={setOpenLg}
@@ -147,7 +146,7 @@ export default function Reward() {
 				tableUpdate={tableUpdate}
 				setTableUpdate={setTableUpdate}
 				gMsg={gMsg}
-				setNotify={setShowNotify}
+				setNotify={openNotification}
 			/>
 			<ProcessPraiseModal
 				open={openPraise}

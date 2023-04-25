@@ -19,6 +19,7 @@ import { useRequest } from "ahooks";
 import {
 	DatePicker,
 	Form,
+	FormInstance,
 	Input,
 	Modal,
 	Select,
@@ -29,8 +30,9 @@ import Upload, {
 	UploadFile,
 	UploadProps,
 } from "antd/es/upload";
+import dayjs from "dayjs";
 import "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const getBase64 = (file: RcFile): Promise<string> =>
 	new Promise((resolve, reject) => {
@@ -54,7 +56,7 @@ const beforeUpload = (file: RcFile) => {
 };
 
 export function RegisterForm(props: {
-	form: any;
+	form: FormInstance<any>;
 	onFinish: any;
 	initialValues: any;
 	gMsg: GMessage;
@@ -88,6 +90,20 @@ export function RegisterForm(props: {
 		// },
 	]);
 
+	useEffect(() => {
+		if (initialValues.zp != null) {
+			setFileList([
+				{
+					uid: dayjs().minute().toString(),
+					name: initialValues.xm + "avatur",
+					percent: 100,
+					status: "done",
+					url: initialValues.zp,
+				} as UploadFile,
+			]);
+		}
+	}, [initialValues]);
+
 	const [team, setTeam] = useState<any[]>();
 
 	const handleCancel = () => setPreviewOpen(false);
@@ -120,7 +136,7 @@ export function RegisterForm(props: {
 
 	useRequest(getAllCrt, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				const teamList = data.data;
 				const temp = teamList.map((team: CrTeam) => {
 					return {
@@ -141,9 +157,20 @@ export function RegisterForm(props: {
 		(img) => uploadImg(img),
 		{
 			onSuccess: ({ data }) => {
+				console.log(data);
 				if (data.status == "200") {
 					gMsg.onSuccess("上传成功!");
 					setImageUrl(data.data);
+					const afterImgItem = {
+						uid: "123",
+						name: "name",
+						status: "done",
+						url: data.data,
+						percent: 100,
+					} as UploadFile;
+					form.setFieldValue("zp", data.data);
+					console.log(afterImgItem);
+					setFileList([afterImgItem]);
 				} else {
 					gMsg.onError("上传失败!" + data.message);
 				}
@@ -157,7 +184,7 @@ export function RegisterForm(props: {
 
 	const customRequest = (options: any) => {
 		console.log("aaa");
-		const { file, filename, onProgress, onSuccess } = options;
+		const { file, filename } = options;
 		const imgItem = {
 			uid: file.uid,
 			name: file.name,
@@ -167,18 +194,7 @@ export function RegisterForm(props: {
 		} as UploadFile;
 		setFileList([imgItem]);
 
-		console.log(file, filename);
 		runUploadImg(file);
-		const afterImgItem = {
-			uid: file.uid,
-			name: file.name,
-			status: "done",
-			url: "https://ccorr-bucket.oss-cn-shenzhen.aliyuncs.com/ccorr/images/20230425/106453304_p0.jpg",
-			percent: 100,
-		} as UploadFile;
-
-		console.log(afterImgItem);
-		setFileList([afterImgItem]);
 	};
 
 	return (
@@ -186,7 +202,7 @@ export function RegisterForm(props: {
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
-			<Form.Item name={"zp"} label="照片">
+			<Form.Item label="照片">
 				<Upload
 					name="avatar"
 					listType="picture-card"
@@ -200,7 +216,6 @@ export function RegisterForm(props: {
 				<Modal
 					open={previewOpen}
 					title={previewTitle}
-					footer={null}
 					onCancel={handleCancel}>
 					<img
 						alt="example"

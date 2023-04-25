@@ -13,7 +13,14 @@ import {
 	PlusOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
+import {
+	Avatar,
+	Button,
+	Dropdown,
+	MenuProps,
+	Popconfirm,
+	Space,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
 import { useState } from "react";
@@ -31,6 +38,16 @@ const columns: ColumnsType<DataType> = [
 		align: "center",
 		key: "dxbh",
 		width: 150,
+	},
+	{
+		title: "对象照片",
+		dataIndex: "zp",
+		align: "center",
+		key: "zp",
+		width: 150,
+		render: (_, record) => (
+			<Avatar size={"large"} shape="square" src={record.zp} />
+		),
 	},
 	{
 		title: "姓名",

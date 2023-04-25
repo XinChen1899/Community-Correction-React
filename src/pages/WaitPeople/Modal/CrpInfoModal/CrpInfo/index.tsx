@@ -10,8 +10,10 @@ import {
 	mzMap,
 	whcdMap,
 	xbMap,
+	zzmmMap,
 } from "@/utils";
 import { getDate } from "@/utils/ie";
+import { Avatar } from "antd";
 
 const CrpInfo = (props: { info: CorrectionPeople }) => {
 	const { info } = props;
@@ -20,6 +22,16 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 		<TemplateDescriptions
 			title={"社区矫正对象基本信息"}
 			info={[
+				{
+					label: "照片",
+					value: (
+						<Avatar
+							size={"large"}
+							shape="square"
+							src={info.zp}
+						/>
+					),
+				},
 				{ label: "社区矫正对象编号", value: info.dxbh },
 				{
 					label: "是否调查评估",
@@ -55,7 +67,10 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 					label: "就业就学情况",
 					value: map2Value(jyjxqkMap, info.jyjxqk),
 				},
-				{ label: "现政治面貌", value: info.xzzmm },
+				{
+					label: "现政治面貌",
+					value: map2Value(zzmmMap, info.xzzmm),
+				},
 				{ label: "现工作单位", value: info.xgzdw },
 				{ label: "单位联系电话", value: info.dwlxdh },
 				{ label: "现工作单位", value: info.xgzdw },
@@ -64,7 +79,6 @@ const CrpInfo = (props: { info: CorrectionPeople }) => {
 					label: "有无家庭成员及主要社会关系",
 					value: info.ywjtcyjzyshgx == "1" ? "是" : "否",
 				},
-				{ label: "照片", value: info.zp },
 			]}
 		/>
 	);

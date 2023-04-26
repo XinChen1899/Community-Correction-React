@@ -6,26 +6,7 @@ import { useRequest } from "ahooks";
 import { Form } from "antd";
 import { useState } from "react";
 import { SuggestForm } from "../../Form/SuggestForm";
-const DefaultYJS = `
-<h1>调查评估意见书</h1>
-<br/>
-<p>（    ） 字第  号</p><br/>
-<p>人民法院（公安局、监狱管理局）：</p><br/>
-<p>
-受你单位委托，我单位于    年  月   日至   年          月   日对被告人（罪犯）        进行了调查评估。有关情况如下：
-</p><br/>
-<p>
-综合以上情况，评估意见为
 
-。
-</p><br/>
-（公章）
-<p>
-年  月  日
-
-注：抄送       人民检察院。
-</p><br/>
-`;
 export default function SuggestModal(props: {
 	open: boolean;
 	setOpen: any;
@@ -73,7 +54,6 @@ export default function SuggestModal(props: {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
 				const sug = data.data;
-				if (!sug.yjs || sug.yjs == "") sug.yjs = DefaultYJS;
 				setSuggest(sug);
 			}
 		},
@@ -83,7 +63,6 @@ export default function SuggestModal(props: {
 		refreshDeps: [wtbh],
 		ready: open,
 	});
-	const [docx, setDocx] = useState("");
 
 	return (
 		<>
@@ -93,16 +72,11 @@ export default function SuggestModal(props: {
 					<SuggestForm
 						form={form}
 						onFinish={(v: any) => {
-							suggest.dcyjshr = v.dcyjshr;
-							console.log(docx);
-							run(suggest);
+							v.yjs = form.getFieldValue("zz");
+							console.log(v);
+							run(v);
 						}}
 						initialValues={{ ...suggest }}
-						quillValue={suggest.yjs}
-						setQuillValue={(v: any) => {
-							//! Error 存在bug!
-							setDocx(v);
-						}}
 					/>
 				}
 				onOk={handleOk}

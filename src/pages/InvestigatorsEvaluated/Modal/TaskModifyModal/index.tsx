@@ -27,7 +27,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 		(detail: IEInfo) => updateIEInfo(detail),
 		{
 			onSuccess: ({ data }) => {
-				if (data.status == "200") {
+				if (data.status == "200" && data.data == true) {
 					setTableUpdate(!tableUpdate);
 					gMsg.onSuccess("修改成功！!");
 				} else {

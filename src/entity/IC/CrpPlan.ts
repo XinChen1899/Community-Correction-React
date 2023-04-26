@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 export interface CrpPlan {
 	id: number; // 方案id
 	dxbh: string; // 对象编号
@@ -11,8 +9,6 @@ export interface CrpPlan {
 	jyjzcs: string; // 教育矫正措施
 	bkfzcs: string; // 帮困扶助措施
 	qtcs: string; // 其他措施
-	ssjgid: string; // 所属机构id
-	ssxgpg: string; // 实施效果评估
-	pgsj: string | Dayjs; //评估时间
-	prg: string; // 评估人
+
+	plan: string; // 方案url
 }

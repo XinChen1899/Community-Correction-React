@@ -1,14 +1,12 @@
 import { updatePlan } from "@/api/ic/crplan";
-import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateModal from "@/template/Modal";
-import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Form } from "antd";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { DataType } from "../..";
-import { AddTeamForm } from "../../Form/AddTeamForm";
+import { AddPlanForm } from "../../Form/AddPlanForm";
 
 export default function ModifyModal(props: {
 	open: boolean;
@@ -23,16 +21,14 @@ export default function ModifyModal(props: {
 
 	const [form] = Form.useForm();
 
-	useEffect(() => {
-		info.pgsj = dayjs(info.pgsj);
-		form.resetFields();
-		form.setFieldsValue(info);
-	});
-
 	const { loading, run } = useRequest((info) => updatePlan(info), {
-		onSuccess() {
-			setTableUpdate(!tableUpdate);
-			gMsg.onSuccess("修改成功！");
+		onSuccess: ({ data }) => {
+			if (data.status == "200" && data.data == true) {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("修改成功!");
+			} else {
+				gMsg.onError(data.message);
+			}
 		},
 		onError(e) {
 			gMsg.onError("修改失败！" + e.message);
@@ -45,10 +41,9 @@ export default function ModifyModal(props: {
 	});
 
 	const onFinish = (values: any) => {
-		const info = values as CrpPlan;
-		info.pgsj = getDate(info.pgsj);
-		console.log(info);
-		run(info);
+		const url = form.getFieldValue("zz");
+		values.plan = url;
+		run(values);
 	};
 
 	const handleOk = () => {
@@ -59,10 +54,11 @@ export default function ModifyModal(props: {
 		<>
 			<TemplateModal
 				InfoDescriptions={
-					<AddTeamForm
+					<AddPlanForm
 						form={form}
 						onFinish={onFinish}
 						initialValues={info}
+						disabled={true}
 					/>
 				}
 				open={open}

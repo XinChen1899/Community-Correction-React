@@ -135,7 +135,7 @@ export function SuggestForm(props: {
 								<Button
 									type="link"
 									onClick={runDownloadTemplate}>
-									模板
+									模板下载
 								</Button>
 
 								<Upload

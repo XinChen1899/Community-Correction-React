@@ -1,12 +1,10 @@
 import { Card, Form } from "antd";
 
 import { savePlan } from "@/api/ic/crplan";
-import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateModal from "@/template/Modal";
-import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import { AddTeamForm } from "../../Form/AddTeamForm";
+import { AddPlanForm } from "../../Form/AddPlanForm";
 
 const AddModal = (props: {
 	open: boolean;
@@ -25,9 +23,13 @@ const AddModal = (props: {
 	};
 
 	const { loading, run } = useRequest((info) => savePlan(info), {
-		onSuccess() {
-			setTableUpdate(!tableUpdate);
-			gMsg.onSuccess("新增矫正方案");
+		onSuccess({ data }) {
+			if (data.status == "200" && data.data == true) {
+				setTableUpdate(!tableUpdate);
+				gMsg.onSuccess("新增矫正方案");
+			} else {
+				gMsg.onError(data.message);
+			}
 		},
 		onError(e) {
 			gMsg.onError("矫正方案保存失败" + e.message);
@@ -41,17 +43,14 @@ const AddModal = (props: {
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
-		const info = values as CrpPlan;
-		info.pgsj = getDate(info.pgsj);
-
-		run(info);
+		run(values);
 	};
 
 	return (
 		<TemplateModal
 			InfoDescriptions={
 				<Card title={"新增矫正方案"}>
-					<AddTeamForm
+					<AddPlanForm
 						form={form}
 						onFinish={onFinish}
 						initialValues={{}}

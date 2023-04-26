@@ -5,9 +5,8 @@ import TemplateTag, { MyTagType } from "@/template/Tag";
 import { jzlbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
-	CheckCircleFilled,
 	DownOutlined,
-	EditOutlined,
+	EditTwoTone,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
@@ -76,9 +75,9 @@ export default function CorrectionPlan() {
 	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
 
-	const [selectRecord, setSelectRecord] = useState<DataType>(
-		{} as DataType
-	);
+	const [selectRecord, setSelectRecord] = useState<DataType>({
+		dxbh: "",
+	} as DataType);
 
 	const items: MenuProps["items"] = [
 		{
@@ -86,7 +85,7 @@ export default function CorrectionPlan() {
 				<Button
 					block
 					type="text"
-					icon={<EditOutlined />}
+					icon={<EditTwoTone />}
 					onClick={() => setOpenModify(true)}>
 					修改矫正方案
 				</Button>
@@ -94,18 +93,6 @@ export default function CorrectionPlan() {
 			key: "0",
 		},
 		{ type: "divider" },
-		{
-			label: (
-				<Button
-					block
-					type="text"
-					icon={<CheckCircleFilled />}
-					onClick={() => setOpenModify(true)}>
-					方案评估
-				</Button>
-			),
-			key: "1",
-		},
 	];
 
 	// 绑定操作栏的操作
@@ -115,7 +102,7 @@ export default function CorrectionPlan() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
+							type="link"
 							onClick={() => setOpenInfo(true)}>
 							查看矫正方案
 						</Button>
@@ -137,8 +124,10 @@ export default function CorrectionPlan() {
 
 	useRequest(getAllPlan, {
 		onSuccess({ data }) {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError(e) {
@@ -236,7 +225,7 @@ export default function CorrectionPlan() {
 						},
 					},
 				]}
-				tableData={tableData.length ? tableData : []}
+				tableData={tableData}
 				tableOnRow={(rec: DataType) => setSelectRecord(rec)}
 				tableRowKey={(rec: DataType) => rec.id}
 			/>

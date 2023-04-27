@@ -6,13 +6,12 @@ import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	CheckCircleTwoTone,
-	DeleteOutlined,
 	DownOutlined,
 	EditTwoTone,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import InfoModal from "./Modal/InfoModal";
@@ -102,23 +101,6 @@ export default function Announcement() {
 			key: "2",
 		},
 		{ type: "divider" },
-		{
-			label: (
-				<Popconfirm
-					title="是否删除"
-					description="是否删除该调查评估信息！"
-					onOpenChange={() => console.log("open change")}>
-					<Button
-						type={"primary"}
-						danger
-						block
-						icon={<DeleteOutlined />}>
-						删除!
-					</Button>
-				</Popconfirm>
-			),
-			key: "1",
-		},
 	];
 	// 绑定操作栏的操作
 	columns.map((column) => {

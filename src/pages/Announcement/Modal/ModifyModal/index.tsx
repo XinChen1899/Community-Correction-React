@@ -54,6 +54,8 @@ export default function ModifyModal(props: ITaskInfoModal) {
 
 	const onFinish = (values: any) => {
 		const info = values as CrpAnnouncement;
+		const url = form.getFieldValue("zz");
+		if (url) info.audio = url;
 		run(info);
 	};
 

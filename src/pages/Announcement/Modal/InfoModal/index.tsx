@@ -1,7 +1,18 @@
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
-import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import { getDate } from "@/utils/ie";
+
+function Audio(props: { src: string }) {
+	const { src } = props;
+	return (
+		<div>
+			<audio controls src={src}>
+				<a href={src}>Download audio</a>
+			</audio>
+		</div>
+	);
+}
 
 export default function InfoModal(props: {
 	open: boolean;
@@ -18,7 +29,10 @@ export default function InfoModal(props: {
 				label: "宣告日期",
 				value: getDate(info.xgrq),
 			},
-			{ label: "宣告音频", value: info.audio },
+			{
+				label: "宣告音频",
+				value: <Audio src={info.audio} />,
+			},
 		];
 	};
 

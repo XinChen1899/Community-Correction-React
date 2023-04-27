@@ -45,8 +45,10 @@ export default function RegisterModal(props: {
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
-		const crp = values as CrpAnnouncement;
-		run(crp);
+		const info = values as CrpAnnouncement;
+		const url = form.getFieldValue("zz");
+		if (url) info.audio = url;
+		run(info);
 	};
 
 	return (

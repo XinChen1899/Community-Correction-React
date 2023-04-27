@@ -21,3 +21,15 @@ export const finishAnnounce = (crp: CrpAnnouncement) => {
 	crp.xgrq = getDate(crp.xgrq);
 	return api.post("/announce/update", crp);
 };
+
+export const uploadAudio = (docx: any) => {
+	let form = new FormData();
+	form.append("file", docx);
+	return api.post("/announce/upload", form);
+};
+
+export const downloadAudio = (name: string) => {
+	return api.get(name, {
+		responseType: "blob",
+	});
+};

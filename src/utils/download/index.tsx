@@ -1,25 +1,3 @@
-import { CrpPlan } from "@/entity/IC/CrpPlan";
-import { getDate } from "@/utils/ie";
-import { api } from "..";
-
-export const savePlan = (plan: CrpPlan) => {
-	return api.post("/plan/save", plan);
-};
-
-export const updatePlan = (plan: CrpPlan) => {
-	return api.post("/plan/update", plan);
-};
-
-export const getAllPlan = () => {
-	return api.get("/plan/all");
-};
-
-export const uploadDocx = (docx: any) => {
-	let form = new FormData();
-	form.append("file", docx);
-	return api.post("/plan/upload", form);
-};
-
 export const download = (res: any, filename: string) => {
 	// 创建blob对象，解析流数据
 	const blob = new Blob([res], {
@@ -43,19 +21,4 @@ export const download = (res: any, filename: string) => {
 	// 收尾工作，在内存中移除URL 对象
 	document.body.removeChild(a);
 	window.URL.revokeObjectURL(herf);
-};
-
-export const downloadTemplate = (name?: string) => {
-	if (name == undefined || name == null) {
-		return api.get(
-			"https://ccorr-bucket.oss-cn-shenzhen.aliyuncs.com/docxs/%E7%9F%AB%E6%AD%A3%E6%96%B9%E6%A1%88%E6%A8%A1%E6%9D%BF.docx",
-			{
-				responseType: "blob",
-			}
-		);
-	} else {
-		return api.get(name, {
-			responseType: "blob",
-		});
-	}
 };

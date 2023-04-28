@@ -13,7 +13,6 @@ import {
 } from "antd";
 import { Upload } from "antd/lib";
 import { useState } from "react";
-import "react-quill/dist/quill.snow.css";
 
 /**
  * 调查评估意见书

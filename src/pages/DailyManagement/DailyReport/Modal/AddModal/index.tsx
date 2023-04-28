@@ -1,12 +1,10 @@
-import TemplateModal from "@/template/Modal";
-import AddForm from "../../Form/AddForm";
-import { GMessage } from "@/utils/msg/GMsg";
-import { Form } from "antd";
-import { useState } from "react";
-import dayjs from "dayjs";
-import { getDate } from "@/utils/ie";
 import { saveReport } from "@/api/daily/report";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import dayjs from "dayjs";
+import AddForm from "../../Form/AddForm";
 
 export default function RegisterModal(props: {
 	open: boolean;
@@ -43,13 +41,8 @@ export default function RegisterModal(props: {
 	);
 
 	const onFinish = (values: any) => {
-		const detail = values;
-		if (detail.dxbh && detail.bg) {
-			detail.date = getDate(detail.date);
-			run(detail);
-		} else {
-			gMsg.onError("请输入报告信息");
-		}
+		values.bg = form.getFieldValue("zz");
+		run(values);
 	};
 
 	return (

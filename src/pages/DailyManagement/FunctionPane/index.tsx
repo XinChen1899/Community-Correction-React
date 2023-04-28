@@ -1,4 +1,4 @@
-import { Card, Space, Row, Col, MenuProps } from "antd";
+import { Card, Col, Row, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 function FunctionPane() {
 	const navigate = useNavigate();
@@ -15,21 +15,19 @@ function FunctionPane() {
 							onClick={() => {
 								navigate("/daily/check");
 							}}>
-							Card content
+							社区矫正人员每月须定期报到
 						</Card>
 					</Col>
 					<Col span={8}>
 						<Card
 							title="日常报告"
-							bordered={false}
+							bordered={true}
 							onClick={() => {
 								navigate("/daily/report");
 							}}
 							hoverable>
-							书面报告次数由管理等级关联生成，可提交
-							纸质格式表格扫描上传或由矫正对象在矫通
-							扫描上传（纸质版同时提交）。报告完成情
-							况关联计分考核、矫正方案落实记录。
+							书面报告次数由管理等级关联生成。
+							报告完成情况关联计分考核、矫正方案落实记录。
 						</Card>
 					</Col>
 					<Col span={8}>

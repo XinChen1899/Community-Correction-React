@@ -1,12 +1,10 @@
-import TemplateModal from "@/template/Modal";
-import AddForm from "../../Form/AddForm";
-import { GMessage } from "@/utils/msg/GMsg";
-import { Form } from "antd";
-import { useState } from "react";
-import dayjs from "dayjs";
-import { getDate } from "@/utils/ie";
 import { saveCheck } from "@/api/daily/check";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
+import dayjs from "dayjs";
+import AddForm from "../../Form/AddForm";
 
 export default function RegisterModal(props: {
 	open: boolean;
@@ -24,11 +22,15 @@ export default function RegisterModal(props: {
 		form.submit();
 	};
 	const { loading, run } = useRequest(
-		(detail: any) => saveCheck(detail),
+		(detail) => saveCheck(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("报到成功！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("报到成功！");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -42,11 +44,7 @@ export default function RegisterModal(props: {
 	);
 
 	const onFinish = (values: any) => {
-		const detail = values;
-		if (detail && detail.dxbh != "") {
-			detail.date = getDate(detail.date);
-			run(detail);
-		}
+		run(values);
 	};
 
 	return (

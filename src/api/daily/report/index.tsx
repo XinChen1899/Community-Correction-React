@@ -1,3 +1,4 @@
+import { getDate } from "@/utils/ie";
 import { api } from "..";
 
 export const getAllReports = () => {
@@ -5,13 +6,7 @@ export const getAllReports = () => {
 };
 
 export const getReportDetails = (dxbh: string) => {
-	if (dxbh && dxbh != "") {
-		return api.get(`/report/detail/${dxbh}`);
-	} else {
-		return new Promise((_, reject) => {
-			reject("dxbh is required");
-		});
-	}
+	return api.get(`/report/detail/${dxbh}`);
 };
 
 export const saveReport = (data: {
@@ -19,11 +14,18 @@ export const saveReport = (data: {
 	bg: string;
 	date: string;
 }) => {
-	if (data) {
-		return api.post("/report/detail", data);
-	} else {
-		return new Promise((_, reject) => {
-			reject("data is required");
-		});
-	}
+	data.date = getDate(data.date);
+	return api.post("/report/detail", data);
+};
+
+export const uploadDocx = (docx: any) => {
+	let form = new FormData();
+	form.append("file", docx);
+	return api.post("/report/detail/upload", form);
+};
+
+export const downloadDocx = (name: string) => {
+	return api.get(name, {
+		responseType: "blob",
+	});
 };

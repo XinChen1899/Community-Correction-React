@@ -3,7 +3,7 @@ import { getDate } from "@/utils/ie";
 import axios from "axios";
 
 export const api = axios.create({
-	baseURL: "/termination/api",
+	baseURL: "/api/termination",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 

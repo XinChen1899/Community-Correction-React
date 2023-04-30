@@ -1,5 +1,9 @@
 # Community-Correction-React
-毕设
+> 毕设
+- 微服务架构
+- 前后端分离架构
+
+后端链接: [github地址](https://github.com/xieyuquanxx/Community-Correction-SpringCloud)
 ## 开发环境
 
 - React

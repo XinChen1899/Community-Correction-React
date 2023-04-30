@@ -4,7 +4,7 @@ import axios from "axios";
 import { useAPI } from "..";
 
 export const api = axios.create({
-	baseURL: "/ie/api",
+	baseURL: "/api/ie",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 

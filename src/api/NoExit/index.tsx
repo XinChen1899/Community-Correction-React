@@ -5,7 +5,7 @@ import axios from "axios";
 import { useAPI } from "..";
 
 export const api = axios.create({
-	baseURL: "/noexit/api",
+	baseURL: "/api/noexit",
 	headers: { "Access-Control-Allow-Origin": "*" },
 });
 

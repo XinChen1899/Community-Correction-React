@@ -1,6 +1,6 @@
 import { downloadAudio, uploadAudio } from "@/api/ic/announce";
-import { download } from "@/api/ie";
 import TemplateForm from "@/template/Form";
+import { download } from "@/utils/download";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import {

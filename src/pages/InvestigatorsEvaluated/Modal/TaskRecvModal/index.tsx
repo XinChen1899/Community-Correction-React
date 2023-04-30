@@ -5,36 +5,21 @@ import {
 	implWTF,
 	unacceptedDcpg,
 } from "@/api/ie/impl";
-import { IEInfo } from "@/entity/IE/IEInfo";
 import TemplateModal from "@/template/Modal";
+import { getColumn } from "@/template/Table";
 import { GMessage } from "@/utils/msg/GMsg";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import { Button, Input, Popconfirm, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
+import { DataType } from "../..";
 import TaskInfoModal from "../TaskInfoModal";
 
-export type DataType = IEInfo;
-
 const columns: ColumnsType<DataType> = [
-	{
-		title: "流程id",
-		dataIndex: "processId",
-		key: "processId",
-		width: 300,
-	},
-	{
-		title: "委托编号",
-		dataIndex: "wtbh",
-		key: "wtbh",
-		width: 150,
-	},
-	{
-		title: "操作",
-		key: "action",
-		width: 200,
-	},
+	getColumn("流程id", "processId"),
+	getColumn("委托编号", "wtbh"),
+	getColumn("操作", "action"),
 ];
 
 export default function TaskRecvModal(props: {
@@ -79,7 +64,7 @@ export default function TaskRecvModal(props: {
 					setRecvUpdate(!recvUpdate);
 					gMsg.onSuccess("已退回!");
 				} else {
-					gMsg.onWarning(data.message);
+					gMsg.onError(data.message);
 				}
 			},
 			manual: true,
@@ -95,7 +80,7 @@ export default function TaskRecvModal(props: {
 					setTableUpdate(!tableUpdate);
 					gMsg.onSuccess("已接收!");
 				} else {
-					gMsg.onWarning(data.message);
+					gMsg.onError(data.message);
 				}
 			},
 			onFinally: () => {
@@ -112,7 +97,7 @@ export default function TaskRecvModal(props: {
 				gMsg.onSuccess("已发送给社区矫正机构!");
 				openNotification();
 			} else {
-				gMsg.onWarning(data.message);
+				gMsg.onError(data.message);
 			}
 		},
 		manual: true,
@@ -124,7 +109,7 @@ export default function TaskRecvModal(props: {
 				setRecvUpdate(!recvUpdate);
 				gMsg.onSuccess("委托方正在准备材料!");
 			} else {
-				gMsg.onWarning(data.message);
+				gMsg.onError(data.message);
 			}
 		},
 		manual: true,

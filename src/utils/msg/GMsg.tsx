@@ -1,11 +1,11 @@
 import { message } from "antd";
 
 export interface GMessage {
-	onSuccess: any;
-	onError: any;
-	onInfo?: any;
-	onWarning?: any;
-	onLoading?: any;
+	onSuccess: (msg: string | any) => void;
+	onError: (msg: string | any) => void;
+	onInfo?: (msg: string | any) => void;
+	onWarning?: (msg: string | any) => void;
+	onLoading?: (msg: string | any) => void;
 }
 
 export const useMessage = (): [

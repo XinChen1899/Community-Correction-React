@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom";
-import { routeTable } from "./routerTable";
+import { RouteItem, routeTable } from "./routerTable";
 
-const generateRoute = (routeTable: any[]) => {
+const generateRoute = (routeTable: RouteItem[]) => {
 	const routes: React.ReactElement[] = [];
 	routeTable.forEach((route: any) => {
 		if (route.page.component) {

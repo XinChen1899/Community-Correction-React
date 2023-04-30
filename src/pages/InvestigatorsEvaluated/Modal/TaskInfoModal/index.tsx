@@ -1,3 +1,4 @@
+import { IEInfo } from "@/entity/IE/IEInfo";
 import TaskInfo from "@/pages/InvestigatorsEvaluated/Modal/TaskInfoModal/TaskInfo";
 import TemplateModal from "@/template/Modal";
 import { Card, Steps } from "antd";
@@ -5,7 +6,7 @@ import { Card, Steps } from "antd";
 interface ITaskInfoModal {
 	open: boolean;
 	setOpen: any;
-	info: any;
+	info: IEInfo;
 	recv?: boolean;
 }
 

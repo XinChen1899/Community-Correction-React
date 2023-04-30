@@ -26,26 +26,26 @@ export const xbMap = getCodeMap([
 	["02", "女"],
 ]);
 
-export const zmMap = [
-	{ code: "01", value: "危害国家安全" },
-	{ code: "02", value: "危害公共安全" },
-	{ code: "03", value: "破坏社会主义市场经济秩序" },
-	{ code: "04", value: "侵犯公民人身权利、民主权利" },
-	{ code: "05", value: "侵犯财产" },
-	{ code: "06", value: "妨害社会管理秩序" },
-	{ code: "07", value: "危害国防利益" },
-	{ code: "08", value: "贪污受贿" },
-	{ code: "09", value: "渎职" },
-	{ code: "99", value: "其他" },
-];
+export const zmMap = getCodeMap([
+	["01", "危害国家安全"],
+	["02", "危害公共安全"],
+	["03", "破坏社会主义市场经济秩序"],
+	["04", "侵犯公民人身权利、民主权利"],
+	["05", "侵犯财产"],
+	["06", "妨害社会管理秩序"],
+	["07", "危害国防利益"],
+	["08", "贪污受贿"],
+	["09", "渎职"],
+	["99", "其他"],
+]);
 
-export const ypxfMap = [
-	{ code: "01", value: "死刑缓期两年执行" },
-	{ code: "02", value: "无期徒刑" },
-	{ code: "03", value: "有期徒刑" },
-	{ code: "04", value: "拘役" },
-	{ code: "05", value: "管制" },
-];
+export const ypxfMap = getCodeMap([
+	["01", "死刑缓期两年执行"],
+	["02", "无期徒刑"],
+	["03", "有期徒刑"],
+	["04", "拘役"],
+	["05", "管制"],
+]);
 
 export const fjxMap = [
 	{ code: "01", value: "罚金" },
@@ -214,20 +214,20 @@ export const zjMap = getCodeMap([
 	["05", "作废"],
 	["06", "未操作"],
 ]);
+const DEFAULT_SELECT_WIDTH = 300;
 
 export const generateSelect = (
-	selectList: any,
+	selectList: CodeMap[],
 	config?: { width?: number; disabled?: boolean }
 ) => {
-	if (!selectList) return;
 	return (
 		<Select
 			style={{
 				width: config
 					? config.width
 						? config.width
-						: 290
-					: 290,
+						: DEFAULT_SELECT_WIDTH
+					: DEFAULT_SELECT_WIDTH,
 			}}
 			disabled={
 				config
@@ -247,13 +247,7 @@ export const generateSelect = (
 	);
 };
 
-export const map2Value = (map: any[], code: string): string => {
-	let value = "";
-	map.forEach((item) => {
-		if (item.code == code) {
-			value = item.value;
-			return;
-		}
-	});
-	return value;
+export const map2Value = (map: CodeMap[], code: string): string => {
+	const val = map.find((e) => e.code == code);
+	return val ? val.value : "";
 };

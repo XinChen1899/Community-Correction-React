@@ -31,7 +31,7 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 					setTableUpdate(!tableUpdate);
 					gMsg.onSuccess("修改成功！!");
 				} else {
-					gMsg.onWarning(data.message);
+					gMsg.onError(data.message);
 				}
 			},
 			onError: (err) => {

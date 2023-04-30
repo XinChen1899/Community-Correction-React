@@ -75,7 +75,14 @@ export function getPageItem(
 	} as IPageItem;
 }
 
-export const routeTable = [
+export interface RouteItem {
+	url: string;
+	page: IPageItem;
+	icon?: JSX.Element;
+	children?: RouteItem[];
+}
+
+export const routeTable: RouteItem[] = [
 	{
 		url: "home",
 		page: getPageItem(

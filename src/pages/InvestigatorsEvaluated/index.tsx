@@ -2,6 +2,7 @@ import { finishIE, getAllIEInfos } from "@/api/ie";
 import { IEInfo } from "@/entity/IE/IEInfo";
 import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, wtdwMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -34,56 +35,24 @@ import TaskRecvModal from "./Modal/TaskRecvModal";
  */
 
 export type DataType = IEInfo;
+
 const columns: ColumnsType<DataType> = [
-	{
-		title: "进度",
-		dataIndex: "isFinished",
-		key: "isFinished",
-		align: "center",
-		width: 100,
-		render: (_, record) => {
-			const { finish } = record;
-			let loading;
-			if (finish != 0) loading = <a>还需{finish}日</a>;
-			else
-				loading = (
-					<Spin indicator={<CheckCircleOutlined />} />
-				);
-			return loading;
-		},
-	},
-	{
-		title: "委托编号",
-		dataIndex: "wtbh",
-		align: "center",
-		key: "wtbh",
-		width: 150,
-	},
-	{
-		title: "委托单位",
-		dataIndex: "wtdw",
-		align: "center",
-		key: "wtdw",
-		width: 150,
-		render: (_, record) => (
-			<TemplateTag
-				value={map2Value(wtdwMap, record.wtdw)}
-				type={MyTagType.Info}
-			/>
-		),
-	},
-	{
-		title: "姓名",
-		dataIndex: "bgrxm",
-		align: "center",
-		key: "bgrxm",
-		width: 150,
-	},
-	{
-		title: "操作",
-		key: "action",
-		width: 200,
-	},
+	getColumn("进度", "isFinished", (_, record) => {
+		const { finish } = record;
+		let loading;
+		if (finish != 0) loading = <a>还需{finish}日</a>;
+		else loading = <Spin indicator={<CheckCircleOutlined />} />;
+		return loading;
+	}),
+	getColumn("委托编号", "wtbh"),
+	getColumn("委托单位", "wtdw", (_, record) => (
+		<TemplateTag
+			value={map2Value(wtdwMap, record.wtdw)}
+			type={MyTagType.Info}
+		/>
+	)),
+	getColumn("姓名", "bgrxm"),
+	getColumn("操作", "action"),
 ];
 
 export default function IE() {
@@ -106,8 +75,10 @@ export default function IE() {
 
 	useRequest(getAllIEInfos, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError: (error) => {

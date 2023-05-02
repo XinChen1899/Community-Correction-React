@@ -1,6 +1,6 @@
-import CrpInfo from "./CrpInfo";
-import { DataType } from "../..";
 import TemplateModal from "@/template/Modal";
+import { DataType } from "../..";
+import CrpInfo from "./CrpInfo";
 
 export default function CrpInfoModal(props: {
 	open: boolean;
@@ -10,12 +10,10 @@ export default function CrpInfoModal(props: {
 	const { open, setOpen, selectRecord } = props;
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={<CrpInfo info={selectRecord} />}
-				open={open}
-				setOpen={setOpen}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={<CrpInfo info={selectRecord} />}
+			open={open}
+			setOpen={setOpen}
+		/>
 	);
 }

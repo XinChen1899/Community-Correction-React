@@ -1,6 +1,7 @@
 import { getAllCrp } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import TemplateHome from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
@@ -32,80 +33,36 @@ import RegisterModal from "./Modal/RegisterModal";
 export type DataType = CorrectionPeople;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		align: "center",
-		key: "dxbh",
-		width: 150,
-	},
-	{
-		title: "对象照片",
-		dataIndex: "zp",
-		align: "center",
-		key: "zp",
-		width: 150,
-		render: (_, record) => (
-			<Avatar size={"large"} shape="square" src={record.zp} />
-		),
-	},
-	{
-		title: "姓名",
-		dataIndex: "xm",
-		align: "center",
-		key: "xm",
-	},
-	{
-		title: "是否调查评估",
-		dataIndex: "sfdcpg",
-		key: "sfdcpg",
-		align: "center",
-		render: (value) => {
-			let loading;
-			if (value == "1")
-				loading = (
-					<Spin indicator={<CheckCircleOutlined />} />
-				);
-			else loading = <Spin indicator={<CloseCircleFilled />} />;
-			return loading;
-		},
-		width: 120,
-	},
-	{
-		title: "矫正状态",
-		align: "center",
-		dataIndex: "status",
-		key: "status",
-		render: (value) => (
-			<TemplateTag value={value} type={MyTagType.Accept} />
-		),
-	},
-	{
-		title: "矫正小组",
-		dataIndex: "team",
-		align: "center",
-		key: "team",
-		render: (value) => {
-			if (value != null)
-				return (
-					<TemplateTag
-						value={`小组${value}`}
-						type={MyTagType.Info}
-					/>
-				);
-			else
-				return (
-					<TemplateTag
-						value={`无小组`}
-						type={MyTagType.Info}
-					/>
-				);
-		},
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("对象编号", "dxbh"),
+	getColumn("对象照片", "zp", (_, record) => (
+		<Avatar size={"large"} shape="square" src={record.zp} />
+	)),
+	getColumn("姓名", "xm"),
+	getColumn("是否调查评估", "sfdcpg", (_, record) => {
+		let loading;
+		if (record.sfdcpg == "1")
+			loading = <Spin indicator={<CheckCircleOutlined />} />;
+		else loading = <Spin indicator={<CloseCircleFilled />} />;
+		return loading;
+	}),
+	getColumn("矫正状态", "status", (_, record) => (
+		<TemplateTag value={record.status} type={MyTagType.Accept} />
+	)),
+	getColumn("矫正小组", "team", (_, record) => {
+		const value = record.team;
+		if (value != null)
+			return (
+				<TemplateTag
+					value={`小组${value}`}
+					type={MyTagType.Info}
+				/>
+			);
+		else
+			return (
+				<TemplateTag value={`无小组`} type={MyTagType.Info} />
+			);
+	}),
+	getColumn("操作", "action"),
 ];
 
 //! 待入矫人员
@@ -254,18 +211,12 @@ export default function WaitPeople() {
 			<TemplateHome
 				columns={columns}
 				cardExtra={
-					<>
-						<Space direction={"horizontal"}>
-							<Button
-								onClick={() => {
-									setOpenRegister(true);
-								}}
-								type={"primary"}
-								icon={<PlusOutlined />}>
-								入矫登记
-							</Button>
-						</Space>
-					</>
+					<Button
+						onClick={() => setOpenRegister(true)}
+						type={"primary"}
+						icon={<PlusOutlined />}>
+						入矫登记
+					</Button>
 				}
 				cardTitle={"待入矫人员统计"}
 				statisticList={[
@@ -306,10 +257,10 @@ export default function WaitPeople() {
 						},
 					},
 				]}
-				tableData={tableData ? tableData : []}
-				tableOnRow={(record: any) => {
-					setSelectRecord(record);
-				}}
+				tableData={tableData}
+				tableOnRow={(record: DataType) =>
+					setSelectRecord(record)
+				}
 				tableRowKey={(rec: DataType) => rec.dxbh}
 			/>
 		</div>

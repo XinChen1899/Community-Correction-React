@@ -1,6 +1,9 @@
 import { getAllNoCheck } from "@/api/ic/nocheck";
 import { CrpCheck } from "@/entity/IC/CrpCheck";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
+import TemplateTag, { MyTagType } from "@/template/Tag";
+import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Button } from "antd";
@@ -11,28 +14,15 @@ import InfoModal from "./Modal";
 export type DataType = CrpCheck;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		key: "dxbh",
-		align: "center",
-	},
-	{
-		title: "对象姓名",
-		dataIndex: "xm",
-		align: "center",
-		key: "xm",
-	},
-	{
-		title: "应报到日期",
-		dataIndex: "date",
-		align: "center",
-		key: "date",
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("对象编号", "dxbh"),
+	getColumn("对象姓名", "xm"),
+	getColumn("应报到日期", "date", (_, record) => (
+		<TemplateTag
+			value={getDate(record.date)}
+			type={MyTagType.Info}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 
 //! 逾期报到/未报到

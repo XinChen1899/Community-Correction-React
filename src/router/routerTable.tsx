@@ -111,7 +111,12 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"wait",
 					routeNameMap.wait,
-					lazy(() => import("@/pages/WaitPeople"))
+					lazy(
+						() =>
+							import(
+								"@/pages/RecvCorrection/WaitPeople"
+							)
+					)
 				),
 			},
 			{
@@ -119,7 +124,12 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"crteam",
 					routeNameMap.crteam,
-					lazy(() => import("@/pages/CorrectionTeam"))
+					lazy(
+						() =>
+							import(
+								"@/pages/RecvCorrection/CorrectionTeam"
+							)
+					)
 				),
 			},
 			{
@@ -127,7 +137,12 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"announcement",
 					routeNameMap.announcement,
-					lazy(() => import("@/pages/Announcement"))
+					lazy(
+						() =>
+							import(
+								"@/pages/RecvCorrection/Announcement"
+							)
+					)
 				),
 			},
 			{
@@ -135,7 +150,10 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"nocheckin",
 					routeNameMap.nocheckin,
-					lazy(() => import("@/pages/NoCheckIn"))
+					lazy(
+						() =>
+							import("@/pages/RecvCorrection/NoCheckIn")
+					)
 				),
 			},
 		],

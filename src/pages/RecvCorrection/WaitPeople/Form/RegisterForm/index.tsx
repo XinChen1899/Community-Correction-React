@@ -2,6 +2,7 @@ import { uploadImg } from "@/api/ic";
 import { getAllCrt } from "@/api/ic/crteam";
 import { CrTeam } from "@/entity/IC/CrTeam";
 import {
+	CodeMap,
 	generateSelect,
 	gjMap,
 	hjlxMap,
@@ -69,26 +70,7 @@ export function RegisterForm(props: {
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const [previewImage, setPreviewImage] = useState("");
 	const [previewTitle, setPreviewTitle] = useState("");
-	const [fileList, setFileList] = useState<UploadFile[]>([
-		// {
-		// 	uid: "-1",
-		// 	name: "image.png",
-		// 	status: "done",
-		// 	url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-		// },
-		// {
-		// 	uid: "-xxx",
-		// 	percent: 50,
-		// 	name: "image.png",
-		// 	status: "uploading",
-		// 	url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-		// },
-		// {
-		// 	uid: "-5",
-		// 	name: "image.png",
-		// 	status: "error",
-		// },
-	]);
+	const [fileList, setFileList] = useState<UploadFile[]>([]);
 
 	useEffect(() => {
 		if (initialValues.zp != null) {
@@ -103,8 +85,6 @@ export function RegisterForm(props: {
 			]);
 		}
 	}, [initialValues]);
-
-	const [team, setTeam] = useState<any[]>();
 
 	const handleCancel = () => setPreviewOpen(false);
 
@@ -134,17 +114,20 @@ export function RegisterForm(props: {
 		</div>
 	);
 
+	// 获取所有的矫正小组信息
+	const [teamList, setTeamList] = useState<CodeMap[]>([]);
 	useRequest(getAllCrt, {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
-				const teamList = data.data;
-				const temp = teamList.map((team: CrTeam) => {
+				const temp = data.data.map((team: CrTeam) => {
 					return {
 						code: team.id,
 						value: team.teamName,
 					};
 				});
-				setTeam(temp);
+				setTeamList(temp);
+			} else {
+				gMsg.onError(data.message);
 			}
 		},
 		onError: (error: any) => {
@@ -183,8 +166,7 @@ export function RegisterForm(props: {
 	);
 
 	const customRequest = (options: any) => {
-		console.log("aaa");
-		const { file, filename } = options;
+		const { file } = options;
 		const imgItem = {
 			uid: file.uid,
 			name: file.name,
@@ -262,7 +244,7 @@ export function RegisterForm(props: {
 				{generateSelect(jzlbMap)}
 			</Form.Item>
 			<Form.Item name={"team"} label="确定矫正小组">
-				{generateSelect(team)}
+				{generateSelect(teamList)}
 			</Form.Item>
 			<Form.Item
 				name={"xm"}

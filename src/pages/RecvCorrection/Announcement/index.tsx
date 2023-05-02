@@ -1,6 +1,7 @@
 import { finishAnnounce, getAllAnnounces } from "@/api/ic/announce";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -21,45 +22,23 @@ import RegisterModal from "./Modal/RegisterModal";
 export type DataType = CrpAnnouncement;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		align: "center",
-		key: "dxbh",
-	},
-	{
-		title: "对象姓名",
-		align: "center",
-		dataIndex: "xm",
-		key: "xm",
-	},
-	{
-		title: "宣告日期",
-		dataIndex: "xgrq",
-		align: "center",
-		key: "xgrq",
-		render: (_, record) => getDate(record.xgrq),
-	},
-	{
-		title: "是否宣告",
-		dataIndex: "finish",
-		align: "center",
-		key: "finish",
-		render: (_, record) => (
-			<TemplateTag
-				value={record.finish ? "已完成" : "未完成"}
-				type={
-					record.finish
-						? MyTagType.Accept
-						: MyTagType.Warning
-				}
-			/>
-		),
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("对象编号", "dxbh"),
+	getColumn("对象姓名", "xm"),
+	getColumn("宣告日期", "xgrq", (_, record) => (
+		<TemplateTag
+			value={getDate(record.xgrq)}
+			type={MyTagType.Info}
+		/>
+	)),
+	getColumn("是否宣告", "finish", (_, record) => (
+		<TemplateTag
+			value={record.finish ? "已完成" : "未完成"}
+			type={
+				record.finish ? MyTagType.Accept : MyTagType.Warning
+			}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 
 //! 入矫宣告

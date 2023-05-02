@@ -3,6 +3,7 @@ import { getAllCrt } from "@/api/ic/crteam";
 import { CrTeam } from "@/entity/IC/CrTeam";
 import { Worker } from "@/entity/IC/Worker";
 import TemplateHome from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	DeleteOutlined,
@@ -29,35 +30,11 @@ const defaultDataType: DataType = {
 };
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "小组编号",
-		dataIndex: "id",
-		key: "id",
-		align: "center",
-		width: 150,
-	},
-	{
-		title: "小组名",
-		dataIndex: "teamName",
-		align: "center",
-		key: "teamName",
-	},
-	{
-		title: "组长姓名",
-		dataIndex: "monitor",
-		align: "center",
-		key: "monitor",
-	},
-	{
-		title: "小组人数",
-		dataIndex: "teamNumber",
-		align: "center",
-		key: "teamNumber",
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("小组编号", "id"),
+	getColumn("小组名", "teamName"),
+	getColumn("组长姓名", "monitor"),
+	getColumn("小组人数", "teamNumber"),
+	getColumn("操作", "action"),
 ];
 
 //! 矫正小组

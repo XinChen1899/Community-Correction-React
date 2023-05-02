@@ -1,6 +1,6 @@
 import { Select } from "antd";
 
-interface CodeMap {
+export interface CodeMap {
 	code: string;
 	value: string;
 }

@@ -1,6 +1,6 @@
 import { getCrpByDxbh } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
-import CrpInfo from "@/pages/WaitPeople/Modal/CrpInfoModal/CrpInfo";
+import CrpInfo from "@/pages/RecvCorrection/WaitPeople/Modal/CrpInfoModal/CrpInfo";
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";

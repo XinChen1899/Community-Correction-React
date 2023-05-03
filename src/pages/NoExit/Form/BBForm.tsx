@@ -1,7 +1,7 @@
-import "react";
-import TemplateForm from "@/template/Form";
+import TemplateForm, { getFormItem } from "@/template/Form";
+import { crjzjzlMap, generateSelect } from "@/utils";
 import { DatePicker, Input } from "antd";
-import { crjzjzlMap, generateSelect, xbMap } from "@/utils";
+import "react";
 
 /**
  * 出入境报备信息 表单
@@ -21,11 +21,11 @@ export function BBForm(props: {
 			onFinish={onFinish}
 			initialValues={initialValues}
 			formTable={[
-				{
-					name: "dxbh",
-					label: "社区矫正对象编号",
-					component: <Input disabled />,
-				},
+				getFormItem(
+					"dxbh",
+					"社区矫正对象编号",
+					<Input disabled />
+				),
 				{
 					name: "crjzjzl",
 					label: "出入境证件种类",

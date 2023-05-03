@@ -23,7 +23,7 @@ const CrpInfo = (props: { info: CrTeam; workerMap: any }) => {
 							renderItem={(item) => (
 								<List.Item>
 									<Card
-										title={`人员编号: ${item}`}
+										title={`编号${item}`}
 										hoverable>
 										{workerMap[item]}
 									</Card>

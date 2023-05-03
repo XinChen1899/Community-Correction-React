@@ -1,10 +1,10 @@
-import "react";
-import { DatePicker, Form, Input } from "antd";
-import { useState } from "react";
-import { generateSelect, jzlbMap, xbMap } from "@/utils";
 import { getAllCrt } from "@/api/ic/crteam";
 import { CrTeam } from "@/entity/IC/CrTeam";
+import { CodeMap, generateSelect, jzlbMap, xbMap } from "@/utils";
 import { useRequest } from "ahooks";
+import { DatePicker, Form, Input, message } from "antd";
+import "react";
+import { useState } from "react";
 
 export function ReceiveForm(props: {
 	form: any;
@@ -13,21 +13,24 @@ export function ReceiveForm(props: {
 }) {
 	const { form, onFinish, initialValues } = props;
 
-	const [team, setTeam] = useState<CrTeam[]>();
-
+	// 获取所有的矫正小组信息
+	const [teamList, setTeamList] = useState<CodeMap[]>([]);
 	useRequest(getAllCrt, {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
-				const teamList = data.data;
-				const temp = teamList.map((team: CrTeam) => {
+				const temp = data.data.map((team: CrTeam) => {
 					return {
 						code: team.id,
 						value: team.teamName,
 					};
 				});
-
-				setTeam(temp);
+				setTeamList(temp);
+			} else {
+				message.error(data.message);
 			}
+		},
+		onError: (error: any) => {
+			message.error(error);
 		},
 		refreshDeps: [form],
 	});
@@ -68,7 +71,7 @@ export function ReceiveForm(props: {
 			</Form.Item>
 			<Form.Item name={"jzxz"}>
 				<Form.Item name={"team"} label="确定矫正小组">
-					{generateSelect(team, { disabled: true })}
+					{generateSelect(teamList, { disabled: true })}
 				</Form.Item>
 			</Form.Item>
 		</Form>

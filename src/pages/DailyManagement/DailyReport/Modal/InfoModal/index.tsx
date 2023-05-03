@@ -1,9 +1,9 @@
 import { downloadDocx, getReportDetails } from "@/api/daily/report";
-import { download } from "@/api/ie";
 import { ReportDetail } from "@/entity/Daily/report/ReportDetail";
 import { ReportInfo } from "@/entity/Daily/report/ReportInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
+import { download } from "@/utils/download";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Button, List, Space, message } from "antd";

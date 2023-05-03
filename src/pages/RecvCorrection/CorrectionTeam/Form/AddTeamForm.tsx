@@ -1,7 +1,7 @@
-import "react";
-import { Button, Form, Input, Select, Tag } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Worker } from "@/entity/IC/Worker";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Select, Tag } from "antd";
+import "react";
 
 const formItemLayout = {
 	labelCol: {
@@ -34,9 +34,6 @@ export function AddTeamForm(props: {
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
-			<Form.Item name={"id"} label={"矫正小组编号"}>
-				<Input placeholder={"请输入矫正小组编号"} />
-			</Form.Item>
 			<Form.Item name={"teamName"} label={"矫正小组名"}>
 				<Input placeholder={"请输入矫正小组名"} />
 			</Form.Item>

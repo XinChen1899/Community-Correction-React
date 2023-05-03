@@ -2,7 +2,6 @@ import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import { jzlbMap, map2Value, sfcnMap } from "@/utils";
-import { getDate } from "@/utils/ie";
 import { DataType } from "../..";
 
 export default function InfoModal(props: {
@@ -30,10 +29,6 @@ export default function InfoModal(props: {
 			{ label: "教育矫正措施", value: info.jyjzcs },
 			{ label: "帮困扶助措施", value: info.bkfzcs },
 			{ label: "其他措施", value: info.qtcs },
-			{ label: "所属机构id", value: info.ssjgid },
-			{ label: "实施效果评估", value: info.ssxgpg },
-			{ label: "评估时间", value: getDate(info.pgsj) },
-			{ label: "评估人", value: info.prg },
 		];
 	};
 

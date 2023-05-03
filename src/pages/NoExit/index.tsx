@@ -1,6 +1,7 @@
 import { getAllExitInfos } from "@/api/noexit";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, zjMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -21,74 +22,33 @@ import ZJModal from "./Modal/ZJModal";
 export type DataType = Exit;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		key: "dxbh",
-		align: "center",
-		width: 150,
-	},
-	{
-		title: "姓名",
-		dataIndex: "xm",
-		key: "xm",
-		align: "center",
-	},
-	{
-		title: "报备",
-		dataIndex: "bb",
-		key: "bb",
-		align: "center",
-		render: (_, record) => (
-			<TemplateTag
-				value={record.bb != "0" ? "已备案" : "待备案"}
-				type={
-					record.bb != "0"
-						? MyTagType.Info
-						: MyTagType.Warning
-				}
-			/>
-		),
-		width: 120,
-	},
-	{
-		title: "证件",
-		dataIndex: "zj",
-		key: "zj",
-		align: "center",
-		render: (_, record) => (
-			<TemplateTag
-				value={map2Value(zjMap, record.zj)}
-				type={
-					record.zj == "06"
-						? MyTagType.Warning
-						: MyTagType.Info
-				}
-			/>
-		),
-		width: 120,
-	},
-	{
-		title: "边控",
-		dataIndex: "bk",
-		key: "bk",
-		align: "center",
-		render: (_, record) => (
-			<TemplateTag
-				value={record.bk != "0" ? "已边控" : "未边控"}
-				type={
-					record.bk != "0"
-						? MyTagType.Info
-						: MyTagType.Warning
-				}
-			/>
-		),
-		width: 120,
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("对象编号", "dxbh"),
+	getColumn("姓名", "xm"),
+	getColumn("报备", "bb", (_, record) => (
+		<TemplateTag
+			value={record.bb != "0" ? "已备案" : "待备案"}
+			type={
+				record.bb != "0" ? MyTagType.Info : MyTagType.Warning
+			}
+		/>
+	)),
+	getColumn("证件", "zj", (_, record) => (
+		<TemplateTag
+			value={map2Value(zjMap, record.zj)}
+			type={
+				record.zj == "06" ? MyTagType.Warning : MyTagType.Info
+			}
+		/>
+	)),
+	getColumn("边控", "bk", (_, record) => (
+		<TemplateTag
+			value={record.bk != "0" ? "已边控" : "未边控"}
+			type={
+				record.bk != "0" ? MyTagType.Info : MyTagType.Warning
+			}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 
 /**
@@ -162,7 +122,7 @@ export default function NoExit() {
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
-			column.render = (_, record) => {
+			column.render = () => {
 				return (
 					<Space size="middle">
 						<Button

@@ -147,7 +147,7 @@ export default function BBModal(props: {
 						</div>
 					),
 				nextAction: () => {},
-				check: (current: number) => info.step > 1,
+				check: () => info.step > 1,
 			},
 			{
 				title: "审批结果",

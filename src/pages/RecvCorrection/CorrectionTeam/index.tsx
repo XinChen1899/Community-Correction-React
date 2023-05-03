@@ -6,13 +6,12 @@ import TemplateHome from "@/template/OperatorAndTable";
 import { getColumn } from "@/template/Table";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
-	DeleteOutlined,
 	DownOutlined,
 	EditTwoTone,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Button, Dropdown, MenuProps, Popconfirm, Space } from "antd";
+import { Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useMemo, useState } from "react";
 import AddTeamModal from "./Modal/AddTeamModal";
@@ -20,14 +19,6 @@ import TeamInfoModal from "./Modal/TeamInfoModal";
 import TeamModifyModal from "./Modal/TeamModifyModal";
 
 export type DataType = CrTeam;
-
-const defaultDataType: DataType = {
-	id: "",
-	teamName: "",
-	monitor: "",
-	teamNumber: 0,
-	workers: [],
-};
 
 const columns: ColumnsType<DataType> = [
 	getColumn("小组编号", "id"),
@@ -52,8 +43,9 @@ export default function CorrectionTeam() {
 
 	const [worker, setWorker] = useState<Worker[]>();
 
-	const [selectRecord, setSelectRecord] =
-		useState<DataType>(defaultDataType);
+	const [selectRecord, setSelectRecord] = useState<DataType>(
+		{} as DataType
+	);
 
 	const items: MenuProps["items"] = [
 		{
@@ -68,29 +60,11 @@ export default function CorrectionTeam() {
 			),
 			key: "0",
 		},
-		{ type: "divider" },
-		{
-			label: (
-				<Popconfirm
-					title="是否删除"
-					description="是否删除该调查评估信息！"
-					onOpenChange={() => console.log("open change")}>
-					<Button
-						type={"primary"}
-						danger
-						block
-						icon={<DeleteOutlined />}>
-						删除!
-					</Button>
-				</Popconfirm>
-			),
-			key: "1",
-		},
 	];
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
-			column.render = (_, record) => {
+			column.render = () => {
 				return (
 					<Space size="middle">
 						<Button
@@ -179,18 +153,12 @@ export default function CorrectionTeam() {
 			<TemplateHome
 				columns={columns}
 				cardExtra={
-					<>
-						<Space direction={"horizontal"}>
-							<Button
-								onClick={() => {
-									setOpenAdd(true);
-								}}
-								type={"primary"}
-								icon={<PlusOutlined />}>
-								新增矫正小组
-							</Button>
-						</Space>
-					</>
+					<Button
+						onClick={() => setOpenAdd(true)}
+						type={"primary"}
+						icon={<PlusOutlined />}>
+						新增矫正小组
+					</Button>
 				}
 				cardTitle={"矫正小组统计"}
 				statisticList={[

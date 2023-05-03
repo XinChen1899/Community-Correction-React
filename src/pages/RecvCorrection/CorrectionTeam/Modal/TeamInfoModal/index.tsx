@@ -11,17 +11,12 @@ export default function TeamInfoModal(props: {
 	const { open, setOpen, selectRecord, workerMap } = props;
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<CrpInfo
-						info={selectRecord}
-						workerMap={workerMap}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<CrpInfo info={selectRecord} workerMap={workerMap} />
+			}
+			open={open}
+			setOpen={setOpen}
+		/>
 	);
 }

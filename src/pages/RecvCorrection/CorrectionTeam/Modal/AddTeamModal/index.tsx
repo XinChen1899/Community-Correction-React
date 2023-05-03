@@ -1,4 +1,4 @@
-import { Card, Form } from "antd";
+import { Form } from "antd";
 
 import { saveCrt } from "@/api/ic/crteam";
 import { CrTeam } from "@/entity/IC/CrTeam";
@@ -62,24 +62,20 @@ const AddTeamModal = (props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<Card title={"新增矫正小组"} hoverable>
-						<AddTeamForm
-							form={form}
-							onFinish={onFinish}
-							initialValues={{}}
-							worker={worker}
-						/>
-					</Card>
-				}
-				onOk={handleOk}
-				open={open}
-				setOpen={setOpen}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<AddTeamForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={{}}
+					worker={worker}
+				/>
+			}
+			onOk={handleOk}
+			open={open}
+			setOpen={setOpen}
+			confirmLoading={loading}
+		/>
 	);
 };
 

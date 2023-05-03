@@ -1,8 +1,14 @@
 import { Descriptions } from "antd";
 
+interface IDescriptionItem {
+	label?: string;
+	value: string | JSX.Element | number;
+	span?: number;
+}
+
 export default function TemplateDescriptions(props: {
 	title: string;
-	info: any[];
+	info: IDescriptionItem[];
 	layout?: "vertical" | "horizontal";
 }) {
 	const { title, info, layout } = props;
@@ -17,6 +23,7 @@ export default function TemplateDescriptions(props: {
 					<Descriptions.Item
 						label={item.label ? item.label : ""}
 						key={idx}
+						span={item.span ? item.span : 1}
 						style={{ textAlign: "center" }}>
 						{item.value}
 					</Descriptions.Item>

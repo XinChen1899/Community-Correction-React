@@ -8,8 +8,8 @@ import { AssessmentScore, Punishment, Reward } from "./Assessment";
 
 import BusinessApproval from "./BusinessApproval/FunctionPane";
 import CategoryManagement from "./Category";
+import PlanRepository from "./IndividualCorrection/PlanRepository";
 import NoExit from "./NoExit";
-import PlanRepository from "./PlanRepository";
 import UnCorrection from "./TerminationCorrection";
 import UnCorrected from "./UnCorrected/Handle";
 import Worker from "./Woker";

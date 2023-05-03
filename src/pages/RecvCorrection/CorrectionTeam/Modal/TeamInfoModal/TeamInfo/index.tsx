@@ -18,7 +18,7 @@ const CrpInfo = (props: { info: CrTeam; workerMap: any }) => {
 					label: "小组成员",
 					value: (
 						<List
-							grid={{ gutter: 16, column: 4 }}
+							grid={{ gutter: 16, column: 3 }}
 							dataSource={info.workers}
 							renderItem={(item) => (
 								<List.Item>

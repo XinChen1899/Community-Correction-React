@@ -42,7 +42,7 @@ export default function TemplateOperatorAndTable(props: {
 								(s: any, idx: number) => {
 									return (
 										<Col
-											span={12}
+											span={8}
 											key={`${s.title}${idx}`}>
 											<Statistic
 												title={s.title}
@@ -57,7 +57,7 @@ export default function TemplateOperatorAndTable(props: {
 						{searchList &&
 							searchList.map((s: any, idx: number) => {
 								return (
-									<Col span={6} key={`${idx}`}>
+									<Col span={8} key={`${idx}`}>
 										<Search
 											placeholder={
 												s.placeholder

@@ -1,26 +1,19 @@
-import { Modal, Card, Space } from "antd";
-import { useEffect } from "react";
+import { Card, Modal, Space } from "antd";
 
 export default function TemplateModal(props: {
-	InfoDescriptions: any;
+	InfoDescriptions: JSX.Element;
 	open: boolean;
 	setOpen: any;
-	getAPI?: any;
-	onOk?: any;
-	onCancel?: any;
+	onOk?: () => void;
+	onCancel?: () => void;
 	confirmLoading?: boolean;
-	recordId?: any;
-	infoUpdate?: any;
 	title?: string;
-	children?: any;
-	footer?: any[];
+	children?: JSX.Element;
+	footer?: JSX.Element[];
 }) {
 	const {
 		open,
 		setOpen,
-		recordId,
-		getAPI,
-		infoUpdate,
 		InfoDescriptions,
 		confirmLoading,
 		onOk,
@@ -29,12 +22,6 @@ export default function TemplateModal(props: {
 		children,
 		footer,
 	} = props;
-
-	useEffect(() => {
-		if (recordId && getAPI) {
-			getAPI(recordId);
-		}
-	}, [recordId, infoUpdate]);
 
 	return (
 		<Modal

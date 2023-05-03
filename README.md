@@ -26,6 +26,11 @@ or
 yarn run dev 
 ```
 
+### 打包项目
+```bash
+npm run build
+```
+
 ## 任务列表
 - [x] 调查评估。
 - [x] 不准出境。

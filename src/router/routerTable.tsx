@@ -198,7 +198,12 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"planrepo",
 					routeNameMap.planrepo,
-					lazy(() => import("@/pages/PlanRepository"))
+					lazy(
+						() =>
+							import(
+								"@/pages/IndividualCorrection/PlanRepository"
+							)
+					)
 				),
 			},
 		],

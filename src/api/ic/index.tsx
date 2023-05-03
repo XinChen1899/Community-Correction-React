@@ -30,6 +30,10 @@ export const getAllCrp = () => {
 	return api.get("/crp/all");
 };
 
+export const getCount = () => {
+	return api.get("/crp/counts");
+};
+
 export const getAllWorkers = () => {
 	return api.get("/worker/all");
 };

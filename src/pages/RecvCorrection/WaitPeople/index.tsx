@@ -1,4 +1,4 @@
-import { getAllCrp } from "@/api/ic";
+import { getAllCrp, getCount } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import TemplateHome from "@/template/OperatorAndTable";
 import { getColumn } from "@/template/Table";
@@ -46,7 +46,14 @@ const columns: ColumnsType<DataType> = [
 		return loading;
 	}),
 	getColumn("矫正状态", "status", (_, record) => (
-		<TemplateTag value={record.status} type={MyTagType.Accept} />
+		<TemplateTag
+			value={record.status}
+			type={
+				record.status == "在矫"
+					? MyTagType.Accept
+					: MyTagType.Warning
+			}
+		/>
 	)),
 	getColumn("矫正小组", "team", (_, record) => {
 		const value = record.team;
@@ -59,11 +66,20 @@ const columns: ColumnsType<DataType> = [
 			);
 		else
 			return (
-				<TemplateTag value={`无小组`} type={MyTagType.Info} />
+				<TemplateTag
+					value={`无小组`}
+					type={MyTagType.Warning}
+				/>
 			);
 	}),
 	getColumn("操作", "action"),
 ];
+
+interface NumberData {
+	total: number;
+	unreceived: number;
+	received: number;
+}
 
 //! 待入矫人员
 export default function WaitPeople() {
@@ -78,6 +94,9 @@ export default function WaitPeople() {
 		{} as DataType
 	);
 
+	const [numberData, setNumberData] = useState<NumberData>(
+		{} as NumberData
+	);
 	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
 
@@ -87,6 +106,20 @@ export default function WaitPeople() {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
+			}
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
+
+	useRequest(getCount, {
+		onSuccess: ({ data }) => {
+			if (data.status == "200") {
+				setNumberData(data.data);
 			} else {
 				gMsg.onError(data.message);
 			}
@@ -220,8 +253,18 @@ export default function WaitPeople() {
 				}
 				cardTitle={"待入矫人员统计"}
 				statisticList={[
-					{ title: "待矫正人员总数", value: 999 },
-					{ title: "今日新增待矫正人员", value: 999 },
+					{
+						title: "矫正人员总数",
+						value: numberData.total,
+					},
+					{
+						title: "待入矫人数",
+						value: numberData.unreceived,
+					},
+					{
+						title: "已入矫人数",
+						value: numberData.received,
+					},
 				]}
 				searchList={[
 					{

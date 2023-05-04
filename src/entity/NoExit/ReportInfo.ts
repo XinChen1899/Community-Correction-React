@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 
-export interface BBInfo {
+export interface ReportInfo {
 	dxbh: string; // 对象编号
 	xm: string; // 姓名
 	sfzhm: string; // 身份证号

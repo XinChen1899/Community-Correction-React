@@ -1,4 +1,4 @@
-import { getAllExitInfos } from "@/api/noexit";
+import { getAllExitInfos, getCounts } from "@/api/noexit";
 import { Exit } from "@/entity/NoExit/Exit";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import { getColumn } from "@/template/Table";
@@ -20,6 +20,12 @@ import InfoModal from "./Modal/InfoModal";
 import ZJModal from "./Modal/ZJModal";
 
 export type DataType = Exit;
+
+interface NumberData {
+	reportNumber: number;
+	zjNumber: number;
+	bkNumber: number;
+}
 
 const columns: ColumnsType<DataType> = [
 	getColumn("对象编号", "dxbh"),
@@ -70,6 +76,7 @@ export default function NoExit() {
 
 	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
+	const [numberData, setNumberData] = useState<NumberData>();
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [gMsg, contextHolder] = useMessage();
@@ -161,6 +168,20 @@ export default function NoExit() {
 		refreshDeps: [tableUpdate],
 	});
 
+	useRequest(getCounts, {
+		onSuccess: ({ data }) => {
+			if (data.status == "200") {
+				setNumberData(data.data);
+			} else {
+				gMsg.onError(data.message);
+			}
+		},
+		onError: (error) => {
+			gMsg.onError(error);
+		},
+		refreshDeps: [tableUpdate],
+	});
+
 	return (
 		<>
 			<ZJModal
@@ -189,7 +210,18 @@ export default function NoExit() {
 				columns={columns}
 				cardTitle={"出入境管理"}
 				statisticList={[
-					{ title: "今日新增待备案人数", value: 999 },
+					{
+						title: "出入境已备案人数",
+						value: numberData?.reportNumber,
+					},
+					{
+						title: "证件已代管人数",
+						value: numberData?.zjNumber,
+					},
+					{
+						title: "边控已报备人数",
+						value: numberData?.bkNumber,
+					},
 				]}
 				searchList={[
 					{

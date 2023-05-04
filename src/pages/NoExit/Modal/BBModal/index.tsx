@@ -4,7 +4,7 @@ import {
 	modifyBBInfo,
 	updateBBInfo,
 } from "@/api/noexit";
-import { BBInfo } from "@/entity/NoExit/BBInfo";
+import { ReportInfo } from "@/entity/NoExit/ReportInfo";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
 import { GMessage } from "@/utils/msg/GMsg";
@@ -25,7 +25,7 @@ export default function BBModal(props: {
 	const { open, setOpen, dxbh, gMsg, tableUpdate, setTableUpdate } =
 		props;
 	const [form] = Form.useForm();
-	const [bbInfo, setBBInfo] = useState<BBInfo>();
+	const [bbInfo, setBBInfo] = useState<ReportInfo>();
 
 	useRequest(() => getBBInfo(dxbh), {
 		onSuccess: ({ data }) => {
@@ -48,7 +48,7 @@ export default function BBModal(props: {
 	});
 
 	const { run: runSubmitForm } = useRequest(
-		(detail: BBInfo) => updateBBInfo(detail),
+		(detail: ReportInfo) => updateBBInfo(detail),
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200" && data.data == true) {
@@ -67,7 +67,7 @@ export default function BBModal(props: {
 	);
 
 	const { run: runImplAccept } = useRequest(
-		(detail: BBInfo) => implBBInfoAccept(detail),
+		(detail: ReportInfo) => implBBInfoAccept(detail),
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200" && data.data == true) {
@@ -86,7 +86,7 @@ export default function BBModal(props: {
 	);
 
 	const onFinish = (values: any) => {
-		const bbInfo = values as BBInfo;
+		const bbInfo = values as ReportInfo;
 		const isStore = form.getFieldValue("store");
 		if (!isStore) {
 			runSubmitForm(bbInfo);
@@ -108,7 +108,7 @@ export default function BBModal(props: {
 		}
 	);
 
-	const getSteps = (info: BBInfo) => {
+	const getSteps = (info: ReportInfo) => {
 		if (!open || info == undefined) return [];
 
 		return [

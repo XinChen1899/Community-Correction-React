@@ -1,11 +1,15 @@
-import { getModifyInfo, implCateSFS, updateCate } from "@/api/cate";
+import {
+	getModifyInfo,
+	implCateSFS,
+	modifyCate,
+	updateCate,
+} from "@/api/cate";
 import { CrpCategoryMoify } from "@/entity/Category/CategoryModifty";
-import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import { Button, Form, Progress, Spin, message } from "antd";
+import { Button, Form, Progress, Spin } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { DataType } from "../..";
@@ -59,6 +63,7 @@ export default function ModifyModal(props: {
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200") {
+					gMsg.onSuccess("审批完成!");
 					setOpen(false);
 					setTableUpdate(!tableUpdate);
 				} else {
@@ -69,7 +74,6 @@ export default function ModifyModal(props: {
 		}
 	);
 
-	// !查找 变更信息modifyInfo, 如果step <=0,则说明还在第一阶段
 	useRequest(() => getModifyInfo(dxbh), {
 		onSuccess({ data }) {
 			if (data.status == "200") {
@@ -87,11 +91,25 @@ export default function ModifyModal(props: {
 		ready: dxbh != "" && open,
 	});
 
+	const { run: runStore } = useRequest((info) => modifyCate(info), {
+		onSuccess: ({ data }) => {
+			if (data.status == "200") {
+				gMsg.onSuccess("保存成功!");
+			}
+		},
+		manual: true,
+		debounceWait: 300,
+	});
+
 	const onFinish = (values: any) => {
 		const info = values as CrpCategoryMoify;
+		const isStore = form.getFieldValue("store");
 		console.log(info);
-
-		runUpdateCateModify(info);
+		if (!isStore) {
+			runUpdateCateModify(info);
+		} else {
+			runStore(info);
+		}
 	};
 
 	const getSteps = (info: CrpCategoryMoify) => {
@@ -124,32 +142,19 @@ export default function ModifyModal(props: {
 							/>
 						</div>
 					),
-				nextAction: () => {},
 				check: () => info.step > 0,
 			},
 			{
 				title: "社区矫正机构填写审批",
 				content: (
-					<TemplateDescriptions
-						title={"矫正类别变更审批表"}
-						info={[
-							{
-								value: (
-									<CategoryForm
-										disabled={info.step > 1}
-										form={form}
-										onFinish={onFinish}
-										initialValues={info}
-									/>
-								),
-							},
-						]}
+					<CategoryForm
+						disabled={info.step > 1}
+						form={form}
+						onFinish={onFinish}
+						initialValues={info}
 					/>
 				),
-				nextAction: () => {
-					if (info.step == 1) form.submit();
-				},
-				check: () => info.step >= 1,
+				check: () => info.step > 1,
 			},
 			{
 				title: "审批结果",
@@ -162,22 +167,17 @@ export default function ModifyModal(props: {
 						/>
 					</div>
 				),
-				nextAction: () => {
-					message.info("审批完成！");
-				},
 			},
 		];
 	};
 
 	return (
 		<TemplateModal
-			title="变更矫正类别审批"
+			title="变更管理类别审批"
 			InfoDescriptions={
 				<TemplateSteps
-					steps={modifyInfo ? getSteps(modifyInfo) : []}
-					step={
-						modifyInfo != undefined ? modifyInfo.step : 0
-					}
+					steps={getSteps(modifyInfo)}
+					step={modifyInfo ? modifyInfo.step : 0}
 				/>
 			}
 			open={open}

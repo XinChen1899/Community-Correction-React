@@ -1,6 +1,7 @@
 import {
 	getZJInfo,
 	implZJInfoAccept,
+	implZJInfoRefuse,
 	modifyZJInfo,
 	updateZJInfo,
 } from "@/api/noexit";
@@ -82,6 +83,25 @@ export default function ZJModal(props: {
 		}
 	);
 
+	const { run: runImplRefuse } = useRequest(
+		(detail: ZJInfo) => implZJInfoRefuse(detail),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200" && data.data == true) {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("审核不通过!");
+				} else {
+					gMsg.onError(data.message);
+				}
+			},
+			onError: (err) => {
+				gMsg.onError(err);
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
 	const { run: runStore } = useRequest(
 		(info) => modifyZJInfo(info),
 		{
@@ -125,14 +145,21 @@ export default function ZJModal(props: {
 				title: "公安审批",
 				content: (
 					<div className="content">
+						<Spin tip="公安审核中...." size="large" />
 						<Button
-							type="primary"
+							type="link"
 							onClick={() => {
 								runImplAccept(info);
 							}}>
 							模拟公安审核(同意)
 						</Button>
-						<Spin tip="公安审核中...." size="large" />
+						<Button
+							type="link"
+							onClick={() => {
+								runImplRefuse(info);
+							}}>
+							模拟公安审核(拒绝)
+						</Button>
 					</div>
 				),
 				check: () => info.step > 1,

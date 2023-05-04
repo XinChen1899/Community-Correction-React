@@ -1,6 +1,6 @@
-import TemplateForm from "@/template/Form";
+import TemplateForm, { getFormItem } from "@/template/Form";
 import { generateSelect, nsyjzlbMap } from "@/utils";
-import { DatePicker, Input } from "antd";
+import { Button, DatePicker, Input, Space } from "antd";
 import "react";
 
 /**
@@ -21,58 +21,79 @@ export function CategoryForm(props: {
 			onFinish={onFinish}
 			initialValues={initialValues}
 			formTable={[
-				{
-					name: "dxbh",
-					label: "社区矫正对象编号",
-					component: <Input disabled />,
-				},
-				{
-					name: "gllb",
-					label: "管理类别",
-					component: generateSelect(nsyjzlbMap, {
+				getFormItem(
+					"dxbh",
+					"社区矫正对象编号",
+					<Input disabled />
+				),
+				getFormItem(
+					"gllb",
+					"管理类别",
+					generateSelect(nsyjzlbMap, {
 						disabled: true,
-					}),
-				},
-				{
-					name: "tzyy",
-					label: "调整原因",
-					component: <Input disabled />,
-				},
-				{
-					name: "bdrq",
-					label: "变动日期",
-					component: <DatePicker disabled />,
-				},
-				{
-					name: "sfsshr",
-					label: "受委托的司法所审核人",
-					component: <Input disabled />,
-				},
-				{
-					name: "sfsshsj",
-					label: "司法所审核时间",
-					component: <DatePicker disabled />,
-				},
-				{
-					name: "sfsshyj",
-					label: "司法所审核意见",
-					component: <Input disabled />,
-				},
-				{
-					name: "xjsqjzjgspr",
-					label: "县级社区矫正机构审批人",
-					component: <Input />,
-				},
-				{
-					name: "xjsqjzjgspsj",
-					label: "县级社区矫正机构审批时间",
-					component: <DatePicker />,
-				},
-				{
-					name: "xjsqjzjgspyj",
-					label: "县级社区矫正机构审批意见",
-					component: <Input />,
-				},
+					})
+				),
+				getFormItem("tzyy", "调整原因", <Input disabled />),
+				getFormItem(
+					"bdrq",
+					"变动日期",
+					<DatePicker disabled />
+				),
+				getFormItem(
+					"sfsshr",
+					"受委托的司法所审核人",
+					<Input disabled />
+				),
+				getFormItem(
+					"sfsshsj",
+					"司法所审核时间",
+					<DatePicker disabled />
+				),
+				getFormItem(
+					"sfsshyj",
+					"司法所审核意见",
+					<Input disabled />
+				),
+				getFormItem(
+					"xjsqjzjgspr",
+					"县级社区矫正机构审批人",
+					<Input />,
+					true
+				),
+				getFormItem(
+					"xjsqjzjgspsj",
+					"县级社区矫正机构审批时间",
+					<DatePicker />,
+					true
+				),
+				getFormItem(
+					"xjsqjzjgspyj",
+					"县级社区矫正机构审批意见",
+					<Input.TextArea />,
+					true
+				),
+				getFormItem(
+					"",
+					"",
+					<Space>
+						<Button
+							type="primary"
+							onClick={() => {
+								form.setFieldValue("store", true);
+								form.submit();
+							}}>
+							保存
+						</Button>
+						<Button
+							type="primary"
+							onClick={() => {
+								form.setFieldValue("store", false);
+								form.submit();
+							}}>
+							提交
+						</Button>
+					</Space>
+				),
 			]}
 		/>
 	);

@@ -2,12 +2,11 @@ import { CrpCategory } from "@/entity/Category/CategoryInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import { map2Value, nsyjzlbMap } from "@/utils";
-import { GMessage } from "@/utils/msg/GMsg";
 
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
-	info: any;
+	info: CrpCategory;
 }) {
 	const { open, setOpen, info } = props;
 

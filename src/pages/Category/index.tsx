@@ -1,7 +1,8 @@
-import { getAllCate } from "@/api/cate";
+import { getAllCate, getCounts } from "@/api/cate";
 import { CrpCategory } from "@/entity/Category/CategoryInfo";
 import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, nsyjzlbMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -15,35 +16,23 @@ import ModifyModal from "./Modal/ModifyModal";
 
 export type DataType = CrpCategory;
 
+interface CountData {
+	baseCount: number;
+	looseCount: number;
+	commonCount: number;
+	strictCount: number;
+}
+
 const columns: ColumnsType<DataType> = [
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		key: "dxbh",
-		align: "center",
-		width: 150,
-	},
-	{
-		title: "矫正对象姓名",
-		dataIndex: "xm",
-		align: "center",
-		key: "xm",
-	},
-	{
-		title: "管理类别",
-		dataIndex: "gllb",
-		align: "center",
-		render: (_, record) => (
-			<TemplateTag
-				value={map2Value(nsyjzlbMap, record.gllb)}
-				type={MyTagType.Info}
-			/>
-		),
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("对象编号", "dxbh"),
+	getColumn("矫正对象姓名", "xm"),
+	getColumn("管理类别", "gllb", (_, record) => (
+		<TemplateTag
+			value={map2Value(nsyjzlbMap, record.gllb)}
+			type={MyTagType.Info}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 
 export default function CategoryManagement() {
@@ -54,6 +43,8 @@ export default function CategoryManagement() {
 	const [tableData, setTableData] = useState<DataType[]>([]);
 	const [history, setHistory] = useState<DataType[]>([]);
 
+	const [countData, setCountData] = useState<CountData>();
+
 	const [tableUpdate, setTableUpdate] = useState(false);
 
 	const [openInfo, setOpenInfo] = useState(false);
@@ -63,7 +54,7 @@ export default function CategoryManagement() {
 
 	columns.map((column) => {
 		if (column.key == "action") {
-			column.render = (_, record) => {
+			column.render = () => {
 				return (
 					<Space size="middle">
 						<Button
@@ -88,6 +79,20 @@ export default function CategoryManagement() {
 		onSuccess({ data }) {
 			if (data.status == "200") {
 				setTableData(data.data);
+			} else {
+				gMsg.onError(data.message);
+			}
+		},
+		onError(e) {
+			gMsg.onError("请求不到调查评估的所有信息！" + e.message);
+		},
+		refreshDeps: [tableUpdate],
+	});
+
+	useRequest(getCounts, {
+		onSuccess({ data }) {
+			if (data.status == "200") {
+				setCountData(data.data);
 			} else {
 				gMsg.onError(data.message);
 			}
@@ -126,10 +131,22 @@ export default function CategoryManagement() {
 				cardExtra={undefined}
 				cardTitle={"分类管理"}
 				statisticList={[
-					{ title: "基础级人员总数", value: 999 },
-					{ title: "宽松级人员总数", value: 999 },
-					{ title: "普通级人员总数", value: 999 },
-					{ title: "严格级人员总数", value: 999 },
+					{
+						title: "基础级人员总数",
+						value: countData?.baseCount,
+					},
+					{
+						title: "宽松级人员总数",
+						value: countData?.looseCount,
+					},
+					{
+						title: "普通级人员总数",
+						value: countData?.commonCount,
+					},
+					{
+						title: "严格级人员总数",
+						value: countData?.strictCount,
+					},
 				]}
 				searchList={[
 					{

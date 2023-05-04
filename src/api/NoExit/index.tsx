@@ -70,6 +70,15 @@ export const implBBInfoAccept = (info: ReportInfo) => {
 	return api.post("/bb/task/accept", info);
 };
 
+export const implBBInfoRefuse = (info: ReportInfo) => {
+	info = convert2BBForm(info);
+	return api.post("/bb/task/refuse", info);
+};
+
 export const implZJInfoAccept = (info: ZJInfo) => {
 	return api.post("/zj/task/accept", info);
+};
+
+export const implZJInfoRefuse = (info: ZJInfo) => {
+	return api.post("/zj/task/refuse", info);
 };

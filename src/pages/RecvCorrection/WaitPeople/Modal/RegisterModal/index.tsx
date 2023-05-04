@@ -51,22 +51,20 @@ const RegisterModal = (props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<RegisterForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={{}}
-						gMsg={gMsg}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<RegisterForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={{}}
+					gMsg={gMsg}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 };
 

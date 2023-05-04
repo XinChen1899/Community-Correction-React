@@ -1,7 +1,7 @@
-import TemplateForm from "@/template/Form";
+import { ZJInfo } from "@/entity/NoExit/ZJInfo";
+import TemplateForm, { getFormItem } from "@/template/Form";
 import { generateSelect, zjMap } from "@/utils";
-import { Input } from "antd";
-import "react";
+import { Button, Input, Space } from "antd";
 
 /**
  * 出入境证件代管信息 表单
@@ -9,7 +9,7 @@ import "react";
 export function ZJForm(props: {
 	form: any;
 	onFinish: any;
-	initialValues: any;
+	initialValues: ZJInfo;
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;
@@ -21,18 +21,41 @@ export function ZJForm(props: {
 			onFinish={onFinish}
 			initialValues={initialValues}
 			formTable={[
-				{
-					name: "dxbh",
-					label: "社区矫正对象编号",
-					component: <Input disabled />,
-				},
-				{
-					name: "zj",
-					label: "证件代管类型",
-					component: generateSelect(zjMap, {
+				getFormItem(
+					"dxbh",
+					"社区矫正对象编号",
+					<Input disabled />
+				),
+				getFormItem(
+					"zj",
+					"出入境证件种类",
+					generateSelect(zjMap, {
 						disabled,
 					}),
-				},
+					true
+				),
+				getFormItem(
+					"",
+					"",
+					<Space>
+						<Button
+							type="primary"
+							onClick={() => {
+								form.setFieldValue("store", true);
+								form.submit();
+							}}>
+							保存
+						</Button>
+						<Button
+							type="primary"
+							onClick={() => {
+								form.setFieldValue("store", false);
+								form.submit();
+							}}>
+							提交
+						</Button>
+					</Space>
+				),
 			]}
 		/>
 	);

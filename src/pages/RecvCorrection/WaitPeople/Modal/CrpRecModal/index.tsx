@@ -3,7 +3,7 @@ import { CorrectionPeople } from "@/entity/IC/Crp";
 import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import { Card, Form } from "antd";
+import { Form } from "antd";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { DataType } from "../..";
@@ -29,9 +29,11 @@ export default function CrpRecModal(props: {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		selectRecord.csrq = dayjs(selectRecord.csrq);
-		form.resetFields();
-		form.setFieldsValue(selectRecord);
+		if (open) {
+			selectRecord.csrq = dayjs(selectRecord.csrq);
+			form.resetFields();
+			form.setFieldsValue(selectRecord);
+		}
 	});
 	const { loading, run } = useRequest(
 		(detail: CorrectionPeople) => recvCrp(detail),
@@ -64,24 +66,18 @@ export default function CrpRecModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<Card
-						title={"接收入矫"}
-						style={{ width: "900px" }}>
-						<ReceiveForm
-							form={form}
-							onFinish={onFinish}
-							initialValues={selectRecord}
-						/>
-					</Card>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<ReceiveForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={selectRecord}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

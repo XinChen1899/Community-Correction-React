@@ -6,10 +6,10 @@ import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, zjMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
-	AppstoreAddOutlined,
+	AppstoreTwoTone,
 	DownOutlined,
 	EditTwoTone,
-	InfoCircleFilled,
+	InfoCircleTwoTone,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import { Button, Dropdown, MenuProps, Space } from "antd";
@@ -94,7 +94,7 @@ export default function NoExit() {
 				<Button
 					block
 					type="text"
-					icon={<AppstoreAddOutlined />}
+					icon={<AppstoreTwoTone />}
 					onClick={() => setOpenZJ(true)}>
 					证照代管审批
 				</Button>
@@ -112,7 +112,7 @@ export default function NoExit() {
 					onClick={() => {
 						gMsg.onSuccess("边控");
 					}}
-					icon={<InfoCircleFilled />}>
+					icon={<InfoCircleTwoTone />}>
 					边控审批
 				</Button>
 			),
@@ -189,7 +189,6 @@ export default function NoExit() {
 				columns={columns}
 				cardTitle={"出入境管理"}
 				statisticList={[
-					{ title: "矫正人员总数", value: 999 },
 					{ title: "今日新增待备案人数", value: 999 },
 				]}
 				searchList={[

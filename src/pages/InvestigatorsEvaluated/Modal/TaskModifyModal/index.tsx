@@ -55,21 +55,19 @@ export default function TaskModifyModal(props: ITaskInfoModal) {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<IEInfoForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={IeInfo2Ieform(info)}
-						disabled={info.finish == 0}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<IEInfoForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={IeInfo2Ieform(info)}
+					disabled={info.finish == 0}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

@@ -1,15 +1,15 @@
 import {
 	getBBInfo,
 	implBBInfoAccept,
+	modifyBBInfo,
 	updateBBInfo,
 } from "@/api/noexit";
 import { BBInfo } from "@/entity/NoExit/BBInfo";
-import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import { Button, Form, Progress, Spin, message } from "antd";
+import { Button, Form, Progress, Spin } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { BBForm } from "../../Form/BBForm";
@@ -87,66 +87,57 @@ export default function BBModal(props: {
 
 	const onFinish = (values: any) => {
 		const bbInfo = values as BBInfo;
-		console.log(bbInfo);
-		runSubmitForm(bbInfo);
+		const isStore = form.getFieldValue("store");
+		if (!isStore) {
+			runSubmitForm(bbInfo);
+		} else {
+			runStore(bbInfo);
+		}
 	};
 
+	const { run: runStore } = useRequest(
+		(info) => modifyBBInfo(info),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					gMsg.onSuccess("保存成功!");
+				}
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
 	const getSteps = (info: BBInfo) => {
-		if (info == undefined) return [];
+		if (!open || info == undefined) return [];
 
 		return [
 			{
 				title: "填写相应的信息表",
 				content: (
-					<TemplateDescriptions
-						title={"出入境信息表"}
-						info={[
-							{
-								value: (
-									<BBForm
-										disabled={
-											info
-												? info.step > 0
-												: false
-										}
-										form={form}
-										onFinish={onFinish}
-										initialValues={info}
-									/>
-								),
-							},
-						]}
+					<BBForm
+						disabled={info ? info.step > 0 : false}
+						form={form}
+						onFinish={onFinish}
+						initialValues={info}
 					/>
 				),
-				nextAction: () => {
-					if (info.step == 0) form.submit();
-				},
-				check: () => true,
+				check: () => info.step > 0,
 			},
 			{
 				title: "公安审批",
-				content:
-					info.step <= 1 ? (
-						<div className="content">
-							<Button
-								type="primary"
-								onClick={() => {
-									runImplAccept(info);
-								}}>
-								模拟公安审核(同意)
-							</Button>
-							<Spin tip="公安审核中...." size="large" />
-						</div>
-					) : (
-						<div className="content">
-							<Progress
-								type="circle"
-								percent={100}
-								format={() => "审核通过"}
-							/>
-						</div>
-					),
-				nextAction: () => {},
+				content: (
+					<div className="content">
+						<Button
+							type="primary"
+							onClick={() => {
+								runImplAccept(info);
+							}}>
+							模拟公安审核(同意)
+						</Button>
+						<Spin tip="公安审核中...." size="large" />
+					</div>
+				),
 				check: () => info.step > 1,
 			},
 			{
@@ -156,20 +147,16 @@ export default function BBModal(props: {
 						<Progress
 							type="circle"
 							percent={100}
-							format={() => "审批完成"}
+							format={() => "审批通过"}
 						/>
 					</div>
 				),
-				nextAction: () => {
-					message.info("审批完成！");
-				},
 			},
 		];
 	};
 
 	return (
 		<TemplateModal
-			title="出入境报备信息"
 			InfoDescriptions={
 				<TemplateSteps
 					steps={bbInfo ? getSteps(bbInfo) : []}

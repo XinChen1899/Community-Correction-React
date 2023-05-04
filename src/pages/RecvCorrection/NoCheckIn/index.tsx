@@ -77,11 +77,7 @@ export default function NoCheckIn() {
 			{contextHolder}
 			<TemplateOperatorAndTable
 				columns={columns}
-				cardExtra={<></>}
 				cardTitle={"矫正人员报到情况"}
-				statisticList={[
-					{ title: "矫正人员未报到总数", value: 999 },
-				]}
 				searchList={[
 					{
 						placeholder: "请输入对象编号",

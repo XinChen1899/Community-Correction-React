@@ -177,9 +177,6 @@ export default function Announcement() {
 					</>
 				}
 				cardTitle={"入矫宣告信息"}
-				statisticList={[
-					{ title: "入矫宣告总数", value: 999 },
-				]}
 				searchList={[
 					{
 						placeholder: "请输入对象编号",

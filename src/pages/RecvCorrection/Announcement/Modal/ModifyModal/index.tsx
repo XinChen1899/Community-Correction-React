@@ -25,9 +25,11 @@ export default function ModifyModal(props: ITaskInfoModal) {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		info.xgrq = dayjs(info.xgrq);
-		form.resetFields();
-		form.setFieldsValue(info);
+		if (open) {
+			info.xgrq = dayjs(info.xgrq);
+			form.resetFields();
+			form.setFieldsValue(info);
+		}
 	});
 
 	const { loading, run } = useRequest(
@@ -64,20 +66,18 @@ export default function ModifyModal(props: ITaskInfoModal) {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<RegisterForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={info}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<RegisterForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={info}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

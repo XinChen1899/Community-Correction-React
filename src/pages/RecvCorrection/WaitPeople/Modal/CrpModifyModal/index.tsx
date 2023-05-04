@@ -29,10 +29,11 @@ export default function CrpModifyModal(props: {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		console.log(selectRecord);
-		selectRecord.csrq = dayjs(selectRecord.csrq);
-		form.resetFields();
-		form.setFieldsValue(selectRecord);
+		if (open) {
+			selectRecord.csrq = dayjs(selectRecord.csrq);
+			form.resetFields();
+			form.setFieldsValue(selectRecord);
+		}
 	});
 
 	const { loading, run } = useRequest(

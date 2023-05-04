@@ -5,8 +5,6 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 	const { steps, step } = props;
 	const { token } = theme.useToken();
 
-	// console.log(current, step);
-
 	const next = () => {
 		setCurrent(current + 1);
 	};
@@ -29,14 +27,11 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 		border: `1px dashed ${token.colorBorder}`,
 		marginTop: 16,
 	};
-
 	useEffect(() => {
 		if (current != step) setCurrent(step);
 	}, [step]);
-
-	const [current, setCurrent] = useState(0);
-	// console.log(current, step, steps[current]);
-
+	const [current, setCurrent] = useState(step);
+	// console.log(step, current, steps[current]);
 	return (
 		<>
 			<Steps current={current} items={items} />
@@ -59,8 +54,8 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 						type="primary"
 						disabled={!steps[current].check(current)}
 						onClick={() => {
-							steps[current].nextAction(current);
 							next();
+							// steps[current].nextAction(current, next);
 						}}>
 						下一步
 					</Button>

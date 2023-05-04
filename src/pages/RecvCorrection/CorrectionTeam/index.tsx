@@ -161,9 +161,6 @@ export default function CorrectionTeam() {
 					</Button>
 				}
 				cardTitle={"矫正小组统计"}
-				statisticList={[
-					{ title: "矫正小组总数", value: 999 },
-				]}
 				searchList={[
 					{
 						placeholder: "请输入小组编号",

@@ -31,8 +31,10 @@ export default function TeamModifyModal(props: {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		form.resetFields();
-		form.setFieldsValue(info);
+		if (open) {
+			form.resetFields();
+			form.setFieldsValue(info);
+		}
 	});
 
 	const { loading, run } = useRequest(

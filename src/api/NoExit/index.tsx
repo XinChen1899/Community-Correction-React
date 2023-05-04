@@ -29,8 +29,17 @@ export const updateBBInfo = (bbInfo: BBInfo) => {
 	return api.post("/bb/update", bbInfo);
 };
 
+export const modifyBBInfo = (bbInfo: BBInfo) => {
+	bbInfo = convert2BBForm(bbInfo);
+	return api.post("/bb/modify", bbInfo);
+};
+
 export const updateZJInfo = (info: ZJInfo) => {
 	return api.post("/zj/update", info);
+};
+
+export const modifyZJInfo = (info: ZJInfo) => {
+	return api.post("/zj/modify", info);
 };
 
 export const getExitInfoByDXBH = (

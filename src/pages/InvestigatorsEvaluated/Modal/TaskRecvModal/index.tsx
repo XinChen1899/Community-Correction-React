@@ -54,6 +54,7 @@ export default function TaskRecvModal(props: {
 			}
 		},
 		refreshDeps: [recvUpdate],
+		ready: open,
 	});
 
 	const { run: runUnaccepted } = useRequest(

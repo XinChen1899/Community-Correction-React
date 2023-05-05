@@ -48,20 +48,18 @@ export default function RegisterModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<AddForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={{ date: dayjs() }}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<AddForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={{ date: dayjs() }}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

@@ -1,6 +1,7 @@
 import { getAllPlan } from "@/api/ic/crplan";
 import { CrpPlan } from "@/entity/IC/CrpPlan";
 import TemplateHome from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { jzlbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -20,47 +21,17 @@ import ModifyModal from "./Modal/ModifyModal";
 export type DataType = CrpPlan;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "方案编号",
-		dataIndex: "id",
-		key: "id",
-		align: "center",
-	},
-	{
-		title: "方案名称",
-		dataIndex: "famc",
-		align: "center",
-		key: "famc",
-	},
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		key: "dxbh",
-		align: "center",
-		width: 150,
-	},
-	{
-		title: "矫正对象姓名",
-		dataIndex: "xm",
-		align: "center",
-		key: "xm",
-	},
-	{
-		title: "矫正类别",
-		dataIndex: "jzlb",
-		align: "center",
-		key: "jzlb",
-		render: (_, record) => (
-			<TemplateTag
-				value={map2Value(jzlbMap, record.jzlb)}
-				type={MyTagType.Info}
-			/>
-		),
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("方案编号", "id"),
+	getColumn("方案名称", "famc"),
+	getColumn("对象编号", "dxbh"),
+	getColumn("矫正对象姓名", "xm"),
+	getColumn("矫正类别", "jzlb", (_, record) => (
+		<TemplateTag
+			value={map2Value(jzlbMap, record.jzlb)}
+			type={MyTagType.Info}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 
 export default function CorrectionPlan() {
@@ -98,7 +69,7 @@ export default function CorrectionPlan() {
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
-			column.render = (_, record) => {
+			column.render = () => {
 				return (
 					<Space size="middle">
 						<Button
@@ -162,14 +133,12 @@ export default function CorrectionPlan() {
 			<TemplateHome
 				columns={columns}
 				cardExtra={
-					<>
-						<Button
-							onClick={() => setOpenAdd(true)}
-							type={"primary"}
-							icon={<PlusOutlined />}>
-							新增矫正方案
-						</Button>
-					</>
+					<Button
+						onClick={() => setOpenAdd(true)}
+						type={"primary"}
+						icon={<PlusOutlined />}>
+						新增矫正方案
+					</Button>
 				}
 				cardTitle={"矫正方案统计"}
 				statisticList={[

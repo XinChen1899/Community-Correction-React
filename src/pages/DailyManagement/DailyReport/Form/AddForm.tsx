@@ -1,5 +1,5 @@
 import { uploadDocx } from "@/api/daily/report";
-import TemplateForm from "@/template/Form";
+import TemplateForm, { getFormItem } from "@/template/Form";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import {
@@ -40,16 +40,14 @@ export default function AddForm(props: {
 				if (data.status == "200") {
 					const url = data.data.split("/");
 					const name = url[url.length - 1];
-					//setImageUrl(data.data);
 					const after = {
-						uid: "123",
+						uid: url,
 						name,
 						status: "done",
 						url: data.data,
 						percent: 100,
 					} as UploadFile;
 					form.setFieldValue("zz", data.data);
-					console.log(after);
 					setFileList([after]);
 				} else {
 					message.error("上传失败!" + data.message);
@@ -84,31 +82,23 @@ export default function AddForm(props: {
 			onFinish={onFinish}
 			initialValues={initialValues}
 			formTable={[
-				{
-					name: "dxbh",
-					label: "社区矫正对象编号",
-					component: <Input />,
-				},
-				{
-					name: "bg",
-					label: "报告文档上传",
-					component: (
-						<Upload
-							{...uploadProps}
-							customRequest={customRequest}>
-							<Button icon={<UploadOutlined />}>
-								上传矫正方案
-							</Button>
-						</Upload>
-					),
-				},
-				{
-					name: "date",
-					label: "提交日期",
-					component: (
-						<DatePicker format="YYYY-MM-DD HH:mm:ss" />
-					),
-				},
+				getFormItem("dxbh", "社区矫正对象编号", <Input />),
+				getFormItem(
+					"bg",
+					"报告文档上传",
+					<Upload
+						{...uploadProps}
+						customRequest={customRequest}>
+						<Button icon={<UploadOutlined />}>
+							上传矫正方案
+						</Button>
+					</Upload>
+				),
+				getFormItem(
+					"date",
+					"提交日期",
+					<DatePicker format="YYYY-MM-DD HH:mm:ss" />
+				),
 			]}
 		/>
 	);

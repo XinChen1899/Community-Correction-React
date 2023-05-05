@@ -26,11 +26,14 @@ export default function AddModal(props: {
 	};
 
 	const { loading, run } = useRequest(
-		(detail: any) => saveVisitorInfo(detail),
+		(detail) => saveVisitorInfo(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("操作成功!");
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -61,21 +64,19 @@ export default function AddModal(props: {
 			info.xjsqjzjgspsj = dayjs(info.xjsqjzjgspsj);
 	}
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<AddForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={info}
-						disabled={info && info.step > 0}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<AddForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={info}
+					disabled={info && info.step > 0}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

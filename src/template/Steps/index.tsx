@@ -54,6 +54,9 @@ const TemplateSteps = (props: { steps: any[]; step: number }) => {
 						type="primary"
 						disabled={!steps[current].check(current)}
 						onClick={() => {
+							if (steps[current].nextAction) {
+								steps[current].nextAction();
+							}
 							next();
 							// steps[current].nextAction(current, next);
 						}}>

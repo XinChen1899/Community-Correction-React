@@ -23,11 +23,15 @@ export default function RegisterModal(props: {
 	};
 
 	const { loading, run } = useRequest(
-		(detail: any) => saveReport(detail),
+		(detail) => saveReport(detail),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("添加报告成功!");
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("添加报告成功!");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -46,20 +50,18 @@ export default function RegisterModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<AddForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={{ date: dayjs() }}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<AddForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={{ date: dayjs() }}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

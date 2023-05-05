@@ -3,8 +3,6 @@ import TemplateModal from "@/template/Modal";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Form } from "antd";
-import dayjs from "dayjs";
-import { useEffect } from "react";
 import { DataType } from "../..";
 import { AddPlanForm } from "../../Form/AddPlanForm";
 
@@ -51,21 +49,19 @@ export default function ModifyModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<AddPlanForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={info}
-						disabled={true}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<AddPlanForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={info}
+					disabled={true}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

@@ -1,5 +1,6 @@
 import {
-	send2JZJG,
+	finishBBInfo,
+	saveBanInfo,
 	send2SFS,
 	sfsSendToJzjg,
 } from "@/api/business/ban";
@@ -7,21 +8,13 @@ import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
 import TemplateSteps from "@/template/Steps";
-import { generateSelect, spjgMap } from "@/utils";
 import { getDate } from "@/utils/ie";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import {
-	Button,
-	DatePicker,
-	Form,
-	Input,
-	Progress,
-	Spin,
-	message,
-} from "antd";
+import { Button, Progress, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { DataType } from "../..";
+import JZJGForm from "../../Form/JZJGForm";
 
 function ProcessModal(props: {
 	open: boolean;
@@ -56,13 +49,20 @@ function ProcessModal(props: {
 		}
 	);
 
-	const { run: runSend2JZJG } = useRequest(
-		(info: DataType) => send2JZJG(info),
+	const { run: runFinishBBInfo } = useRequest(
+		(info: DataType) => finishBBInfo(info),
 		{
-			onSuccess() {
-				setTableUpdate(!tableUpdate);
+			onSuccess({ data }) {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("审批成功!");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
-
+			onFinally: () => {
+				setOpen(false);
+			},
 			manual: true,
 		}
 	);
@@ -70,9 +70,13 @@ function ProcessModal(props: {
 	const { run: runSend2SFS } = useRequest(
 		(info: DataType) => send2SFS(info),
 		{
-			onSuccess: () => {
-				setTableUpdate(!tableUpdate);
-				gMsg.onSuccess("已向司法所发送禁止令！");
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					setTableUpdate(!tableUpdate);
+					gMsg.onSuccess("已向司法所发送禁止令！");
+				} else {
+					gMsg.onError(data.message);
+				}
 			},
 			onError: (err) => {
 				gMsg.onError(err);
@@ -82,8 +86,45 @@ function ProcessModal(props: {
 	);
 	const [form] = useForm();
 
+	const onFinish = (values: any) => {
+		const d = values as BanInfo;
+		d.step = info.step;
+		d.dxbh = info.dxbh;
+		d.processId = info.processId;
+		const isStore = form.getFieldValue("store");
+		if (!isStore) {
+			runFinishBBInfo(d);
+		} else {
+			runStore(d);
+		}
+	};
+
+	const checkStep1 = (info: DataType) => {
+		return (
+			info.dxbh != "" &&
+			info.xm != "" &&
+			info.sqjrcs != "" &&
+			getDate(info.sqrq) != "" &&
+			info.sqly != ""
+		);
+	};
+
+	const { run: runStore } = useRequest(
+		(info) => saveBanInfo(info),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					gMsg.onSuccess("保存成功!");
+					setTableUpdate(!tableUpdate);
+				}
+			},
+			manual: true,
+			debounceWait: 300,
+		}
+	);
+
 	const getSteps = (info: DataType) => {
-		if (info == undefined) return [];
+		if (info == undefined || !open) return [];
 
 		return [
 			{
@@ -109,7 +150,7 @@ function ProcessModal(props: {
 				nextAction: () => {
 					if (info.step == 0) runSend2SFS(info);
 				},
-				check: () => true,
+				check: () => checkStep1(info),
 			},
 			{
 				title: "司法所审批",
@@ -117,7 +158,7 @@ function ProcessModal(props: {
 					info.step <= 1 ? (
 						<div className="content">
 							<Button
-								type="primary"
+								type="link"
 								onClick={() => {
 									runSfsSendToJzjg(info);
 								}}>
@@ -134,7 +175,6 @@ function ProcessModal(props: {
 							/>
 						</div>
 					),
-				nextAction: () => {},
 				check: (current: number) => info.step > 1,
 			},
 			{
@@ -157,49 +197,19 @@ function ProcessModal(props: {
 							},
 							{
 								label: "社区矫正机构审批",
+								span: 3,
 								value: (
-									<Form
+									<JZJGForm
 										form={form}
-										initialValues={{ info }}
-										onFinish={(values) => {
-											const d =
-												values as BanInfo;
-											d.step = info.step;
-											d.dxbh = info.dxbh;
-											d.processId =
-												info.processId;
-											runSend2JZJG(d);
-										}}>
-										<Form.Item
-											name="xjsqjzjgspr"
-											label="社区矫正机构审批人">
-											<Input />
-										</Form.Item>
-										<Form.Item
-											name="xjsqjzjgspsj"
-											label="县级社区矫正机构审批时间">
-											<DatePicker />
-										</Form.Item>
-										<Form.Item
-											name="xjsqjzjgspyj"
-											label="县级社区矫正机构审批意见">
-											<Input.TextArea />
-										</Form.Item>
-										<Form.Item
-											name="spjg"
-											label="县级社区矫正机构审批结果">
-											{generateSelect(spjgMap)}
-										</Form.Item>
-									</Form>
+										onFinish={onFinish}
+										initialValues={info}
+									/>
 								),
 							},
 						]}
 					/>
 				),
-				nextAction: (current: number) => {
-					if (info && info.step <= current) form.submit();
-				},
-				check: (current: number) => true,
+				check: () => info.step > 2,
 			},
 			{
 				title: "审批结果",
@@ -212,9 +222,6 @@ function ProcessModal(props: {
 						/>
 					</div>
 				),
-				nextAction: () => {
-					message.info("审批完成！");
-				},
 			},
 		];
 	};

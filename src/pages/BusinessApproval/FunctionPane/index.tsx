@@ -9,8 +9,7 @@ export default function FunctionPane() {
 				<Row gutter={16}>
 					<Col span={8}>
 						<Card
-							title="禁止令（进入特定场所审批）"
-							bordered={false}
+							title="进入特定场所审批"
 							hoverable
 							onClick={() => {
 								navigate("/business/ban");

@@ -1,13 +1,12 @@
-import TemplateModal from "@/template/Modal";
-import AddForm from "../../Form/AddForm";
-import { GMessage } from "@/utils/msg/GMsg";
-import { Form } from "antd";
-import { DataType } from "../..";
 import { saveBanInfo } from "@/api/business/ban";
 import { BanInfo } from "@/entity/Business/Ban/BanInfo";
-import { getDate } from "@/utils/ie";
+import TemplateModal from "@/template/Modal";
+import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
+import { Form } from "antd";
 import dayjs from "dayjs";
+import { DataType } from "../..";
+import AddForm from "../../Form/AddForm";
 
 export default function AddModal(props: {
 	open: boolean;
@@ -27,7 +26,7 @@ export default function AddModal(props: {
 	};
 
 	const { loading, run } = useRequest(
-		(detail: any) => saveBanInfo(detail),
+		(detail) => saveBanInfo(detail),
 		{
 			onSuccess: () => {
 				setTableUpdate(!tableUpdate);
@@ -63,21 +62,19 @@ export default function AddModal(props: {
 			info.xjsqjzjgspsj = dayjs(info.xjsqjzjgspsj);
 	}
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<AddForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={info}
-						disabled={info && info.step > 0}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<AddForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={info}
+					disabled={info && info.step > 0}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

@@ -18,6 +18,7 @@ const formConvertObject = (info: VisitorInfo) => {
 // 模拟司法所向社区矫正机构发送信息
 export const visSfsSendToJzjg = (info: VisitorInfo) => {
 	info = formConvertObject(info);
+	info.step = 1;
 	return api.post("/visitor/sfs/jzjg", info);
 };
 
@@ -26,19 +27,11 @@ export const visSend2SFS = (info: VisitorInfo) => {
 	info = formConvertObject(info);
 	return api.post("/visitor/sfs", info);
 };
-// 发送给社区矫正机构，就是更新操作
-export const visSend2JZJG = (info: VisitorInfo) => {
+// 发送给社区矫正机构，结束审批流程
+export const finishVisitorInfo = (info: VisitorInfo) => {
 	info = formConvertObject(info);
-	console.log(info);
 	return api.post("/visitor/jzjg", info);
 };
-
-// 更新矫正机构审核部分
-export const updateJZJGInfo = (
-	info: any,
-	onSuccess: any,
-	onError: any
-) => {};
 
 export const saveVisitorInfo = (data: VisitorInfo) => {
 	data = formConvertObject(data);

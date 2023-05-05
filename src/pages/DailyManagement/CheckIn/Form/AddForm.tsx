@@ -1,5 +1,4 @@
-import "react";
-import TemplateForm from "@/template/Form";
+import TemplateForm, { getFormItem } from "@/template/Form";
 import { DatePicker, Input } from "antd";
 
 export default function AddForm(props: {
@@ -17,18 +16,12 @@ export default function AddForm(props: {
 			onFinish={onFinish}
 			initialValues={initialValues}
 			formTable={[
-				{
-					name: "dxbh",
-					label: "社区矫正对象编号",
-					component: <Input />,
-				},
-				{
-					name: "date",
-					label: "报到日期",
-					component: (
-						<DatePicker format="YYYY-MM-DD HH:mm:ss" />
-					),
-				},
+				getFormItem("dxbh", "社区矫正对象编号", <Input />),
+				getFormItem(
+					"date",
+					"提交日期",
+					<DatePicker format="YYYY-MM-DD HH:mm:ss" />
+				),
 			]}
 		/>
 	);

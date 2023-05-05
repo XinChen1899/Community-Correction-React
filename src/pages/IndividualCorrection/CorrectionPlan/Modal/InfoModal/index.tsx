@@ -12,6 +12,7 @@ export default function InfoModal(props: {
 	const { open, setOpen, info } = props;
 
 	const getInfos = (info: CrpPlan) => {
+		if (!open || !info) return [];
 		return [
 			{ label: "方案编号", value: info.id },
 			{ label: "方案名称", value: info.famc },
@@ -37,7 +38,7 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"矫正方案信息"}
-					info={info != undefined ? getInfos(info) : []}
+					info={getInfos(info)}
 				/>
 			}
 			open={open}

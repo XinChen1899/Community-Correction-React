@@ -15,7 +15,6 @@ import {
 	message,
 } from "antd";
 import Upload, { UploadFile, UploadProps } from "antd/es/upload";
-import "react";
 import { useState } from "react";
 
 export function AddPlanForm(props: {
@@ -36,16 +35,14 @@ export function AddPlanForm(props: {
 				if (data.status == "200") {
 					const url = data.data.split("/");
 					const name = url[url.length - 1];
-					//setImageUrl(data.data);
 					const after = {
-						uid: "123",
+						uid: url,
 						name,
 						status: "done",
 						url: data.data,
 						percent: 100,
 					} as UploadFile;
 					form.setFieldValue("zz", data.data);
-					console.log(after);
 					setFileList([after]);
 				} else {
 					message.error("上传失败!" + data.message);
@@ -79,6 +76,7 @@ export function AddPlanForm(props: {
 			debounceWait: 500,
 		}
 	);
+
 	const { run: runDownloadDocx } = useRequest(
 		(name) => downloadTemplate(name),
 		{

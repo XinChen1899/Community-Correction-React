@@ -2,7 +2,7 @@ import { Descriptions } from "antd";
 
 interface IDescriptionItem {
 	label?: string;
-	value: string | JSX.Element | number;
+	value?: string | JSX.Element | number;
 	span?: number;
 }
 

@@ -2,9 +2,9 @@ import { Form, FormInstance } from "antd";
 import { useEffect } from "react";
 
 interface IFormItem {
-	name: string;
+	name?: string;
 	label: string;
-	component: JSX.Element;
+	component?: JSX.Element;
 	rules?: any[];
 	children?: IFormItem[];
 }

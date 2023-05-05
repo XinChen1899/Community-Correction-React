@@ -6,7 +6,7 @@ import TemplateModal from "@/template/Modal";
 import { download } from "@/utils/download";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
-import { Button, List, Space, message } from "antd";
+import { Button, List, Space } from "antd";
 import { useState } from "react";
 export default function InfoModal(props: {
 	open: boolean;
@@ -24,7 +24,7 @@ export default function InfoModal(props: {
 		(name) => downloadDocx(name),
 		{
 			onSuccess: ({ data }) => {
-				message.success("下载成功!");
+				gMsg.onSuccess("下载成功!");
 				download(data, info.dxbh + "的报告.doc");
 			},
 			manual: true,
@@ -53,10 +53,11 @@ export default function InfoModal(props: {
 			gMsg.onError(error);
 		},
 		refreshDeps: [info.dxbh, tableUpdate],
-		ready: open && info && info.dxbh != undefined,
+		ready: open && info != undefined,
 	});
 
 	const getInfos = (detail: ReportDetail) => {
+		if (!open || !detail) return [];
 		return [
 			{ label: "对象编号", value: detail.dxbh },
 			{
@@ -95,7 +96,7 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"报告信息"}
-					info={reportDetail ? getInfos(reportDetail) : []}
+					info={getInfos(reportDetail)}
 				/>
 			}
 			open={open}

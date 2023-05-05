@@ -43,6 +43,7 @@ export default function InfoModal(props: {
 	});
 
 	const getInfos = (detail: CheckDetail) => {
+		if (!open || !detail) return [];
 		return [
 			{ label: "对象编号", value: detail.dxbh },
 			{ label: "已报到次数", value: info.count },
@@ -66,7 +67,7 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"报到信息"}
-					info={checkDetail ? getInfos(checkDetail) : []}
+					info={getInfos(checkDetail)}
 				/>
 			}
 			open={open}

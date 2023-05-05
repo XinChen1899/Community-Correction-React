@@ -2,16 +2,13 @@ import { getAllBans } from "@/api/business/ban";
 import { BanInfo } from "@/entity/Business/Ban/BanInfo";
 import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, spjgMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
-import {
-	DownOutlined,
-	EditOutlined,
-	PlusOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Button, Dropdown, MenuProps, Space } from "antd";
+import { Button, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
 import AddModal from "./Modal/AddModal";
@@ -20,47 +17,20 @@ import ProcessModal from "./Modal/ProcessModal";
 export type DataType = BanInfo;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "申请对象编号",
-		dataIndex: "dxbh",
-		align: "center",
-		key: "dxbh",
-	},
-	{
-		title: "申请对象姓名",
-		dataIndex: "xm",
-		align: "center",
-		key: "xm",
-	},
-	{
-		title: "申请进入的场所",
-		dataIndex: "sqjrcs",
-		align: "center",
-		key: "sqjrcs",
-		render: (_, rec) => (
-			<TemplateTag value={rec.sqjrcs} type={MyTagType.Info} />
-		),
-	},
-	{
-		title: "审批结果",
-		dataIndex: "spjg",
-		align: "center",
-		key: "spjg",
-		render: (_, rec) => (
-			<TemplateTag
-				value={map2Value(spjgMap, rec.spjg)}
-				type={
-					rec.spjg == "01"
-						? MyTagType.Accept
-						: MyTagType.Error
-				}
-			/>
-		),
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("申请对象编号", "dxbh"),
+	getColumn("申请对象姓名", "xm"),
+	getColumn("申请进入的场所", "sqjrcs", (_, rec) => (
+		<TemplateTag value={rec.sqjrcs} type={MyTagType.Info} />
+	)),
+	getColumn("审批结果", "spjg", (_, rec) => (
+		<TemplateTag
+			value={map2Value(spjgMap, rec.spjg)}
+			type={
+				rec.spjg == "01" ? MyTagType.Accept : MyTagType.Error
+			}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 export default function BanOrder() {
 	const [gMsg, contextHolder] = useMessage();
@@ -74,46 +44,22 @@ export default function BanOrder() {
 		{} as DataType
 	);
 
-	const items: MenuProps["items"] = [
-		{
-			label: (
-				<Button
-					block
-					type="text"
-					icon={<EditOutlined />}
-					onClick={() => {}}>
-					占位
-				</Button>
-			),
-			key: "0",
-		},
-	];
 	// 绑定操作栏的操作
 	columns.map((column) => {
 		if (column.key == "action") {
-			column.render = (_, record) => {
+			column.render = () => {
 				return (
 					<Space>
 						<Button
-							type="primary"
+							type="link"
 							onClick={() => setOpenAdd(true)}>
 							修改/查看《信息表》
 						</Button>
 						<Button
-							type="primary"
+							type="link"
 							onClick={() => setOpenProcess(true)}>
 							审批
 						</Button>
-						<Dropdown
-							menu={{ items }}
-							trigger={["click"]}>
-							<a onClick={(e) => e.preventDefault()}>
-								<Space>
-									操作
-									<DownOutlined />
-								</Space>
-							</a>
-						</Dropdown>
 					</Space>
 				);
 			};
@@ -126,17 +72,6 @@ export default function BanOrder() {
 	useRequest(getAllBans, {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
-				if (
-					selectRecord != undefined &&
-					selectRecord.dxbh != ""
-				) {
-					for (let i = 0; i < data.data.length; i++) {
-						if (data.data[i].dxbh == selectRecord.dxbh) {
-							setSelectRecord(data.data[i]);
-							break;
-						}
-					}
-				}
 				setTableData(data.data);
 			} else {
 				gMsg.onError(data.message);
@@ -177,17 +112,15 @@ export default function BanOrder() {
 			<TemplateOperatorAndTable
 				columns={columns}
 				cardExtra={
-					<>
-						<Button
-							type="primary"
-							icon={<PlusOutlined />}
-							onClick={() => {
-								setSelectRecord({} as DataType);
-								setOpenAdd(true);
-							}}>
-							添加进入特定场所/区域审批
-						</Button>
-					</>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={() => {
+							setSelectRecord({} as DataType);
+							setOpenAdd(true);
+						}}>
+						添加进入特定场所/区域审批
+					</Button>
 				}
 				cardTitle={"进入特定场所审批"}
 				statisticList={[{ title: "今日审批数", value: 999 }]}

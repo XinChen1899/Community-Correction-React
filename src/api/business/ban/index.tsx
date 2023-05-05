@@ -22,24 +22,16 @@ export const sfsSendToJzjg = (info: BanInfo) => {
 	return api.post("/ban/sfs/jzjg", info);
 };
 
-// 更新司法所审核部分
+// 信息发送给司法所，更新司法所审核部分
 export const send2SFS = (info: BanInfo) => {
 	info = formConvertObject(info);
 	return api.post("/ban/sfs", info);
 };
-// 发送给社区矫正机构，就是更新操作
-export const send2JZJG = (info: BanInfo) => {
+// 审批结束
+export const finishBBInfo = (info: BanInfo) => {
 	info = formConvertObject(info);
-	console.log(info);
 	return api.post("/ban/jzjg", info);
 };
-
-// 更新矫正机构审核部分
-export const updateJZJGInfo = (
-	info: any,
-	onSuccess: any,
-	onError: any
-) => {};
 
 export const saveBanInfo = (data: BanInfo) => {
 	data = formConvertObject(data);

@@ -52,7 +52,7 @@ const getPathKey = (history: any[], pathname: string) => {
 	}
 };
 function AppContent(props: IContenterProps) {
-	const { children, history, setHistory } = props;
+	const { history, setHistory } = props;
 
 	const location = useLocation();
 
@@ -105,6 +105,9 @@ function AppContent(props: IContenterProps) {
 		const newPanes = items.filter(
 			(pane) => pane.key !== targetKey
 		);
+		const newHistory = history.filter(
+			(item: any) => item.key != targetKey
+		);
 		if (newPanes.length && targetKey === activeKey) {
 			const { key } =
 				newPanes[
@@ -115,6 +118,7 @@ function AppContent(props: IContenterProps) {
 			setActiveKey(key);
 		}
 		setItems(newPanes);
+		setHistory(newHistory);
 	};
 
 	const onEdit = (
@@ -122,7 +126,7 @@ function AppContent(props: IContenterProps) {
 		action: "add" | "remove"
 	) => {
 		if (action === "add") {
-			const cur = history[history.length - 1];
+			// const cur = history[history.length - 1];
 			// add(cur.component, cur.key);
 		} else {
 			remove(targetKey);

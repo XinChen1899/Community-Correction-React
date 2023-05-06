@@ -1,9 +1,9 @@
 import { routeTable } from "@/router/routerTable";
 import { Image, Menu, MenuProps } from "antd";
-import Sider, { SiderTheme } from "antd/es/layout/Sider";
+import Sider from "antd/es/layout/Sider";
 import MenuItem from "antd/es/menu/MenuItem";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];

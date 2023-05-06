@@ -1,4 +1,29 @@
 import {
+	Announcement,
+	AssessmentScore,
+	BanOrder,
+	BusFunctionPane,
+	CategoryManagement,
+	CorrectionPlan,
+	CorrectionTeam,
+	Home,
+	IE,
+	NoCheckIn,
+	NoExit,
+	Punishment,
+	Reward,
+	TerminationCorrection,
+	UnCorrected,
+	WaitPeople,
+} from "@/pages";
+import { VisitorApproval } from "@/pages/BusinessApproval";
+import {
+	CheckIn,
+	DailyReport,
+	FunctionPane,
+} from "@/pages/DailyManagement";
+import { UncorrectedAnnouncement } from "@/pages/UnCorrected";
+import {
 	ApartmentOutlined,
 	DeleteRowOutlined,
 	DeploymentUnitOutlined,
@@ -10,7 +35,7 @@ import {
 	TeamOutlined,
 	UsergroupDeleteOutlined,
 } from "@ant-design/icons";
-import { LazyExoticComponent, lazy } from "react";
+import React, { LazyExoticComponent, lazy } from "react";
 
 // id -> 中文名
 export const routeNameMap = {
@@ -61,17 +86,20 @@ interface IPageItem {
 	pathname: string;
 	title: string;
 	component: LazyExoticComponent<any>;
+	_comp?: React.ReactNode;
 }
 
 export function getPageItem(
 	pathname: string,
 	title: string,
-	component?: LazyExoticComponent<any>
+	component?: LazyExoticComponent<any>,
+	_comp?: React.ReactNode
 ) {
 	return {
 		pathname,
 		title,
 		component,
+		_comp,
 	} as IPageItem;
 }
 
@@ -88,7 +116,8 @@ export const routeTable: RouteItem[] = [
 		page: getPageItem(
 			"home",
 			routeNameMap.home,
-			lazy(() => import("@/pages/Home"))
+			lazy(() => import("@/pages/Home")),
+			<Home />
 		),
 		icon: <HomeOutlined />,
 	},
@@ -97,7 +126,8 @@ export const routeTable: RouteItem[] = [
 		page: getPageItem(
 			"ie",
 			routeNameMap.ie,
-			lazy(() => import("@/pages/InvestigatorsEvaluated"))
+			lazy(() => import("@/pages/InvestigatorsEvaluated")),
+			<IE />
 		),
 		icon: <SearchOutlined />,
 	},
@@ -116,7 +146,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/RecvCorrection/WaitPeople"
 							)
-					)
+					),
+					<WaitPeople />
 				),
 			},
 			{
@@ -129,7 +160,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/RecvCorrection/CorrectionTeam"
 							)
-					)
+					),
+					<CorrectionTeam />
 				),
 			},
 			{
@@ -142,7 +174,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/RecvCorrection/Announcement"
 							)
-					)
+					),
+					<Announcement />
 				),
 			},
 			{
@@ -153,7 +186,8 @@ export const routeTable: RouteItem[] = [
 					lazy(
 						() =>
 							import("@/pages/RecvCorrection/NoCheckIn")
-					)
+					),
+					<NoCheckIn />
 				),
 			},
 		],
@@ -163,7 +197,8 @@ export const routeTable: RouteItem[] = [
 		page: getPageItem(
 			"noexit",
 			routeNameMap.noexit,
-			lazy(() => import("@/pages/NoExit"))
+			lazy(() => import("@/pages/NoExit")),
+			<NoExit />
 		),
 		icon: <DeleteRowOutlined />,
 	},
@@ -172,7 +207,8 @@ export const routeTable: RouteItem[] = [
 		page: getPageItem(
 			"category",
 			routeNameMap.category,
-			lazy(() => import("@/pages/Category"))
+			lazy(() => import("@/pages/Category")),
+			<CategoryManagement />
 		),
 		icon: <DeploymentUnitOutlined />,
 	},
@@ -190,7 +226,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/IndividualCorrection/CorrectionPlan"
 							)
-					)
+					),
+					<CorrectionPlan />
 				),
 			},
 			{
@@ -223,7 +260,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/DailyManagement/FunctionPane"
 							)
-					)
+					),
+					<FunctionPane />
 				),
 			},
 			{
@@ -234,7 +272,8 @@ export const routeTable: RouteItem[] = [
 					lazy(
 						() =>
 							import("@/pages/DailyManagement/CheckIn")
-					)
+					),
+					<CheckIn />
 				),
 			},
 			{
@@ -247,7 +286,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/DailyManagement/DailyReport"
 							)
-					)
+					),
+					<DailyReport />
 				),
 			},
 		],
@@ -267,7 +307,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/BusinessApproval/FunctionPane"
 							)
-					)
+					),
+					<BusFunctionPane />
 				),
 			},
 			{
@@ -280,7 +321,8 @@ export const routeTable: RouteItem[] = [
 							import(
 								"@/pages/BusinessApproval/BanOrder"
 							)
-					)
+					),
+					<BanOrder />
 				),
 			},
 			{
@@ -291,7 +333,8 @@ export const routeTable: RouteItem[] = [
 					lazy(
 						() =>
 							import("@/pages/BusinessApproval/Visitor")
-					)
+					),
+					<VisitorApproval />
 				),
 			},
 		],
@@ -306,7 +349,8 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"score",
 					routeNameMap.score,
-					lazy(() => import("@/pages/Assessment/Score"))
+					lazy(() => import("@/pages/Assessment/Score")),
+					<AssessmentScore />
 				),
 			},
 			{
@@ -314,7 +358,8 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"reward",
 					routeNameMap.reward,
-					lazy(() => import("@/pages/Assessment/Reward"))
+					lazy(() => import("@/pages/Assessment/Reward")),
+					<Reward />
 				),
 			},
 			{
@@ -324,7 +369,8 @@ export const routeTable: RouteItem[] = [
 					routeNameMap.punish,
 					lazy(
 						() => import("@/pages/Assessment/Punishment")
-					)
+					),
+					<Punishment />
 				),
 			},
 		],
@@ -335,7 +381,8 @@ export const routeTable: RouteItem[] = [
 		page: getPageItem(
 			"termination",
 			routeNameMap.termination,
-			lazy(() => import("@/pages/TerminationCorrection"))
+			lazy(() => import("@/pages/TerminationCorrection")),
+			<TerminationCorrection />
 		),
 		children: [],
 		icon: <UsergroupDeleteOutlined />,
@@ -349,7 +396,8 @@ export const routeTable: RouteItem[] = [
 				page: getPageItem(
 					"uchandle",
 					routeNameMap.uchandle,
-					lazy(() => import("@/pages/UnCorrected/Handle"))
+					lazy(() => import("@/pages/UnCorrected/Handle")),
+					<UnCorrected />
 				),
 			},
 			{
@@ -360,7 +408,8 @@ export const routeTable: RouteItem[] = [
 					lazy(
 						() =>
 							import("@/pages/UnCorrected/Announcement")
-					)
+					),
+					<UncorrectedAnnouncement />
 				),
 			},
 		],

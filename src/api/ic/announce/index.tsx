@@ -28,8 +28,21 @@ export const uploadAudio = (docx: any) => {
 	return api.post("/announce/upload", form);
 };
 
-export const downloadAudio = (name: string) => {
+const downloadFile = (name: string) => {
 	return api.get(name, {
 		responseType: "blob",
 	});
+};
+
+export const downloadAudio = (name: string) => {
+	return downloadFile(name);
+};
+
+export const downloadWord = (name: string) => {
+	return downloadFile(name);
+};
+
+export const exportWord = (crp: CrpAnnouncement) => {
+	crp.xgrq = getDate(crp.xgrq);
+	return api.post("/announce/export", crp);
 };

@@ -1,5 +1,6 @@
 import { downloadAudio, uploadAudio } from "@/api/ic/announce";
-import TemplateForm from "@/template/Form";
+import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import TemplateForm, { getFormItem } from "@/template/Form";
 import { download } from "@/utils/download";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
@@ -13,13 +14,14 @@ import {
 	UploadProps,
 	message,
 } from "antd";
+import { FormInstance } from "antd/lib";
 import "react";
 import { useState } from "react";
 
 export default function RegisterForm(props: {
-	form: any;
-	onFinish: any;
-	initialValues: any;
+	form: FormInstance<any>;
+	onFinish: (values: any) => void;
+	initialValues: CrpAnnouncement;
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;
@@ -34,9 +36,8 @@ export default function RegisterForm(props: {
 				if (data.status == "200") {
 					const url = data.data.split("/");
 					const name = url[url.length - 1];
-					//setImageUrl(data.data);
 					const after = {
-						uid: "123",
+						uid: url,
 						name,
 						status: "done",
 						url: data.data,
@@ -65,6 +66,7 @@ export default function RegisterForm(props: {
 		},
 		fileList,
 	};
+
 	const { run: runDownloadAudio } = useRequest(
 		(name) => downloadAudio(name),
 		{
@@ -99,48 +101,41 @@ export default function RegisterForm(props: {
 			onFinish={onFinish}
 			initialValues={initialValues}
 			formTable={[
-				{
-					name: "dxbh",
-					label: "社区矫正对象编号",
-					component: (
-						<Input
-							placeholder="请输入对象编号"
-							disabled={disabled}
-						/>
-					),
-				},
-				{
-					name: "xgrq",
-					label: "宣告日期",
-					component: <DatePicker />,
-				},
-				{
-					name: "audio",
-					label: "宣告音频",
-					component: (
-						<Space>
-							<Upload
-								accept="audio/ogg,audio/mpeg,audio/wav,audio/m4a,audio/flac"
-								{...uploadProps}
-								customRequest={customRequest}>
-								<Button icon={<UploadOutlined />}>
-									上传宣告音频
-								</Button>
-							</Upload>
-							{initialValues.audio && (
-								<Button
-									type="link"
-									onClick={() =>
-										runDownloadAudio(
-											initialValues.audio
-										)
-									}>
-									下载宣告音频
-								</Button>
-							)}
-						</Space>
-					),
-				},
+				getFormItem(
+					"dxbh",
+					"社区矫正对象编号",
+					<Input
+						placeholder="请输入对象编号"
+						disabled={disabled}
+					/>,
+					true
+				),
+				getFormItem("xgrq", "宣告日期", <DatePicker />, true),
+				getFormItem(
+					"audio",
+					"宣告音频",
+					<Space>
+						<Upload
+							accept="audio/ogg,audio/mpeg,audio/wav,audio/m4a,audio/flac"
+							{...uploadProps}
+							customRequest={customRequest}>
+							<Button icon={<UploadOutlined />}>
+								上传宣告音频
+							</Button>
+						</Upload>
+						{initialValues.audio && (
+							<Button
+								type="link"
+								onClick={() =>
+									runDownloadAudio(
+										initialValues.audio
+									)
+								}>
+								下载宣告音频
+							</Button>
+						)}
+					</Space>
+				),
 			]}
 		/>
 	);

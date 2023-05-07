@@ -12,6 +12,7 @@ export default function InfoModal(props: {
 	const { open, setOpen, info } = props;
 
 	const getInfos = (info: CrpAnnouncement) => {
+		if (!info || !open) return [];
 		return [
 			{ label: "对象编号", value: info.dxbh },
 			{ label: "姓名", value: info.xm },
@@ -22,6 +23,7 @@ export default function InfoModal(props: {
 			{
 				label: "宣告音频",
 				value: <Audio src={info.audio} />,
+				span: 3,
 			},
 		];
 	};
@@ -31,7 +33,7 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"入矫宣告信息表"}
-					info={info ? getInfos(info) : []}
+					info={getInfos(info)}
 				/>
 			}
 			open={open}

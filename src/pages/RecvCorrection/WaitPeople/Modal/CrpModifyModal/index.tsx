@@ -42,7 +42,6 @@ export default function CrpModifyModal(props: {
 					gMsg.onSuccess("修改成功！");
 				} else {
 					gMsg.onError(data.message);
-					console.log(data.message);
 				}
 			},
 			onError: (err) => {
@@ -58,7 +57,6 @@ export default function CrpModifyModal(props: {
 
 	const onFinish = (values: any) => {
 		const crp = values as CorrectionPeople;
-		console.log(values);
 		crp.zp = form.getFieldValue("zp");
 		run(crp);
 	};

@@ -21,7 +21,7 @@ export default function SuggestModal(props: {
 	const [form] = Form.useForm();
 
 	const [suggest, setSuggest] = useState<SuggestInfo>({
-		wtbh: "",
+		wtbh,
 	} as SuggestInfo);
 
 	const handleOk = () => {
@@ -53,8 +53,7 @@ export default function SuggestModal(props: {
 	useRequest(() => getSuggestInfoById(wtbh), {
 		onSuccess: ({ data }) => {
 			if (data.status == "200") {
-				const sug = data.data;
-				setSuggest(sug);
+				setSuggest(data.data);
 			}
 		},
 		onError: (error) => {
@@ -65,25 +64,22 @@ export default function SuggestModal(props: {
 	});
 
 	return (
-		<>
-			<TemplateModal
-				title="调查评估意见书编辑"
-				InfoDescriptions={
-					<SuggestForm
-						form={form}
-						onFinish={(v: any) => {
-							v.yjs = form.getFieldValue("zz");
-							console.log(v);
-							run(v);
-						}}
-						initialValues={{ ...suggest }}
-					/>
-				}
-				onOk={handleOk}
-				open={open}
-				setOpen={setOpen}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			title="调查评估意见书编辑"
+			InfoDescriptions={
+				<SuggestForm
+					form={form}
+					onFinish={(v: any) => {
+						v.yjs = form.getFieldValue("zz");
+						run(v);
+					}}
+					initialValues={suggest}
+				/>
+			}
+			onOk={handleOk}
+			open={open}
+			setOpen={setOpen}
+			confirmLoading={loading}
+		/>
 	);
 }

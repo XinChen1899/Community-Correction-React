@@ -1,7 +1,45 @@
 import { Card, Modal, Space } from "antd";
 
+export function HintModal(props: {
+	open: boolean;
+	setOpen: any;
+	hint: JSX.Element | string;
+	title?: string;
+	confirmLoading?: boolean;
+	onOk?: () => void;
+	onCancel?: () => void;
+}) {
+	const {
+		open,
+		setOpen,
+		title,
+		confirmLoading,
+		onOk,
+		onCancel,
+		hint,
+	} = props;
+	return (
+		<Modal
+			style={{ top: 20 }}
+			title={title}
+			centered
+			open={open}
+			closable={false}
+			confirmLoading={confirmLoading}
+			onOk={onOk != undefined ? onOk : () => setOpen(false)}
+			onCancel={
+				onCancel != undefined
+					? onCancel
+					: () => setOpen(false)
+			}>
+			{hint}
+			{/* <Card hoverable>{hint}</Card> */}
+		</Modal>
+	);
+}
+
 export default function TemplateModal(props: {
-	InfoDescriptions: JSX.Element;
+	InfoDescriptions: JSX.Element | string;
 	open: boolean;
 	setOpen: any;
 	onOk?: () => void;
@@ -29,7 +67,6 @@ export default function TemplateModal(props: {
 			title={title}
 			centered
 			open={open}
-			width={980}
 			confirmLoading={confirmLoading}
 			onOk={onOk != undefined ? onOk : () => setOpen(false)}
 			onCancel={
@@ -37,13 +74,12 @@ export default function TemplateModal(props: {
 					? onCancel
 					: () => setOpen(false)
 			}
+			closable={false}
 			footer={footer}>
-			<Space direction={"vertical"}>
-				<Card hoverable style={{ width: "900px" }}>
-					{InfoDescriptions}
-				</Card>
-				{children}
-			</Space>
+			<Card hoverable style={{ width: "100%" }}>
+				{InfoDescriptions}
+			</Card>
+			<Space direction={"vertical"}>{children}</Space>
 		</Modal>
 	);
 }

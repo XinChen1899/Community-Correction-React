@@ -1,11 +1,13 @@
 // 调查评估意见书
 import { downloadTemplate, uploadDocx } from "@/api/ie";
-import TemplateForm from "@/template/Form";
+import { SuggestInfo } from "@/entity/IE/SuggestInfo";
+import TemplateForm, { getFormItem } from "@/template/Form";
 import { download } from "@/utils/download";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import {
 	Button,
+	FormInstance,
 	Input,
 	Space,
 	UploadFile,
@@ -19,9 +21,9 @@ import { useState } from "react";
  * 调查评估意见书
  */
 export function SuggestForm(props: {
-	form: any;
-	onFinish: any;
-	initialValues: any;
+	form: FormInstance<any>;
+	onFinish: (values: any) => void;
+	initialValues: SuggestInfo;
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;
@@ -110,54 +112,43 @@ export function SuggestForm(props: {
 		<TemplateForm
 			disabled={disabled}
 			form={form}
-			onFinish={(values: any) => {
-				if (fileList.length > 0) {
-					onFinish(values);
-				}
-			}}
+			onFinish={onFinish}
 			initialValues={initialValues}
 			formTable={[
-				{
-					name: "wtbh",
-					label: "委托编号",
-					component: <Input disabled />,
-				},
-				{
-					name: "dcyjshr",
-					label: "调查评估意见审核人",
-					component: <Input disabled={disabled} />,
-				},
-				{
-					label: "调查评估意见书",
-					component: (
-						<Space>
+				getFormItem("wtbh", "委托编号", <Input disabled />),
+				getFormItem(
+					"dcyjshr",
+					"调查评估意见审核人",
+					<Input disabled={disabled} />
+				),
+				getFormItem(
+					"",
+					"调查评估意见书",
+					<Space>
+						<Button
+							type="link"
+							onClick={runDownloadTemplate}>
+							模板下载
+						</Button>
+
+						<Upload
+							{...uploadProps}
+							customRequest={customRequest}>
+							<Button icon={<UploadOutlined />}>
+								上传意见书
+							</Button>
+						</Upload>
+						{initialValues.yjs && (
 							<Button
 								type="link"
-								onClick={runDownloadTemplate}>
-								模板下载
+								onClick={() =>
+									runDownloadDocx(initialValues.yjs)
+								}>
+								下载意见书
 							</Button>
-
-							<Upload
-								{...uploadProps}
-								customRequest={customRequest}>
-								<Button icon={<UploadOutlined />}>
-									上传意见书
-								</Button>
-							</Upload>
-							{initialValues.yjs && (
-								<Button
-									type="link"
-									onClick={() =>
-										runDownloadDocx(
-											initialValues.yjs
-										)
-									}>
-									下载意见书
-								</Button>
-							)}
-						</Space>
-					),
-				},
+						)}
+					</Space>
+				),
 			]}
 		/>
 	);

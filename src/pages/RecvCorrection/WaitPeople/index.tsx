@@ -8,20 +8,12 @@ import {
 	CheckCircleOutlined,
 	CheckCircleTwoTone,
 	CloseCircleFilled,
-	DeleteOutlined,
 	DownOutlined,
 	EditTwoTone,
 	PlusOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import {
-	Avatar,
-	Button,
-	Dropdown,
-	MenuProps,
-	Popconfirm,
-	Space,
-} from "antd";
+import { Avatar, Button, Dropdown, MenuProps, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Spin } from "antd/lib";
 import { useState } from "react";
@@ -157,23 +149,6 @@ export default function WaitPeople() {
 		},
 		{
 			type: "divider",
-		},
-		{
-			label: (
-				<Popconfirm
-					title="是否删除"
-					description="是否删除该调查评估信息！"
-					onOpenChange={() => console.log("open change")}>
-					<Button
-						type={"primary"}
-						danger
-						block
-						icon={<DeleteOutlined />}>
-						删除!
-					</Button>
-				</Popconfirm>
-			),
-			key: "2",
 		},
 	];
 

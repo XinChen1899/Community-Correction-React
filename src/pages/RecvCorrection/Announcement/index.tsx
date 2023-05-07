@@ -1,12 +1,20 @@
-import { finishAnnounce, getAllAnnounces } from "@/api/ic/announce";
+import {
+	downloadWord,
+	exportWord,
+	finishAnnounce,
+	getAllAnnounces,
+} from "@/api/ic/announce";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import { HintModal } from "@/template/Modal";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
+import { download } from "@/utils/download";
 import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	CheckCircleTwoTone,
+	DownCircleTwoTone,
 	DownOutlined,
 	EditTwoTone,
 	PlusOutlined,
@@ -73,13 +81,28 @@ export default function Announcement() {
 					block
 					type="text"
 					icon={<CheckCircleTwoTone />}
-					onClick={() => runFinishAnnounce(selectRecord)}>
-					已宣告
+					onClick={() => {
+						setOpenHint(true);
+					}}>
+					完成宣告
 				</Button>
 			),
 			key: "2",
 		},
-		{ type: "divider" },
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<DownCircleTwoTone />}
+					onClick={() => {
+						setOpenExport(true);
+					}}>
+					导出宣告书
+				</Button>
+			),
+			key: "3",
+		},
 	];
 	// 绑定操作栏的操作
 	columns.map((column) => {
@@ -124,16 +147,18 @@ export default function Announcement() {
 		refreshDeps: [tableUpdate],
 	});
 
-	const { run: runFinishAnnounce } = useRequest(
+	const { loading, run: runFinishAnnounce } = useRequest(
 		(record) => finishAnnounce(record),
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200" && data.data == true) {
 					gMsg.onSuccess("已完成入矫宣告");
+					setOpenHint(false);
 				} else {
 					gMsg.onError("请稍后再试");
 				}
 			},
+
 			debounceWait: 150,
 			manual: true,
 			ready:
@@ -141,8 +166,58 @@ export default function Announcement() {
 		}
 	);
 
+	const { run: runDownloadWord } = useRequest(
+		(url) => downloadWord(url),
+		{
+			onSuccess: ({ data }) => {
+				download(
+					data,
+					selectRecord.dxbh + "的入矫宣告宣告书.doc"
+				);
+			},
+			manual: true,
+			debounceWait: 500,
+		}
+	);
+
+	const { loading: exportLoading, run: runExportWord } = useRequest(
+		(info) => exportWord(info),
+		{
+			onSuccess: ({ data }) => {
+				console.log(data);
+				if (data.status == "200") {
+					runDownloadWord(data.data);
+				}
+			},
+			onFinally: () => {
+				setOpenExport(false);
+			},
+			manual: true,
+			debounceWait: 150,
+		}
+	);
+
+	const [openHint, setOpenHint] = useState(false);
+	const [openExport, setOpenExport] = useState(false);
+
 	return (
 		<>
+			<HintModal
+				open={openExport}
+				setOpen={setOpenExport}
+				hint={"是否导出入矫宣告书"}
+				title="导出入矫宣告书"
+				onOk={() => runExportWord(selectRecord)}
+				confirmLoading={exportLoading}
+			/>
+			<HintModal
+				open={openHint}
+				setOpen={setOpenHint}
+				hint={"是否完成入矫宣告"}
+				title="入矫宣告完成"
+				onOk={() => runFinishAnnounce(selectRecord)}
+				confirmLoading={loading}
+			/>
 			<ModifyModal
 				open={openModify}
 				setOpen={setOpenModify}

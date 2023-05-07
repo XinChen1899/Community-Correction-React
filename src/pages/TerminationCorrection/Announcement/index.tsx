@@ -1,4 +1,6 @@
 import {
+	downloadWord,
+	exportWord,
 	finishTermAnnounce,
 	getAllTermAnnounces,
 } from "@/api/termination/announce";
@@ -6,6 +8,7 @@ import { TermAnnounce } from "@/entity/Termination/TermAnnounce";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
+import { download } from "@/utils/download";
 import { getDate } from "@/utils/ie";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
@@ -36,9 +39,11 @@ const columns: ColumnsType<DataType> = [
 	)),
 	getColumn("是否宣告", "finish", (_, record) => (
 		<TemplateTag
-			value={record.finish ? "已完成" : "未完成"}
+			value={record.finish == "1" ? "已完成" : "未完成"}
 			type={
-				record.finish ? MyTagType.Accept : MyTagType.Warning
+				record.finish == "1"
+					? MyTagType.Accept
+					: MyTagType.Warning
 			}
 		/>
 	)),
@@ -90,7 +95,10 @@ export default function TermAnnouncement() {
 					block
 					type="text"
 					icon={<DownCircleTwoTone />}
-					onClick={() => gMsg.onSuccess("导出!")}>
+					onClick={() => {
+						if (selectRecord && selectRecord.dxbh != "")
+							runExportWord(selectRecord);
+					}}>
 					导出宣告书
 				</Button>
 			),
@@ -155,6 +163,34 @@ export default function TermAnnouncement() {
 			manual: true,
 			ready:
 				selectRecord != undefined && selectRecord.dxbh != "",
+		}
+	);
+
+	const { run: runDownloadWord } = useRequest(
+		(url) => downloadWord(url),
+		{
+			onSuccess: ({ data }) => {
+				download(
+					data,
+					selectRecord.dxbh + "的终止矫正宣告书.doc"
+				);
+			},
+			manual: true,
+			debounceWait: 500,
+		}
+	);
+
+	const { run: runExportWord } = useRequest(
+		(info) => exportWord(info),
+		{
+			onSuccess: ({ data }) => {
+				console.log(data);
+				if (data.status == "200") {
+					runDownloadWord(data.data);
+				}
+			},
+			manual: true,
+			debounceWait: 150,
 		}
 	);
 

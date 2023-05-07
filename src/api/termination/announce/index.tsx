@@ -17,7 +17,7 @@ export const updateTermAnnounce = (crp: TermAnnounce) => {
 };
 
 export const finishTermAnnounce = (crp: TermAnnounce) => {
-	crp.finish = true;
+	crp.finish = "1";
 	crp.xgrq = getDate(crp.xgrq);
 	return api.post("/announce/update", crp);
 };
@@ -28,7 +28,18 @@ export const uploadAudio = (docx: any) => {
 	return api.post("/announce/upload", form);
 };
 
+export const exportWord = (crp: TermAnnounce) => {
+	crp.xgrq = getDate(crp.xgrq);
+	return api.post("/announce/export", crp);
+};
+
 export const downloadAudio = (name: string) => {
+	return api.get(name, {
+		responseType: "blob",
+	});
+};
+
+export const downloadWord = (name: string) => {
 	return api.get(name, {
 		responseType: "blob",
 	});

@@ -1,4 +1,4 @@
-import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
+import { TermAnnounce } from "@/entity/Termination/TermAnnounce";
 import { Audio } from "@/template/Audio";
 import TemplateDescriptions from "@/template/Descriptions";
 import TemplateModal from "@/template/Modal";
@@ -7,11 +7,12 @@ import { getDate } from "@/utils/ie";
 export default function InfoModal(props: {
 	open: boolean;
 	setOpen: any;
-	info: CrpAnnouncement;
+	info: TermAnnounce;
 }) {
 	const { open, setOpen, info } = props;
 
-	const getInfos = (info: CrpAnnouncement) => {
+	const getInfos = (info: TermAnnounce) => {
+		if (!open || !info) return [];
 		return [
 			{ label: "对象编号", value: info.dxbh },
 			{ label: "姓名", value: info.xm },
@@ -22,6 +23,7 @@ export default function InfoModal(props: {
 			{
 				label: "宣告音频",
 				value: <Audio src={info.audio} />,
+				span: 3,
 			},
 		];
 	};
@@ -30,8 +32,8 @@ export default function InfoModal(props: {
 		<TemplateModal
 			InfoDescriptions={
 				<TemplateDescriptions
-					title={"入矫宣告信息表"}
-					info={info ? getInfos(info) : []}
+					title={"终止矫正宣告信息表"}
+					info={getInfos(info)}
 				/>
 			}
 			open={open}

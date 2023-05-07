@@ -12,7 +12,6 @@ import {
 	NoExit,
 	Punishment,
 	Reward,
-	TerminationCorrection,
 	UnCorrected,
 	WaitPeople,
 } from "@/pages";
@@ -22,6 +21,10 @@ import {
 	DailyReport,
 	FunctionPane,
 } from "@/pages/DailyManagement";
+import {
+	TermAnnouncement,
+	TerminationCorrectionHandle,
+} from "@/pages/TerminationCorrection";
 import { UncorrectedAnnouncement } from "@/pages/UnCorrected";
 import {
 	ApartmentOutlined,
@@ -76,6 +79,8 @@ export const routeNameMap = {
 	punish: "惩罚",
 
 	termination: "终止矫正",
+	termhandle: "终止矫正办理",
+	termannounce: "终止矫正宣告",
 
 	uncorrected: "解除矫正",
 	uchandle: "解除矫正办理",
@@ -378,13 +383,37 @@ export const routeTable: RouteItem[] = [
 	},
 	{
 		url: "termination",
-		page: getPageItem(
-			"termination",
-			routeNameMap.termination,
-			lazy(() => import("@/pages/TerminationCorrection")),
-			<TerminationCorrection />
-		),
-		children: [],
+		page: getPageItem("termination", routeNameMap.termination),
+		children: [
+			{
+				url: "term/handle",
+				page: getPageItem(
+					"termhandle",
+					routeNameMap.termhandle,
+					lazy(
+						() =>
+							import(
+								"@/pages/TerminationCorrection/Handle"
+							)
+					),
+					<TerminationCorrectionHandle />
+				),
+			},
+			{
+				url: "term/announce",
+				page: getPageItem(
+					"termannounce",
+					routeNameMap.termannounce,
+					lazy(
+						() =>
+							import(
+								"@/pages/TerminationCorrection/Announcement"
+							)
+					),
+					<TermAnnouncement />
+				),
+			},
+		],
 		icon: <UsergroupDeleteOutlined />,
 	},
 	{

@@ -1,45 +1,41 @@
-import { recvCrp } from "@/api/ic";
-import { CorrectionPeople } from "@/entity/IC/Crp";
+import { updateTermAnnounce } from "@/api/termination/announce";
+import { TermAnnounce } from "@/entity/Termination/TermAnnounce";
 import TemplateModal from "@/template/Modal";
+import { getDayjs } from "@/utils/date";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Form } from "antd";
-import dayjs from "dayjs";
 import { DataType } from "../..";
-import { ReceiveForm } from "../../Form/ReceiveForm";
+import RegisterForm from "../../Form/RegisterForm";
 
-export default function CrpRecModal(props: {
+interface ITaskInfoModal {
 	open: boolean;
 	setOpen: any;
-	selectRecord: DataType;
-	gMsg: GMessage;
+	info: DataType;
 	tableUpdate: boolean;
 	setTableUpdate: any;
-}) {
-	const {
-		open,
-		setOpen,
-		selectRecord,
-		gMsg,
-		tableUpdate,
-		setTableUpdate,
-	} = props;
+	gMsg: GMessage;
+}
+
+export default function ModifyModal(props: ITaskInfoModal) {
+	const { open, setOpen, info, setTableUpdate, tableUpdate, gMsg } =
+		props;
 
 	const [form] = Form.useForm();
 
 	if (open) {
-		selectRecord.csrq = dayjs(selectRecord.csrq);
+		info.xgrq = getDayjs(info.xgrq);
 		form.resetFields();
-		form.setFieldsValue(selectRecord);
+		form.setFieldsValue(info);
 	}
 
 	const { loading, run } = useRequest(
-		(detail: CorrectionPeople) => recvCrp(detail),
+		(detail) => updateTermAnnounce(detail),
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200" && data.data == true) {
 					setTableUpdate(!tableUpdate);
-					gMsg.onSuccess("接收入矫成功");
+					gMsg.onSuccess("修改成功！");
 				} else {
 					gMsg.onError(data.message);
 				}
@@ -54,8 +50,11 @@ export default function CrpRecModal(props: {
 			debounceWait: 300,
 		}
 	);
+
 	const onFinish = (values: any) => {
-		const info = values as CorrectionPeople;
+		const info = values as TermAnnounce;
+		const url = form.getFieldValue("zz");
+		if (url) info.audio = url;
 		run(info);
 	};
 
@@ -66,10 +65,10 @@ export default function CrpRecModal(props: {
 	return (
 		<TemplateModal
 			InfoDescriptions={
-				<ReceiveForm
+				<RegisterForm
 					form={form}
 					onFinish={onFinish}
-					initialValues={selectRecord}
+					initialValues={info}
 				/>
 			}
 			open={open}

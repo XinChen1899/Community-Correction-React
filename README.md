@@ -60,13 +60,11 @@ npm run build
   - [x] 解矫宣告
   - [ ] 特赦
 
-## Mini Tools
-- [ ] TS接口变成Java数据类
 
 
-## Features
-1. 全局流程代办通知
-2. TODO：生成通知书
+## TODO
+1. 下载时出现进度条
+2. 增加导出word
 
 ## Bugs
 1. 分类管理-管理审批 设置step无效 ✅

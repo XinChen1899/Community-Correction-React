@@ -1,11 +1,10 @@
 import { updateCrp } from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
 import TemplateModal from "@/template/Modal";
+import { getDayjs } from "@/utils/date";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Form } from "antd";
-import dayjs from "dayjs";
-import { useEffect } from "react";
 import { DataType } from "../..";
 import { RegisterForm } from "../../Form/RegisterForm";
 
@@ -28,13 +27,11 @@ export default function CrpModifyModal(props: {
 
 	const [form] = Form.useForm();
 
-	useEffect(() => {
-		if (open) {
-			selectRecord.csrq = dayjs(selectRecord.csrq);
-			form.resetFields();
-			form.setFieldsValue(selectRecord);
-		}
-	});
+	if (open) {
+		selectRecord.csrq = getDayjs(selectRecord.csrq);
+		form.resetFields();
+		form.setFieldsValue(selectRecord);
+	}
 
 	const { loading, run } = useRequest(
 		(detail: CorrectionPeople) => updateCrp(detail),

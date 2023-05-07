@@ -52,7 +52,6 @@ export default function RegisterModal(props: {
 	};
 
 	return (
-		<>
 			<TemplateModal
 				InfoDescriptions={
 					<RegisterForm
@@ -66,6 +65,5 @@ export default function RegisterModal(props: {
 				onOk={handleOk}
 				confirmLoading={loading}
 			/>
-		</>
 	);
 }

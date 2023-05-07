@@ -106,6 +106,7 @@ export default function AppSider() {
 				items={menuItems}
 				theme={theme}
 				onClick={(d) => {
+					// console.log(d);
 					navigate(d.key);
 				}}
 			/>

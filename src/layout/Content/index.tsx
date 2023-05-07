@@ -3,7 +3,7 @@ import { RouteItem, routeTable } from "@/router/routerTable";
 import { Tabs } from "antd";
 import { Content } from "antd/es/layout/layout";
 import React, { ReactNode, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface IContenterProps {
 	colorBgContainer: string;
@@ -57,7 +57,7 @@ function AppContent(props: IContenterProps) {
 	const location = useLocation();
 
 	useEffect(() => {
-		console.log(location.pathname, history);
+		// console.log(location.pathname, history);
 		if (existPath(history, location.pathname)) {
 			const key = `${location.pathname}${history.length + 1}`;
 			const { r, title } = getComponentByPathname(
@@ -73,7 +73,7 @@ function AppContent(props: IContenterProps) {
 			add(current);
 			setActiveKey(String(key));
 		} else {
-			console.log(location.pathname + "已存在");
+			// console.log(location.pathname + "已存在");
 			const key = getPathKey(history, location.pathname);
 			setActiveKey(String(key));
 		}
@@ -81,9 +81,12 @@ function AppContent(props: IContenterProps) {
 
 	const [activeKey, setActiveKey] = useState("");
 	const [items, setItems] = useState<any[]>([]);
-
+	const navigate = useNavigate();
 	const onChange = (key: string) => {
+		const kk = key.slice(1, key.length - 1);
+		// console.log("====" + kk);
 		setActiveKey(key);
+		navigate(kk);
 	};
 
 	const add = (current: any) => {

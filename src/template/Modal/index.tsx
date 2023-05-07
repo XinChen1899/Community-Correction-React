@@ -67,6 +67,7 @@ export default function TemplateModal(props: {
 			title={title}
 			centered
 			open={open}
+			width={900}
 			confirmLoading={confirmLoading}
 			onOk={onOk != undefined ? onOk : () => setOpen(false)}
 			onCancel={

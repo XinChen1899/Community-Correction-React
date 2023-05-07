@@ -1,3 +1,4 @@
+import { ReportInfo } from "@/entity/NoExit/ReportInfo";
 import TemplateForm, { getFormItem } from "@/template/Form";
 import { crjzjzlMap, generateSelect } from "@/utils";
 import { Button, DatePicker, FormInstance, Input, Space } from "antd";
@@ -7,8 +8,8 @@ import { Button, DatePicker, FormInstance, Input, Space } from "antd";
  */
 export function BBForm(props: {
 	form: FormInstance<any>;
-	onFinish: any;
-	initialValues: any;
+	onFinish: (values: any) => void;
+	initialValues: ReportInfo;
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;

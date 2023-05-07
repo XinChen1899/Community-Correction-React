@@ -31,6 +31,7 @@ const CrpInfo = (props: { info: CrTeam; workerMap: any }) => {
 							)}
 						/>
 					),
+					span: 3,
 				},
 			]}
 		/>

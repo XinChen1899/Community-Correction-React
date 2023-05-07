@@ -2,13 +2,14 @@ import { ZJInfo } from "@/entity/NoExit/ZJInfo";
 import TemplateForm, { getFormItem } from "@/template/Form";
 import { generateSelect, zjMap } from "@/utils";
 import { Button, Input, Space } from "antd";
+import { FormInstance } from "antd/lib";
 
 /**
  * 出入境证件代管信息 表单
  */
 export function ZJForm(props: {
-	form: any;
-	onFinish: any;
+	form: FormInstance<any>;
+	onFinish: (values: any) => void;
 	initialValues: ZJInfo;
 	disabled?: boolean;
 }) {

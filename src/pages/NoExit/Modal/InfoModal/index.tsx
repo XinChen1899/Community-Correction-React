@@ -20,6 +20,7 @@ export default function InfoModal(props: {
 	const { open, setOpen, info } = props;
 
 	const getInfos = (exitInfo: Exit) => {
+		if (!exitInfo || !open) return [];
 		return [
 			{ label: "对象编号", value: exitInfo.dxbh },
 			{ label: "姓名", value: exitInfo.xm },
@@ -40,7 +41,7 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"出入境情况表"}
-					info={info ? getInfos(info) : []}
+					info={getInfos(info)}
 				/>
 			}
 			open={open}

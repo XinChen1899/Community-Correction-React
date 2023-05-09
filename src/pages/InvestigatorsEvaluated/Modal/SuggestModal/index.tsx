@@ -63,15 +63,19 @@ export default function SuggestModal(props: {
 		ready: open,
 	});
 
+	const [url, setURL] = useState("");
+
 	return (
 		<TemplateModal
 			title="调查评估意见书编辑"
 			InfoDescriptions={
 				<SuggestForm
 					form={form}
+					setURL={setURL}
 					onFinish={(v: any) => {
-						v.yjs = form.getFieldValue("zz");
-						run(v);
+						const t = v as SuggestInfo;
+						t.yjs = url;
+						run(t);
 					}}
 					initialValues={suggest}
 				/>

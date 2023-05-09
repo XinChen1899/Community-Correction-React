@@ -1,4 +1,5 @@
 import { Form, FormInstance } from "antd";
+import { useEffect } from "react";
 
 interface IFormItem {
 	name?: string;
@@ -34,8 +35,10 @@ export default function TemplateForm(props: {
 	const { form, onFinish, initialValues, formTable, disabled } =
 		props;
 
-	form.resetFields();
-	form.setFieldsValue(initialValues);
+	useEffect(() => {
+		form.resetFields();
+		form.setFieldsValue(initialValues);
+	}, [initialValues]);
 
 	return (
 		<Form

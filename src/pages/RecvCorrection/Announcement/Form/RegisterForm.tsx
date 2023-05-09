@@ -21,7 +21,7 @@ import { useState } from "react";
 export default function RegisterForm(props: {
 	form: FormInstance<any>;
 	onFinish: (values: any) => void;
-	initialValues: CrpAnnouncement;
+	initialValues: CrpAnnouncement | any;
 	disabled?: boolean;
 }) {
 	const { form, onFinish, initialValues, disabled } = props;

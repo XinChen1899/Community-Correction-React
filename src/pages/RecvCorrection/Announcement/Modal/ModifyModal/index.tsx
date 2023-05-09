@@ -1,10 +1,11 @@
 import { updateAnnounce } from "@/api/ic/announce";
 import { CrpAnnouncement } from "@/entity/IC/CrpAnnouncement";
 import TemplateModal from "@/template/Modal";
+import { getDayjs } from "@/utils/date";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Form } from "antd";
-import dayjs from "dayjs";
+import { useEffect } from "react";
 import { DataType } from "../..";
 import RegisterForm from "../../Form/RegisterForm";
 
@@ -23,11 +24,11 @@ export default function ModifyModal(props: ITaskInfoModal) {
 
 	const [form] = Form.useForm();
 
-	if (open) {
-		info.xgrq = dayjs(info.xgrq);
+	useEffect(() => {
+		info.xgrq = getDayjs(info.xgrq);
 		form.resetFields();
 		form.setFieldsValue(info);
-	}
+	}, [info]);
 
 	const { loading, run } = useRequest(
 		(detail: CrpAnnouncement) => updateAnnounce(detail),

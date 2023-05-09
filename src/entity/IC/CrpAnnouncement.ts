@@ -6,5 +6,5 @@ export interface CrpAnnouncement {
 	xm: string;
 	xgrq: string | Dayjs;
 	audio: string;
-	finish: boolean;
+	finish: string;
 }

@@ -31,14 +31,12 @@ export default function TeamModifyModal(props: {
 	const [form] = Form.useForm();
 
 	useEffect(() => {
-		if (open) {
-			form.resetFields();
-			form.setFieldsValue(info);
-		}
-	});
+		form.resetFields();
+		form.setFieldsValue(info);
+	}, [info]);
 
 	const { loading, run } = useRequest(
-		(detail: CrTeam) => updateCrt(detail),
+		(detail) => updateCrt(detail),
 		{
 			onSuccess: ({ data }) => {
 				if (data.status == "200" && data.data == true) {
@@ -61,7 +59,8 @@ export default function TeamModifyModal(props: {
 
 	const onFinish = (values: any) => {
 		const cteam = values as CrTeam;
-		cteam.teamNumber = cteam.workers.length;
+		cteam.number = cteam.workers.length;
+		cteam.id = info.id;
 		run(cteam);
 	};
 
@@ -70,22 +69,20 @@ export default function TeamModifyModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				title={"修改id为" + info.id + "的矫正小组信息"}
-				InfoDescriptions={
-					<AddTeamForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={info}
-						worker={worker}
-					/>
-				}
-				onOk={handleOk}
-				open={open}
-				setOpen={setOpen}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			title={"修改id为" + info.id + "的矫正小组信息"}
+			InfoDescriptions={
+				<AddTeamForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={info}
+					worker={worker}
+				/>
+			}
+			onOk={handleOk}
+			open={open}
+			setOpen={setOpen}
+			confirmLoading={loading}
+		/>
 	);
 }

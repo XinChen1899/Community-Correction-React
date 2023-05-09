@@ -43,3 +43,18 @@ export const uploadImg = (img: any) => {
 	form.append("file", img);
 	return api.post("/crp/upload", form);
 };
+
+const downloadFile = (name: string) => {
+	return api.get(name, {
+		responseType: "blob",
+	});
+};
+
+export const downloadWord = (name: string) => {
+	return downloadFile(name);
+};
+
+export const exportWord = (crp: CorrectionPeople) => {
+	crp.csrq = getDate(crp.csrq);
+	return api.post("/crp/export", crp);
+};

@@ -1,6 +1,5 @@
-import useAPI from "@/api";
-import { api } from "..";
 import { CrTeam } from "@/entity/IC/CrTeam";
+import { api } from "..";
 
 export const saveCrt = (crt: CrTeam) => {
 	return api.post("/crt/save", crt);
@@ -11,5 +10,6 @@ export const getAllCrt = () => {
 };
 
 export const updateCrt = (crt: CrTeam) => {
+	console.log(crt);
 	return api.post("/crt/update", crt);
 };

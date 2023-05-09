@@ -17,7 +17,7 @@ export const uploadDocx = (docx: any) => {
 export const downloadTemplate = (name?: string) => {
 	if (name == undefined || name == null) {
 		return api.get(
-			"https://ccorr-bucket.oss-cn-shenzhen.aliyuncs.com/docxs/%E8%B0%83%E6%9F%A5%E8%AF%84%E4%BC%B0%E6%84%8F%E8%A7%81%E4%B9%A6%E6%A8%A1%E6%9D%BF.doc",
+			"https://ccorr-bucket.oss-cn-shenzhen.aliyuncs.com/templates/%E8%B0%83%E6%9F%A5%E8%AF%84%E4%BC%B0%E6%84%8F%E8%A7%81%E4%B9%A6.doc",
 			{
 				responseType: "blob",
 			}

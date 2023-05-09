@@ -55,7 +55,7 @@ const AddTeamModal = (props: {
 	// 提交表单时操作
 	const onFinish = (values: any) => {
 		const cteam = values as CrTeam;
-		cteam.teamNumber = cteam.workers.length + 1;
+		cteam.number = cteam.workers.length + 1;
 		cteam.workers.push(cteam.monitor);
 
 		run(cteam);

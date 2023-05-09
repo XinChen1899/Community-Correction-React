@@ -25,8 +25,9 @@ export function SuggestForm(props: {
 	onFinish: (values: any) => void;
 	initialValues: SuggestInfo;
 	disabled?: boolean;
+	setURL: any;
 }) {
-	const { form, onFinish, initialValues, disabled } = props;
+	const { form, onFinish, initialValues, disabled, setURL } = props;
 
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -46,8 +47,11 @@ export function SuggestForm(props: {
 						url: data.data,
 						percent: 100,
 					} as UploadFile;
-					form.setFieldValue("zz", data.data);
-					console.log(after);
+					// form.setFieldValue("zz", after.url);
+					// form.setFieldValue("zz", after.url);
+					// form.setFieldValue("upload", after.url);
+					setURL(after.url);
+					// console.log(after);
 					setFileList([after]);
 				} else {
 					message.error("上传失败!" + data.message);
@@ -55,6 +59,9 @@ export function SuggestForm(props: {
 			},
 			onError: (error: any) => {
 				message.error(error);
+			},
+			onFinally: () => {
+				console.log(form.getFieldValue("zz"));
 			},
 			manual: true,
 		}
@@ -122,7 +129,7 @@ export function SuggestForm(props: {
 					<Input disabled={disabled} />
 				),
 				getFormItem(
-					"",
+					"upload",
 					"调查评估意见书",
 					<Space>
 						<Button

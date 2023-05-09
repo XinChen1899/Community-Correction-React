@@ -40,9 +40,11 @@ const columns: ColumnsType<DataType> = [
 	)),
 	getColumn("是否宣告", "finish", (_, record) => (
 		<TemplateTag
-			value={record.finish ? "已完成" : "未完成"}
+			value={record.finish == "1" ? "已完成" : "未完成"}
 			type={
-				record.finish ? MyTagType.Accept : MyTagType.Warning
+				record.finish == "1"
+					? MyTagType.Accept
+					: MyTagType.Warning
 			}
 		/>
 	)),
@@ -113,7 +115,7 @@ export default function Announcement() {
 						<Button
 							type="link"
 							onClick={() => setOpenInfo(true)}>
-							查看宣告书
+							查看宣告信息
 						</Button>
 						<Dropdown
 							menu={{ items }}
@@ -205,8 +207,8 @@ export default function Announcement() {
 			<HintModal
 				open={openExport}
 				setOpen={setOpenExport}
-				hint={"是否导出入矫宣告书"}
-				title="导出入矫宣告书"
+				hint={`是否导出${selectRecord.xm}的宣告书`}
+				title={`导出${selectRecord.xm}的宣告书`}
 				onOk={() => runExportWord(selectRecord)}
 				confirmLoading={exportLoading}
 			/>

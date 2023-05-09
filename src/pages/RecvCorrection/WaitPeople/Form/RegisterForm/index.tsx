@@ -83,6 +83,8 @@ export function RegisterForm(props: {
 					url: initialValues.zp,
 				} as UploadFile,
 			]);
+		} else {
+			setFileList([]);
 		}
 	}, [initialValues]);
 
@@ -105,7 +107,10 @@ export function RegisterForm(props: {
 
 	const handleChange: UploadProps["onChange"] = ({
 		fileList: newFileList,
-	}) => setFileList(newFileList);
+	}) => {
+		setFileList(newFileList);
+		console.log(fileList);
+	};
 
 	const uploadButton = (
 		<div>
@@ -122,7 +127,7 @@ export function RegisterForm(props: {
 				const temp = data.data.map((team: CrTeam) => {
 					return {
 						code: team.id,
-						value: team.teamName,
+						value: team.name,
 					};
 				});
 				setTeamList(temp);

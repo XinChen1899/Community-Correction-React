@@ -1,13 +1,21 @@
-import { getAllCrp, getCount } from "@/api/ic";
+import {
+	downloadWord,
+	exportWord,
+	getAllCrp,
+	getCount,
+} from "@/api/ic";
 import { CorrectionPeople } from "@/entity/IC/Crp";
+import { HintModal } from "@/template/Modal";
 import TemplateHome from "@/template/OperatorAndTable";
 import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
+import { download } from "@/utils/download";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	CheckCircleOutlined,
 	CheckCircleTwoTone,
 	CloseCircleFilled,
+	DownCircleTwoTone,
 	DownOutlined,
 	EditTwoTone,
 	PlusOutlined,
@@ -39,9 +47,9 @@ const columns: ColumnsType<DataType> = [
 	}),
 	getColumn("矫正状态", "status", (_, record) => (
 		<TemplateTag
-			value={record.status}
+			value={record.status == "1" ? "在矫" : "未入矫"}
 			type={
-				record.status == "在矫"
+				record.status == "1"
 					? MyTagType.Accept
 					: MyTagType.Warning
 			}
@@ -150,7 +158,45 @@ export default function WaitPeople() {
 		{
 			type: "divider",
 		},
+		{
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<DownCircleTwoTone />}
+					onClick={() => setOpenExport(true)}>
+					导出信息
+				</Button>
+			),
+			key: "2",
+		},
 	];
+
+	const { loading: exportLoading, run: runDownloadWord } =
+		useRequest((url) => downloadWord(url), {
+			onSuccess: ({ data }) => {
+				download(data, selectRecord.xm + "的信息表.doc");
+			},
+			manual: true,
+			debounceWait: 500,
+		});
+
+	const { run: runExportWord } = useRequest(
+		(info) => exportWord(info),
+		{
+			onSuccess: ({ data }) => {
+				console.log(data);
+				if (data.status == "200") {
+					runDownloadWord(data.data);
+				}
+			},
+			onFinally: () => {
+				setOpenExport(false);
+			},
+			manual: true,
+			debounceWait: 150,
+		}
+	);
 
 	// 绑定操作栏的操作
 	columns.map((column) => {
@@ -184,8 +230,18 @@ export default function WaitPeople() {
 		}
 	});
 
+	const [openExport, setOpenExport] = useState(false);
+
 	return (
 		<div>
+			<HintModal
+				open={openExport}
+				setOpen={setOpenExport}
+				hint={`是否导出${selectRecord.xm}的个人信息`}
+				title={`导出${selectRecord.xm}信息`}
+				onOk={() => runExportWord(selectRecord)}
+				confirmLoading={exportLoading}
+			/>
 			<CrpInfoModal
 				open={openInfo}
 				setOpen={setOpenInfo}

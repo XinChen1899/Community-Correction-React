@@ -34,7 +34,7 @@ export function AddTeamForm(props: {
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
-			<Form.Item name={"teamName"} label={"矫正小组名"}>
+			<Form.Item name={"name"} label={"矫正小组名"}>
 				<Input placeholder={"请输入矫正小组名"} />
 			</Form.Item>
 			<Form.Item name={"monitor"} label="选择小组队长">
@@ -42,8 +42,8 @@ export function AddTeamForm(props: {
 					{worker?.map((item: Worker) => {
 						return (
 							<Select.Option
-								value={item.rybm}
-								key={item.rybm}>
+								value={item.id}
+								key={item.id}>
 								{item.xm} 所属小队:
 								<Tag>{item.team}</Tag>
 							</Select.Option>
@@ -99,11 +99,9 @@ export function AddTeamForm(props: {
 												return (
 													<Select.Option
 														value={
-															item.rybm
+															item.id
 														}
-														key={
-															item.rybm
-														}>
+														key={item.id}>
 														{item.xm}{" "}
 														所属小队:
 														<Tag>

@@ -17,7 +17,7 @@ export const updateAnnounce = (crp: CrpAnnouncement) => {
 };
 
 export const finishAnnounce = (crp: CrpAnnouncement) => {
-	crp.finish = true;
+	crp.finish = "1";
 	crp.xgrq = getDate(crp.xgrq);
 	return api.post("/announce/update", crp);
 };

@@ -22,9 +22,9 @@ export type DataType = CrTeam;
 
 const columns: ColumnsType<DataType> = [
 	getColumn("小组编号", "id"),
-	getColumn("小组名", "teamName"),
+	getColumn("小组名", "name"),
 	getColumn("组长姓名", "monitor"),
-	getColumn("小组人数", "teamNumber"),
+	getColumn("小组人数", "number"),
 	getColumn("操作", "action"),
 ];
 
@@ -119,7 +119,7 @@ export default function CorrectionTeam() {
 	const workerMap = useMemo(() => {
 		const temp: any = {};
 		worker?.forEach((element: Worker) => {
-			temp[element.rybm] = element.xm;
+			temp[element.id] = element.xm;
 		});
 		return temp;
 	}, [worker]);
@@ -186,8 +186,7 @@ export default function CorrectionTeam() {
 								return;
 							}
 							const filterData = tableData.filter(
-								(item) =>
-									item.teamName.includes(value)
+								(item) => item.name.includes(value)
 							);
 							setTableData((prev) => {
 								setHistory(prev);

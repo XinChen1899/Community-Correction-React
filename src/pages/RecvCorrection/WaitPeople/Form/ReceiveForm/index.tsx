@@ -21,7 +21,7 @@ export function ReceiveForm(props: {
 				const temp = data.data.map((team: CrTeam) => {
 					return {
 						code: team.id,
-						value: team.teamName,
+						value: team.name,
 					};
 				});
 				setTeamList(temp);

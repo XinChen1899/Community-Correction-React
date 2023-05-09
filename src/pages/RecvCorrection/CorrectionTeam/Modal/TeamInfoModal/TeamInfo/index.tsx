@@ -11,7 +11,7 @@ const CrpInfo = (props: { info: CrTeam; workerMap: any }) => {
 				{ label: "矫正小组编号", value: info.id },
 				{
 					label: "小组名",
-					value: info.teamName,
+					value: info.name,
 				},
 				{ label: "组长姓名", value: workerMap[info.monitor] },
 				{

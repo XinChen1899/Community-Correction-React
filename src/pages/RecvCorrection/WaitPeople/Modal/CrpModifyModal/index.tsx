@@ -5,6 +5,7 @@ import { getDayjs } from "@/utils/date";
 import { GMessage } from "@/utils/msg/GMsg";
 import { useRequest } from "ahooks";
 import { Form } from "antd";
+import { useEffect } from "react";
 import { DataType } from "../..";
 import { RegisterForm } from "../../Form/RegisterForm";
 
@@ -27,11 +28,12 @@ export default function CrpModifyModal(props: {
 
 	const [form] = Form.useForm();
 
-	if (open) {
+	useEffect(() => {
+		console.log(selectRecord);
 		selectRecord.csrq = getDayjs(selectRecord.csrq);
 		form.resetFields();
 		form.setFieldsValue(selectRecord);
-	}
+	}, [selectRecord]);
 
 	const { loading, run } = useRequest(
 		(detail: CorrectionPeople) => updateCrp(detail),
@@ -57,6 +59,7 @@ export default function CrpModifyModal(props: {
 
 	const onFinish = (values: any) => {
 		const crp = values as CorrectionPeople;
+		console.log(form.getFieldValue("zp"));
 		crp.zp = form.getFieldValue("zp");
 		run(crp);
 	};

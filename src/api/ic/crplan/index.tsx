@@ -1,5 +1,4 @@
 import { CrpPlan } from "@/entity/IC/CrpPlan";
-import { getDate } from "@/utils/ie";
 import { api } from "..";
 
 export const savePlan = (plan: CrpPlan) => {
@@ -58,4 +57,9 @@ export const downloadTemplate = (name?: string) => {
 			responseType: "blob",
 		});
 	}
+};
+
+export const exportPlan = (info: CrpPlan) => {
+	console.log(info);
+	return api.post("/plan/export", info);
 };

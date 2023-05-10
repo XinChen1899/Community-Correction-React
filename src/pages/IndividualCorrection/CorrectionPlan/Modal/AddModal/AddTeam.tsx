@@ -43,6 +43,7 @@ const AddModal = (props: {
 
 	// 提交表单时操作
 	const onFinish = (values: any) => {
+		console.log(values);
 		run(values);
 	};
 

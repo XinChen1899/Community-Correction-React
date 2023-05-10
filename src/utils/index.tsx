@@ -1,5 +1,10 @@
 import { Select } from "antd";
 
+export interface ModuleDict {
+	classify: string;
+	dict: CodeMap[];
+}
+
 export interface CodeMap {
 	code: string;
 	value: string;
@@ -213,6 +218,16 @@ export const zjMap = getCodeMap([
 	["04", "吊销"],
 	["05", "作废"],
 	["06", "未操作"],
+]);
+// 备案状态
+export const reportMap = getCodeMap([
+	["0", "未备案"],
+	["1", "已备案"],
+]);
+// 边控状态
+export const bkMap = getCodeMap([
+	["0", "未边控"],
+	["1", "已边控"],
 ]);
 const DEFAULT_SELECT_WIDTH = 300;
 

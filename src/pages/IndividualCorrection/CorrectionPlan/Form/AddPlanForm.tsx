@@ -1,9 +1,12 @@
 import {
 	download,
 	downloadTemplate,
+	exportPlan,
 	uploadDocx,
 } from "@/api/ic/crplan";
-import { generateSelect, sfcnMap } from "@/utils";
+import { getAllCrt } from "@/api/ic/crteam";
+import { CrTeam } from "@/entity/IC/CrTeam";
+import { CodeMap, generateSelect } from "@/utils";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import {
@@ -89,6 +92,18 @@ export function AddPlanForm(props: {
 		}
 	);
 
+	const { run: runExport } = useRequest(
+		(info) => exportPlan(info),
+		{
+			onSuccess: ({ data }) => {
+				if (data.status == "200") {
+					runDownloadDocx(data.data);
+				}
+			},
+			manual: true,
+		}
+	);
+
 	const customRequest = (options: any) => {
 		const { file } = options;
 		const imgItem = {
@@ -104,38 +119,71 @@ export function AddPlanForm(props: {
 		runUploadDocx(file);
 	};
 
+	// 获取所有的矫正小组信息
+	const [teamList, setTeamList] = useState<CodeMap[]>([]);
+	useRequest(getAllCrt, {
+		onSuccess: ({ data }) => {
+			if (data.status == "200") {
+				const temp = data.data.map((team: CrTeam) => {
+					return {
+						code: team.id,
+						value: team.name,
+					};
+				});
+				setTeamList(temp);
+			} else {
+				message.error(data.message);
+			}
+		},
+		onError: (error: any) => {
+			message.error(error);
+		},
+		refreshDeps: [form],
+	});
+
 	return (
 		<Form
 			form={form}
 			onFinish={onFinish}
 			initialValues={initialValues}>
-			<Form.Item name={"dxbh"} label={"社区矫正对象编号"}>
+			<Form.Item
+				name={"dxbh"}
+				label={"社区矫正对象编号"}
+				rules={[
+					{
+						required: true,
+					},
+				]}>
 				<Input
 					placeholder={"请输入社区矫正对象编号"}
 					disabled={disabled}
 				/>
 			</Form.Item>
-			<Form.Item name={"famc"} label={"方案名称"}>
+			<Form.Item
+				name={"famc"}
+				label={"方案名称"}
+				rules={[
+					{
+						required: true,
+					},
+				]}>
 				<Input placeholder={"请输入方案名称"} />
 			</Form.Item>
-			<Form.Item name={"sfcn"} label="是否成年">
-				{generateSelect(sfcnMap)}
-			</Form.Item>
-			<Form.Item name={"jdglcs"} label="监督管理措施">
-				<Input.TextArea placeholder={"请输入监督管理措施"} />
-			</Form.Item>
-			<Form.Item name={"jyjzcs"} label="教育矫正措施">
-				<Input.TextArea placeholder={"请输入教育矫正措施"} />
-			</Form.Item>
-			<Form.Item name={"bkfzcs"} label="帮困扶助措施">
-				<Input.TextArea placeholder={"请输入帮困扶助措施"} />
-			</Form.Item>
-			<Form.Item name={"qtcs"} label="其他措施">
-				<Input.TextArea placeholder={"请输入其他措施"} />
+			<Form.Item
+				name={"team"}
+				label="确定矫正小组"
+				rules={[
+					{
+						required: true,
+					},
+				]}>
+				{generateSelect(teamList)}
 			</Form.Item>
 			<Form.Item label="矫正方案上传">
 				<Space>
-					<Button type="link" onClick={runDownloadTemplate}>
+					<Button
+						type="link"
+						onClick={() => runExport(initialValues)}>
 						模板下载
 					</Button>
 

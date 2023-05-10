@@ -3,7 +3,7 @@ import { Exit } from "@/entity/NoExit/Exit";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
 import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
-import { map2Value, zjMap } from "@/utils";
+import { bkMap, map2Value, reportMap, zjMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
 	AppstoreTwoTone,
@@ -32,7 +32,7 @@ const columns: ColumnsType<DataType> = [
 	getColumn("姓名", "xm"),
 	getColumn("报备", "bb", (_, record) => (
 		<TemplateTag
-			value={record.bb != "0" ? "已备案" : "待备案"}
+			value={map2Value(reportMap, record.bb)}
 			type={
 				record.bb != "0" ? MyTagType.Info : MyTagType.Warning
 			}
@@ -48,7 +48,7 @@ const columns: ColumnsType<DataType> = [
 	)),
 	getColumn("边控", "bk", (_, record) => (
 		<TemplateTag
-			value={record.bk != "0" ? "已边控" : "未边控"}
+			value={map2Value(bkMap, record.bk)}
 			type={
 				record.bk != "0" ? MyTagType.Info : MyTagType.Warning
 			}

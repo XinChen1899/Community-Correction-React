@@ -57,7 +57,7 @@ function ProcessPraiseModal(props: {
 			gMsg.onError(err);
 		},
 		refreshDeps: [tableUpdate, info.rewardId],
-		ready: info != undefined && open,
+		ready: info && open,
 	});
 
 	// todo 发起审批更新操作
@@ -167,9 +167,6 @@ function ProcessPraiseModal(props: {
 			}
 			open={open}
 			setOpen={setOpen}
-			onOk={() => {
-				setOpen(false);
-			}}
 		/>
 	);
 }

@@ -2,6 +2,7 @@ import { getAllRewards } from "@/api/assessment/reward";
 import { RewardInfo } from "@/entity/Assessment/Reward/RewardInfo";
 import { useMyNotification } from "@/template/Notification";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { jllbMap, map2Value } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
@@ -18,35 +19,15 @@ import ProcessPraiseModal from "./Modal/ProcessPraiseModal";
 export type DataType = RewardInfo;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		key: "dxbh",
-		align: "center",
-		width: 150,
-	},
-	{
-		title: "矫正对象姓名",
-		dataIndex: "xm",
-		align: "center",
-		key: "xm",
-	},
-	{
-		title: "奖励",
-		dataIndex: "jllb",
-		align: "center",
-		key: "jllb",
-		render: (_, record) => (
-			<TemplateTag
-				value={map2Value(jllbMap, record.jllb)}
-				type={MyTagType.Info}
-			/>
-		),
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("对象编号", "dxbh"),
+	getColumn("矫正对象姓名", "xm"),
+	getColumn("奖励", "jllb", (_, record) => (
+		<TemplateTag
+			value={map2Value(jllbMap, record.jllb)}
+			type={MyTagType.Info}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 
 export default function Reward() {
@@ -80,7 +61,7 @@ export default function Reward() {
 			label: (
 				<Button
 					block
-					type="text"
+					type="link"
 					onClick={() => setOpenAdd(true)}>
 					立功审核占位
 				</Button>
@@ -94,12 +75,12 @@ export default function Reward() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
+							type={"link"}
 							onClick={() => setOpenInfo(true)}>
 							查看奖励信息
 						</Button>
 						<Button
-							type={"primary"}
+							type={"link"}
 							onClick={() => jllbModalMap(record.jllb)}>
 							审批
 						</Button>
@@ -122,7 +103,7 @@ export default function Reward() {
 
 	useRequest(getAllRewards, {
 		onSuccess: ({ data }) => {
-			if (data.status == 200) {
+			if (data.status == "200") {
 				setTableData(data.data);
 			}
 		},
@@ -172,7 +153,6 @@ export default function Reward() {
 			<TemplateOperatorAndTable
 				columns={columns}
 				cardExtra={
-					<>
 						<Button
 							type="primary"
 							icon={<PlusOutlined />}
@@ -181,7 +161,6 @@ export default function Reward() {
 							}}>
 							新增奖励
 						</Button>
-					</>
 				}
 				cardTitle={"奖励查询"}
 				searchList={[

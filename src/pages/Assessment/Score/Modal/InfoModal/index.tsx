@@ -47,23 +47,24 @@ export default function InfoModal(props: {
 		onError: (err) => {
 			gMsg.onError(err);
 		},
-		debounceWait: 300,
 		refreshDeps: [info.dxbh, tableUpdate],
-		ready: info && info.dxbh != "" && open,
+		ready: info && open,
 	});
 
 	const getInfos = (detail: ScoreDetail) => {
-		if (detail == undefined || detail.detail == undefined)
-			return [];
+		if (!detail || !open) return [];
 		return [
 			{ label: "对象编号", value: detail.dxbh },
 			{ label: "对象姓名", value: info.xm },
 			{ label: "总分", value: info.score },
 			{
 				label: "计分情况",
+				span: 3,
 				value: (
 					<InfiniteScroll
-						dataLength={detail.detail.length}
+						dataLength={
+							detail.detail ? detail.detail.length : 0
+						}
 						next={() => {}}
 						scrollableTarget="scrollableDiv"
 						hasMore={false}
@@ -118,7 +119,7 @@ export default function InfoModal(props: {
 			InfoDescriptions={
 				<TemplateDescriptions
 					title={"计分详情"}
-					info={scoreDetail ? getInfos(scoreDetail) : []}
+					info={getInfos(scoreDetail)}
 				/>
 			}
 			open={open}

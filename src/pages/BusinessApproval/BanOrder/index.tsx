@@ -123,7 +123,7 @@ export default function BanOrder() {
 					</Button>
 				}
 				cardTitle={"进入特定场所审批"}
-				statisticList={[{ title: "今日审批数", value: 999 }]}
+				// statisticList={[{ title: "今日审批数", value: 999 }]}
 				searchList={[
 					{
 						placeholder: "请输入对象编号",

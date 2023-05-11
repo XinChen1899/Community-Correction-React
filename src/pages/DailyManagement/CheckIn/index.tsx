@@ -6,6 +6,7 @@ import TemplateTag, { MyTagType } from "@/template/Tag";
 import { map2Value, nsyjzlbMap } from "@/utils";
 import { useMessage } from "@/utils/msg/GMsg";
 import {
+	DownCircleTwoTone,
 	DownOutlined,
 	EditTwoTone,
 	PlusOutlined,
@@ -71,6 +72,19 @@ export default function CheckIn() {
 			),
 			key: "0",
 		},
+		{
+			// todo 导出报到记录
+			label: (
+				<Button
+					block
+					type="text"
+					icon={<DownCircleTwoTone />}
+					onClick={() => setOpenInfo(true)}>
+					导出报到记录
+				</Button>
+			),
+			key: "1",
+		},
 	];
 	// 绑定操作栏的操作
 	columns.map((column) => {
@@ -124,17 +138,15 @@ export default function CheckIn() {
 			<TemplateOperatorAndTable
 				columns={columns}
 				cardExtra={
-					<>
-						<Button
-							type="primary"
-							icon={<PlusOutlined />}
-							onClick={() => setOpenAdd(true)}>
-							添加打卡信息
-						</Button>
-					</>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={() => setOpenAdd(true)}>
+						添加打卡信息
+					</Button>
 				}
 				cardTitle={"定期报到"}
-				statisticList={[{ title: "今天报到数", value: 999 }]}
+				// statisticList={[{ title: "今天报到数", value: 999 }]}
 				searchList={[
 					{
 						placeholder: "请输入对象编号",

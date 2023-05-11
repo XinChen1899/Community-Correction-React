@@ -51,20 +51,18 @@ export default function ModifyModal(props: {
 	};
 
 	return (
-		<>
-			<TemplateModal
-				InfoDescriptions={
-					<ModifyForm
-						form={form}
-						onFinish={onFinish}
-						initialValues={{ date: dayjs(), ...info }}
-					/>
-				}
-				open={open}
-				setOpen={setOpen}
-				onOk={handleOk}
-				confirmLoading={loading}
-			/>
-		</>
+		<TemplateModal
+			InfoDescriptions={
+				<ModifyForm
+					form={form}
+					onFinish={onFinish}
+					initialValues={{ date: dayjs(), ...info }}
+				/>
+			}
+			open={open}
+			setOpen={setOpen}
+			onOk={handleOk}
+			confirmLoading={loading}
+		/>
 	);
 }

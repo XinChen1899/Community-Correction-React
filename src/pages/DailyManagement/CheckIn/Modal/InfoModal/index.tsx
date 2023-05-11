@@ -46,9 +46,10 @@ export default function InfoModal(props: {
 		if (!open || !detail) return [];
 		return [
 			{ label: "对象编号", value: detail.dxbh },
-			{ label: "已报到次数", value: info.count },
+			{ label: "已报到次数", value: info.count, span: 2 },
 			{
 				label: "打卡日期",
+				span: 3,
 				value: (
 					<List
 						bordered

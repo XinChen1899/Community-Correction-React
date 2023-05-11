@@ -1,6 +1,7 @@
 import { getAllScores } from "@/api/assessment/score";
 import { Score } from "@/entity/Assessment/Score/Score";
 import TemplateOperatorAndTable from "@/template/OperatorAndTable";
+import { getColumn } from "@/template/Table";
 import TemplateTag, { MyTagType } from "@/template/Tag";
 import { useMessage } from "@/utils/msg/GMsg";
 import { DownOutlined } from "@ant-design/icons";
@@ -14,32 +15,15 @@ import ModifyModal from "./Modal/Modify";
 export type DataType = Score;
 
 const columns: ColumnsType<DataType> = [
-	{
-		title: "对象编号",
-		dataIndex: "dxbh",
-		key: "dxbh",
-		align: "center",
-		width: 150,
-	},
-	{
-		title: "矫正对象姓名",
-		dataIndex: "xm",
-		align: "center",
-		key: "xm",
-	},
-	{
-		title: "累计分",
-		dataIndex: "score",
-		key: "score",
-		align: "center",
-		render: (_, record) => (
-			<TemplateTag value={record.score} type={MyTagType.Info} />
-		),
-	},
-	{
-		title: "操作",
-		key: "action",
-	},
+	getColumn("对象编号", "dxbh"),
+	getColumn("矫正对象姓名", "xm"),
+	getColumn("累计分", "score", (_, record) => (
+		<TemplateTag
+			value={`${record.score}分`}
+			type={MyTagType.Info}
+		/>
+	)),
+	getColumn("操作", "action"),
 ];
 
 const staticTableData: DataType[] = [
@@ -81,7 +65,7 @@ export default function AssessmentScore() {
 				return (
 					<Space size="middle">
 						<Button
-							type={"dashed"}
+							type={"link"}
 							onClick={() => setOpenInfo(true)}>
 							查看计分列表
 						</Button>
@@ -136,7 +120,6 @@ export default function AssessmentScore() {
 			{contextHolder}
 			<TemplateOperatorAndTable
 				columns={columns}
-				cardExtra={<></>}
 				cardTitle={"计分考核"}
 				searchList={[
 					{
